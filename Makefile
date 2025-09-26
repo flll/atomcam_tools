@@ -38,7 +38,7 @@ docker-build:
 		tee docker-build_`date +"%Y%m%d_%H%M%S"`.log
 
 login:
-	$(call check_container_running) && $(DOCKER_COMPOSE) up -d
+	$(call check_container_running) || $(DOCKER_COMPOSE) up -d
 	$(DOCKER_COMPOSE) exec builder bash
 
 lima:
