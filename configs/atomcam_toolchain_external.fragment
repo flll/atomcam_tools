@@ -1,0 +1,103 @@
+# Toolchain override fragment applied on top of atomcam_defconfig by
+# buildscripts/setup_buildroot.sh.
+#
+# Switches the build from Buildroot's internal toolchain (which in 2026.02 only
+# supports gcc 13+) to BR2_TOOLCHAIN_EXTERNAL pointing at Bootlin's pre-built
+# mips32el glibc toolchain. The 2017.05 stable release is chosen because:
+#   * gcc 5.4.0 is close to the original gcc 4.9.3 ABI used by Wyze Cam V3
+#   * glibc 2.24 is forward-compatible with the original glibc 2.21
+#   * Linux kernel headers 3.10.105 exactly match the camera kernel
+#
+# Notes for future bumps:
+#   * If the Ingenic SDK blobs require a different glibc minor version, pick
+#     another mips32el--glibc--stable tarball from
+#     https://toolchains.bootlin.com/releases_mips32el.html and update the URL,
+#     gcc version (BR2_TOOLCHAIN_EXTERNAL_GCC_*) and header version
+#     (BR2_TOOLCHAIN_EXTERNAL_HEADERS_*) accordingly.
+#   * Disable the legacy internal-toolchain knobs explicitly. Buildroot would
+#     otherwise warn that they are dangling.
+
+# BR2_TOOLCHAIN_BUILDROOT is not set
+BR2_TOOLCHAIN_EXTERNAL=y
+BR2_TOOLCHAIN_EXTERNAL_CUSTOM=y
+BR2_TOOLCHAIN_EXTERNAL_DOWNLOAD=y
+BR2_TOOLCHAIN_EXTERNAL_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/mips32el/tarballs/mips32el--glibc--stable-2017.05-toolchains-1-1.tar.bz2"
+BR2_TOOLCHAIN_EXTERNAL_REL_BIN_PATH="bin"
+BR2_TOOLCHAIN_EXTERNAL_CUSTOM_PREFIX="mipsel-linux"
+
+BR2_TOOLCHAIN_EXTERNAL_GCC_5=y
+BR2_TOOLCHAIN_EXTERNAL_HEADERS_3_10=y
+BR2_TOOLCHAIN_EXTERNAL_CUSTOM_GLIBC=y
+BR2_TOOLCHAIN_EXTERNAL_INET_RPC=y
+BR2_TOOLCHAIN_EXTERNAL_HAS_SSP=y
+BR2_TOOLCHAIN_EXTERNAL_CXX=y
+
+# Switch the target CPU variant from generic mips32r2 to Ingenic XBurst. This
+# is what allows the upstream toolchain-wrapper.mk to inject -ffp-contract=off
+# automatically for the FPU bug, replacing the old add_fp_no_fused_madd.patch.
+# BR2_mips_32r2 is not set
+BR2_mips_xburst=y
+
+# Pin the FP32 mode and NaN encoding to match the Wyze Cam V3 GPL kernel ABI
+# (gcc 5+ defaults moved to FP32_MODE_XX which would silently change ABI).
+BR2_MIPS_FP32_MODE_32=y
+# BR2_MIPS_FP32_MODE_XX is not set
+# BR2_MIPS_FP32_MODE_64 is not set
+BR2_MIPS_ENABLE_NAN_LEGACY=y
+# BR2_MIPS_ENABLE_NAN_2008 is not set
+
+# --- Legacy option scrubbing -------------------------------------------------
+# Buildroot 2026.02 selects BR2_LEGACY=y when the .config still contains any
+# symbol that was deprecated/removed since 2016.02. Makefile.legacy then aborts
+# the build. Each line below either removes the dead symbol entirely (because
+# we use BR2_TOOLCHAIN_EXTERNAL now and never need the internal-toolchain
+# version pickers) or switches to the upstream replacement.
+
+# Internal-toolchain version pickers are dead code with the external Bootlin
+# toolchain; clearing them avoids the legacy detector tripping.
+# BR2_BINUTILS_VERSION_2_23_X is not set
+# BR2_GCC_VERSION_4_9_X is not set
+# BR2_KERNEL_HEADERS_3_10 is not set
+
+# Curl renamed: the standalone BR2_PACKAGE_CURL is now folded into
+# BR2_PACKAGE_LIBCURL_CURL (sub-option of libcurl).
+# BR2_PACKAGE_CURL is not set
+BR2_PACKAGE_LIBCURL_CURL=y
+
+# host-mke2img no longer exists; Buildroot calls mkfs.ext{2,3,4} directly.
+# BR2_PACKAGE_HOST_MKE2IMG is not set
+
+# Python 2.7 is EOL since April 2020. Switch any python target dependency to
+# python3; if no package needed Python at all this just disables both.
+# BR2_PACKAGE_PYTHON is not set
+BR2_PACKAGE_PYTHON3=y
+
+# MD5 password hashing was removed for security; SHA-256 is the new default
+# and is supported by every current libc.
+# BR2_TARGET_GENERIC_PASSWD_MD5 is not set
+BR2_TARGET_GENERIC_PASSWD_SHA256=y
+
+# --- Initramfs *-init packages -----------------------------------------------
+# patches/linux_makefile.patch declares
+#   LINUX_DEPENDENCIES += dosfstools-init exfatprogs-init busybox-init host-uboot-tools
+# so that buildscripts/linux_prebuild_hook.sh can copy fsck.fat / fsck.exfat /
+# busybox into the embedded initramfs. Buildroot 2026.02 errors out
+# ("X is in the dependency chain of linux ... without selecting it ... Stop.")
+# unless those packages are also enabled in the .config. dosfstools-init is
+# already enabled in atomcam_defconfig, busybox-init is `default y`, and
+# host-uboot-tools is enabled too -- only exfatprogs-init was missing because
+# its `depends on BR2_USE_WCHAR` makes Kconfig leave it unset by default.
+BR2_PACKAGE_BUSYBOX_INIT=y
+BR2_PACKAGE_DOSFSTOOLS_INIT=y
+BR2_PACKAGE_EXFATPROGS_INIT=y
+BR2_PACKAGE_HOST_UBOOT_TOOLS=y
+
+# --- v4l2loopback: legacy fork over stock 0.15.3 ----------------------------
+# Stock Buildroot 2026.02 ships v4l2loopback 0.15.3 which has hard-coded
+# `#error This module is not supported on kernels before 4.0.0.`. The Wyze
+# Cam V3 GPL kernel is pinned at 3.10, so we ship our own br2-external
+# package `v4l2loopback-legacy` (commit a6d82287, kernel-3.10-compatible)
+# and explicitly disable the stock package to avoid double-build attempts.
+# BR2_PACKAGE_V4L2LOOPBACK is not set
+BR2_PACKAGE_V4L2LOOPBACK_LEGACY=y
+BR2_PACKAGE_V4L2LOOPBACK_LEGACY_UTILS=y

@@ -11,8 +11,10 @@ echo "Executing pre filesystem image creation script"
 find $TARGET_DIR -name .DS_Store -delete
 cp /src/configs/atomhack.ver $TARGET_DIR/etc
 
-DEFAULT_IMAGE_DIR="/atomtools/build/buildroot-2016.02/output/images"
-BASE_DIR=${BASE_DIR:-/atomtools/build/buildroot-2016.02/output}
+BUILDROOT_VERSION=${BUILDROOT_VERSION:-2026.02.1}
+DEFAULT_BUILDROOT_OUT="/atomtools/build/buildroot-${BUILDROOT_VERSION}/output"
+DEFAULT_IMAGE_DIR="${DEFAULT_BUILDROOT_OUT}/images"
+BASE_DIR=${BASE_DIR:-${DEFAULT_BUILDROOT_OUT}}
 IMAGES="${BASE_DIR}/images"
-HOST_DIR=${HOST_DIR:-/atomtools/build/buildroot-2016.02/output/host}
-TARGET_DIR=${TARGET_DIR:-/atomtools/build/buildroot-2016.02/output/target}
+HOST_DIR=${HOST_DIR:-${DEFAULT_BUILDROOT_OUT}/host}
+TARGET_DIR=${TARGET_DIR:-${DEFAULT_BUILDROOT_OUT}/target}

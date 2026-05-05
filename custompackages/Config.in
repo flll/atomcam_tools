@@ -1,0 +1,35 @@
+menu "ATOMCam / WyzeCamV3 extensions"
+
+# Packages that have no equivalent in stock Buildroot 2026.02.
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/atbm_wifi/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/busybox-init/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/collections_c/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/dosfstools-init/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/exfatprogs-init/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/go2rtc/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/h264bitstream/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/ingenic_samples/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/ingenic_videocap/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/libtinyalsa/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/logconv/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/micropython-lib/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/oss/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/v4l2cpp/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/v4l2loopback-legacy/Config.in"
+source "$BR2_EXTERNAL_ATOMCAM_TOOLS_PATH/package/v4l2rtspserver/Config.in"
+
+# Removed during the Ubuntu 26.04 / Buildroot 2026.02 migration because the
+# stock Buildroot tree now ships these packages and Buildroot rejects two
+# definitions for the same name. If their old patches are still needed, port
+# them to BR2_GLOBAL_PATCH_DIR (defconfig already supports it):
+#   fdk-aac, ffmpeg, libcurl, libv4l, lighttpd, live555, log4cpp,
+#   micropython, mjpg-streamer, ncurses, opus
+# See git log for the historical contents of those package dirs.
+#
+# v4l2loopback was special: stock Buildroot ships v4l2loopback 0.15.3 which
+# refuses to compile on kernels older than 4.0.0, but the Wyze Cam V3 GPL
+# kernel is fixed at 3.10. We therefore re-instate the package under a new
+# name `v4l2loopback-legacy` (sourced above) pinning the last upstream commit
+# that still compiles on 3.10 plus our load-reduction patch.
+
+endmenu

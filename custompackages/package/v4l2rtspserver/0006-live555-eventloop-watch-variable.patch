@@ -1,0 +1,73 @@
+diff --git a/inc/V4l2RTSPServer.h b/inc/V4l2RTSPServer.h
+index 7099c13..cf18f2e 100644
+--- a/inc/V4l2RTSPServer.h
++++ b/inc/V4l2RTSPServer.h
+@@ -15,6 +15,7 @@
+ 
+ // live555
+ #include <BasicUsageEnvironment.hh>
++#include <UsageEnvironment.hh>
+ #include <GroupsockHelper.hh>
+ 
+ #include "UnicastServerMediaSubsession.h"
+@@ -25,7 +26,7 @@ class V4l2RTSPServer {
+ class V4l2RTSPServer {
+     public:
+         V4l2RTSPServer(unsigned short rtspPort, unsigned short rtspOverHTTPPort = 0, int timeout = 10, unsigned int hlsSegment = 0, const std::list<std::string> & userPasswordList = std::list<std::string>(), const char* realm = NULL, const std::string & webroot = "", const char *sslkeycert = NULL)
+-            : m_stop(0)
++            : m_stop{}
+             , m_env(BasicUsageEnvironment::createNew(*BasicTaskScheduler::createNew()))
+             , m_rtspPort(rtspPort)
+         {     
+@@ -59,7 +60,7 @@ class V4l2RTSPServer {
+             return result;
+         }
+ 
+-        void eventLoop(char * stop) {
++        void eventLoop(EventLoopWatchVariable * stop) {
+             m_env->taskScheduler().doEventLoop(stop); 
+         }
+ 
+@@ -68,7 +69,7 @@ class V4l2RTSPServer {
+         }
+ 
+         void stopLoop() {
+-            m_stop = 1;
++            m_stop.store(1);
+         }
+ 
+         UsageEnvironment* env() {
+@@ -281,7 +282,7 @@ class V4l2RTSPServer {
+         }
+ 
+     protected:
+-        char              m_stop;
++        EventLoopWatchVariable m_stop;
+         UsageEnvironment* m_env;	
+         RTSPServer*       m_rtspServer;
+         int               m_rtspPort;
+diff --git a/main.cpp b/main.cpp
+index 8154069..2967b8a 100755
+--- a/main.cpp
++++ b/main.cpp
+@@ -34,15 +34,17 @@
+ #include "DeviceSourceFactory.h"
+ #include "V4l2RTSPServer.h"
+ 
++#include <UsageEnvironment.hh>
++
+ 
+ // -----------------------------------------
+ //    signal handler
+ // -----------------------------------------
+-char quit = 0;
++EventLoopWatchVariable quit{};
+ void sighandler(int n)
+ { 
+ 	printf("SIGINT\n");
+-	quit =1;
++	quit.store(1);
+ }
+ 
+ // -------------------------------------------------------
+-- 

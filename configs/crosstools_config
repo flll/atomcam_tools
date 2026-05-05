@@ -45,8 +45,8 @@ CT_MODULES=y
 #
 # Paths
 #
-# CT_LOCAL_TARBALLS_DIR="/atomtools/build/cross/src/build"
-# CT_SAVE_TARBALLS=y
+CT_LOCAL_TARBALLS_DIR="/atomtools/build/cross/tarballs"
+CT_SAVE_TARBALLS=y
 # CT_TARBALLS_BUILDROOT_LAYOUT is not set
 CT_WORK_DIR="${CT_TOP_DIR}/.build"
 CT_BUILD_TOP_DIR="${CT_WORK_DIR:-${CT_TOP_DIR}/.build}/${CT_HOST:+HOST-${CT_HOST}/}${CT_TARGET}"
@@ -117,7 +117,11 @@ CT_LOG_EXTRA=y
 # CT_LOG_DEBUG is not set
 CT_LOG_LEVEL_MAX="EXTRA"
 # CT_LOG_SEE_TOOLS_WARN is not set
-CT_LOG_PROGRESS_BAR=y
+# CT_LOG_PROGRESS_BAR is disabled because tee'ing the build to a file turns
+# the in-place spinner (\ | / -) into one line per frame; build.log balloons
+# from a few MB of useful log into hundreds of MB of garbage and editors
+# count each \r as a new line (>160k apparent lines for ~1300 real lines).
+# CT_LOG_PROGRESS_BAR is not set
 CT_LOG_TO_FILE=y
 CT_LOG_FILE_COMPRESS=y
 # end of Paths and misc options
