@@ -16,19 +16,21 @@ mkdir -p $TARGET_DIR/configs
 export CROSS_BASE=/atomtools/build/cross/mips-uclibc
 export CROSS_COMPILE=${CROSS_BASE}/bin/mipsel-ingenic-linux-uclibc-
 export CFLAGS="-std=gnu99"
-rm -rf /atomtools/build/buildroot-2016.02/output/local/libcallback
-mkdir -p /atomtools/build/buildroot-2016.02/output/local
-cp -pr /src/libcallback /atomtools/build/buildroot-2016.02/output/local
-cd /atomtools/build/buildroot-2016.02/output/local/libcallback
+LOCAL_DIR="${BASE_DIR:?BASE_DIR is not set}/local"
+rm -rf ${LOCAL_DIR}/libcallback
+mkdir -p ${LOCAL_DIR}
+cp -pr /src/libcallback ${LOCAL_DIR}
+cd ${LOCAL_DIR}/libcallback
 make
 [ $? != 0 ] && exit 1
 mkdir -p $TARGET_DIR/lib/modules/
 cp -dpf libcallback.so $TARGET_DIR/lib/modules/libcallback.so
 
 # build webpage
-mkdir -p /atomtools/build/buildroot-2016.02/output/web
-cp -pr /src/web/webpack.config.js /src/web/package* /src/web/source /atomtools/build/buildroot-2016.02/output/web
-cd /atomtools/build/buildroot-2016.02/output/web
+WEB_DIR="${BASE_DIR}/web"
+mkdir -p ${WEB_DIR}
+cp -pr /src/web/webpack.config.js /src/web/package* /src/web/source ${WEB_DIR}
+cd ${WEB_DIR}
 rm -rf frontend
 npm install -g npm@latest
 npm install

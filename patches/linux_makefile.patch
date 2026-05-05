@@ -1,14 +1,32 @@
---- a/linux/linux.mk	2020-09-27 18:49:27.098885846 +0000
-+++ b/linux/linux.mk	2020-09-27 18:49:19.318602900 +0000
-@@ -8,6 +8,11 @@
- LINUX_LICENSE = GPLv2
- LINUX_LICENSE_FILES = COPYING
- 
-+define OPENMIKO_LINUX_PRE_BUILD_HOOKS
+--- a/linux/linux.mk
++++ b/linux/linux.mk
+@@ -11,6 +11,12 @@
+ LINUX_CPE_ID_VENDOR = linux
+ LINUX_CPE_ID_PRODUCT = linux_kernel
+ LINUX_CPE_ID_PREFIX = cpe:2.3:o
++
++define ATOMCAM_LINUX_PRE_BUILD_HOOKS
 +	/src/buildscripts/linux_prebuild_hook.sh
 +endef
-+LINUX_PRE_BUILD_HOOKS += OPENMIKO_LINUX_PRE_BUILD_HOOKS
++LINUX_PRE_BUILD_HOOKS += ATOMCAM_LINUX_PRE_BUILD_HOOKS
 +
+ 
  # Compute LINUX_SOURCE and LINUX_SITE from the configuration
  ifeq ($(BR2_LINUX_KERNEL_CUSTOM_TARBALL),y)
- LINUX_TARBALL = $(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION))
+@@ -88,6 +94,16 @@
+ 	host-kmod \
+ 	$(BR2_MAKE_HOST_DEPENDENCY)
+ LINUX_MAKE = $(BR2_MAKE)
++
++# The Wyze Cam V3 / ATOMCam kernel embeds an initramfs (CONFIG_INITRAMFS_SOURCE
++# in configs/kernel.config) containing static busybox + fsck.fat + fsck.exfat.
++# These come from the *-init custom packages and land under
++# $(STAGING_DIR)/bin-init/. Without explicit dependencies, the package
++# scheduler runs linux-custom in parallel with them and the pre-build hook
++# above fails with "cp: cannot stat staging/bin-init/fsck.fat". This MUST be
++# placed *after* the upstream `LINUX_DEPENDENCIES = host-kmod ...` assignment
++# (which uses `=`, not `+=`, and would otherwise clobber our additions).
++LINUX_DEPENDENCIES += dosfstools-init exfatprogs-init busybox-init host-uboot-tools
+ 
+ # The kernel CONFIG_EXTRA_FIRMWARE feature requires firmware files at build
+ # time. Make sure they are available before the kernel builds.
