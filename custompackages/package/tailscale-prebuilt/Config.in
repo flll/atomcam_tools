@@ -1,0 +1,19 @@
+config BR2_PACKAGE_TAILSCALE_PREBUILT
+	bool "tailscale (prebuilt mipsle binary)"
+	depends on BR2_USE_MMU
+	help
+	  Install official Tailscale mipsle release binaries instead of
+	  compiling from source. Required for AtomCam MIPS32r1 targets.
+
+	  https://tailscale.com/
+
+if BR2_PACKAGE_TAILSCALE_PREBUILT
+
+config BR2_PACKAGE_TAILSCALE_PREBUILT_ENABLE
+	bool "Enable Tailscale by default"
+	default y
+	help
+	  Enable Tailscale daemon by default on system startup.
+	  Can be controlled via WebUI (hack.ini).
+
+endif
