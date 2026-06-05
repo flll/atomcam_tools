@@ -25,3 +25,11 @@ lima:
 	[ "`uname -s`" = "Darwin" ] || exit 0
 	[ -d ~/.lima/lima-docker ] || ( limactl start --tty=false lima-docker.yml && exit 0 )
 	[ "`limactl list | awk '/lima-docker/ { print $2 }'`" = "Running" ] || limactl start lima-docker
+
+sim-swing:
+	chmod +x ./scripts/sim_atomswing.sh
+	./scripts/sim_atomswing.sh swing-80m
+
+sim-swing-92m:
+	chmod +x ./scripts/sim_atomswing.sh
+	./scripts/sim_atomswing.sh swing-92m

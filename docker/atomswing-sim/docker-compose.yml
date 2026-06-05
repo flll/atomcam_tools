@@ -1,0 +1,45 @@
+# AtomSwing (Ingenic T31) resource-constrained simulation containers.
+# Uses the builder image (qemu-user-binfmt for mipsel binaries).
+#
+# Profiles:
+#   swing-80m  Linux mem=80M + 128M swap (AtomSwing stock, GitHub #74)
+#   swing-92m  Linux mem=92M + 128M swap (atomcam_tools kernel.config)
+
+services:
+  atomswing-sim-80m:
+    image: atomtools/atomtools:ubuntu2604-br2026
+    privileged: true
+    pid: host
+    cpus: "1"
+    mem_limit: 80m
+    memswap_limit: 208m
+    pids_limit: 128
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+      - /run:size=8m
+    volumes:
+      - ../..:/src:ro
+      - sim-work-80m:/work
+    working_dir: /work
+    command: tail -f /dev/null
+
+  atomswing-sim-92m:
+    image: atomtools/atomtools:ubuntu2604-br2026
+    privileged: true
+    pid: host
+    cpus: "1"
+    mem_limit: 92m
+    memswap_limit: 220m
+    pids_limit: 128
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+      - /run:size=8m
+    volumes:
+      - ../..:/src:ro
+      - sim-work-92m:/work
+    working_dir: /work
+    command: tail -f /dev/null
+
+volumes:
+  sim-work-80m:
+  sim-work-92m:
