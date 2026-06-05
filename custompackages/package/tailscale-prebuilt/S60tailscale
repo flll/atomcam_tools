@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# Tailscale daemon init script
+#
+
+DAEMON="tailscaled"
+TAILSCALE_SCRIPT="/scripts/tailscale.sh"
+
+umask 077
+
+start() {
+	printf 'Starting %s: ' "$DAEMON"
+	if [ -x "$TAILSCALE_SCRIPT" ]; then
+		"$TAILSCALE_SCRIPT" start
+		echo "OK"
+	else
+		echo "FAIL - script not found"
+		return 1
+	fi
+}
+
+stop() {
+	printf 'Stopping %s: ' "$DAEMON"
+	if [ -x "$TAILSCALE_SCRIPT" ]; then
+		"$TAILSCALE_SCRIPT" stop
+		echo "OK"
+	else
+		echo "FAIL - script not found"
+		return 1
+	fi
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart|reload)
+		restart
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?
