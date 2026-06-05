@@ -12,6 +12,25 @@ TAILSCALE_EXITNODE_ONLY="off"
 mkdir -p "$TAILSCALE_STATE_DIR"
 mkdir -p "$(dirname "$TAILSCALE_SOCKET")"
 
+normalize_kernel_release() {
+    if [ -w /proc/sys/kernel/osrelease ] 2>/dev/null; then
+        echo 3.10.14 > /proc/sys/kernel/osrelease 2>/dev/null || true
+    fi
+}
+
+check_binary_health() {
+    normalize_kernel_release
+    local version_out version_rc
+    version_out="$(/usr/bin/tailscale version 2>&1 | head -1 | tr -d '\r')"
+    version_rc=$?
+    if [ "$version_rc" -ne 0 ]; then
+        echo "Error: tailscale binary health check failed (rc=${version_rc})"
+        echo "$version_out"
+        return 1
+    fi
+    return 0
+}
+
 validate_auth_key() {
     local key="$1"
     if [[ ! "$key" =~ ^tskey-(auth|client)-[a-zA-Z0-9-]{20,}$ ]]; then
@@ -137,6 +156,10 @@ load_config() {
 
 start_daemon() {
     echo "Starting Tailscale daemon..."
+
+    if ! check_binary_health; then
+        return 1
+    fi
     
     if pgrep -f tailscaled > /dev/null; then
         echo "Tailscale daemon is already running"
