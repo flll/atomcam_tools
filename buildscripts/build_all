@@ -33,12 +33,4 @@ export BR2_EXTERNAL=/src/custompackages
 cp /src/configs/atomcam_defconfig .config
 cat /src/configs/atomcam_toolchain_external.fragment >> .config
 make olddefconfig
-for i in `ls /src/custompackages/package`
-do
-  if ! diff -urb /src/custompackages/package/$i package/$i > /dev/null 2>&1 ; then
-    rm -rf package/$i
-    cp -pr /src/custompackages/package/$i package
-    [ "$i" != "Config.in" ] && make $i-dirclean
-  fi
-done
 make
