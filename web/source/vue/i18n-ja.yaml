@@ -403,6 +403,27 @@ deviceSettings:
     title: パスワード
     tooltip: ログインのためのパスワードを設定します
 
+tailscaleSettings:
+  title: Tailscale設定
+  enable:
+    title: Tailscale有効化
+    tooltip: Tailscaleを起動してテイルネットへ接続します
+  authKey:
+    title: Auth Key
+    tooltip: Tailscaleの認証キー (tskey-...)
+  hostname:
+    title: ホスト名
+    tooltip: 空欄の場合はデバイス名を使用します
+  tags:
+    title: タグ
+    tooltip: advertise-tagsに渡すタグ。空欄時はtag:cctvを使用します
+  extraArgs:
+    title: 追加引数
+    tooltip: tailscale upへ追加する引数を指定します
+  exitNodeOnly:
+    title: Tailscale専用通信
+    tooltip: LAN側の公開ポート(80/8080/8554)を閉じ、tailscale経由のみ許可します
+
 motionDetect:
   title: 動体検知
   sensorPeriod:

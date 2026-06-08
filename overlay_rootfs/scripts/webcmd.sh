@@ -123,6 +123,11 @@ do
     echo "$cmd $params OK" >> /var/run/webres
     cmd=""
   fi
+  if [ "$cmd" = "tailscale" ] && [ "$params" != "" ]; then
+    /scripts/tailscale.sh $params
+    echo "$cmd $params OK" >> /var/run/webres
+    cmd=""
+  fi
   if [ "$cmd" = "sderase" ]; then
     busybox rm -rf /media/mmc/record
     busybox rm -rf /media/mmc/alarm_record

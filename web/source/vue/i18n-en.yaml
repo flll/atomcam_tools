@@ -404,6 +404,27 @@ deviceSettings:
     title: Password
     tooltip: set login password
 
+tailscaleSettings:
+  title: Tailscale
+  enable:
+    title: Enable Tailscale
+    tooltip: Start Tailscale and connect to your tailnet.
+  authKey:
+    title: Auth Key
+    tooltip: Tailscale auth key (tskey-...)
+  hostname:
+    title: Hostname
+    tooltip: Leave empty to use the device hostname.
+  tags:
+    title: Tags
+    tooltip: Tags passed to advertise-tags. Defaults to tag:cctv when empty.
+  extraArgs:
+    title: Extra Args
+    tooltip: Additional arguments passed to tailscale up.
+  exitNodeOnly:
+    title: Tailscale-only Access
+    tooltip: Close LAN-exposed ports (80/8080/8554) and allow access only over Tailscale.
+
 motionDetect:
   title: MotionDetect
   sensorPeriod:
