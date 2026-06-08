@@ -1,1 +1,0 @@
-Ingenic sample code
