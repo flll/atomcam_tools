@@ -1,12 +1,14 @@
---- lighttpd-org/src/mod_cgi.c	2024-07-02 15:03:46
-+++ lighttpd-1.4.39/src/mod_cgi.c	2024-07-02 15:03:46
-@@ -1029,6 +1029,9 @@
- 			cgi_env_add(&env, CONST_STR_LEN("SYSTEMROOT"), s, strlen(s));
+--- a/src/mod_cgi.c
++++ b/src/mod_cgi.c
+@@ -920,6 +920,11 @@
+ 			cgi_env_add(env, CONST_STR_LEN("MSYSTEM"), BUF_PTR_LEN(p->env.msystem));
  		}
- #endif
-+		if (NULL != (s = getenv("TZ"))) {
-+			cgi_env_add(&env, CONST_STR_LEN("TZ"), s, strlen(s));
+ 	      #endif
++		{
++			const char *tz = getenv("TZ");
++			if (tz)
++				cgi_env_add(env, CONST_STR_LEN("TZ"), tz, strlen(tz));
 +		}
  
- 		for (n = 0; n < con->request.headers->used; n++) {
- 			data_string *ds;
+ 		/* adjust (uintptr_t) offsets to (char *) ptr
+ 		 * (stored as offsets while accumulating in buffer,
