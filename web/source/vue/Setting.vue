@@ -330,6 +330,16 @@
           <SettingInput v-if="loginAuth==='on'" i18n="deviceSettings.account" type="text" v-model="account" />
           <SettingInput v-if="loginAuth==='on'" i18n="deviceSettings.password" type="password" v-model="password" />
 
+          <h3 v-t="'tailscaleSettings.title'" />
+          <SettingSwitch i18n="tailscaleSettings.enable" v-model="config.TAILSCALE_ENABLE" />
+          <div v-if="config.TAILSCALE_ENABLE === 'on'">
+            <SettingInput i18n="tailscaleSettings.authKey" type="password" :titleOffset="2" v-model="config.TAILSCALE_AUTH_KEY" show-password />
+            <SettingInput i18n="tailscaleSettings.hostname" type="text" :titleOffset="2" v-model="config.TAILSCALE_HOSTNAME" />
+            <SettingInput i18n="tailscaleSettings.tags" type="text" :titleOffset="2" v-model="config.TAILSCALE_TAGS" />
+            <SettingInput i18n="tailscaleSettings.extraArgs" type="text" :titleOffset="2" v-model="config.TAILSCALE_EXTRA_ARGS" />
+            <SettingSwitch i18n="tailscaleSettings.exitNodeOnly" :titleOffset="2" v-model="config.TAILSCALE_EXITNODE_ONLY" />
+          </div>
+
           <h3 v-t="'motionDetect.title'" />
           <SettingSwitch i18n="motionDetect.sensorPeriod" v-model="config.MINIMIZE_ALARM_CYCLE" />
           <SettingSwitch i18n="motionDetect.uploadStop" v-model="config.AWS_VIDEO_DISABLE" />
@@ -523,6 +533,12 @@
           BITRATE_MAIN_AVC: 960,   // ch0 H264 HD   Record/Alarm, RTSP AVC Main
           BITRATE_SUB_HEVC: -180,  // ch1 H265 360p MobileApp,    RTSP HEVC Sub
           BITRATE_MAIN_HEVC: -800, // ch3 H265 HD   MobileApp,    RTSP HEVC Main
+          TAILSCALE_ENABLE: 'off',
+          TAILSCALE_AUTH_KEY: '',
+          TAILSCALE_HOSTNAME: '',
+          TAILSCALE_TAGS: 'tag:cctv',
+          TAILSCALE_EXTRA_ARGS: '',
+          TAILSCALE_EXITNODE_ONLY: 'off',
         },
         property: {},
         ISPSettings: {
@@ -1318,6 +1334,16 @@
           parseInt(this.reboot.startTime.slice(0, 2)) + ' * * ' +
           this.reboot.dayOfWeekSelect.sort((a, b) => a - b).reduce((v, d) => v + (v.length ? ':' : '') + ((d + 1) % 7).toString(), '');
 
+        if(this.config.TAILSCALE_ENABLE === 'on') {
+          this.config.TAILSCALE_TAGS = (this.config.TAILSCALE_TAGS || '').trim() || 'tag:cctv';
+          if(this.config.TAILSCALE_EXITNODE_ONLY === 'on') {
+            this.config.RTSP_VIDEO0 = 'off';
+            this.config.RTSP_VIDEO1 = 'off';
+            this.config.RTSP_VIDEO2 = 'off';
+            this.config.RTSP_OVER_HTTP = 'off';
+          }
+        }
+
         if(this.config.RTSP_VIDEO0 === 'off') {
           this.config.HOMEKIT_ENABLE = 'off';
           this.config.RTMP_ENABLE = 'off';
@@ -1442,6 +1468,14 @@
         if((this.config.CRUISE !== this.oldConfig.CRUISE) ||
            (this.config.CRUISE_LIST !== this.oldConfig.CRUISE_LIST)) {
              execCmds.push('cruise restart');
+        }
+        if((this.config.TAILSCALE_ENABLE !== this.oldConfig.TAILSCALE_ENABLE) ||
+           (this.config.TAILSCALE_AUTH_KEY !== this.oldConfig.TAILSCALE_AUTH_KEY) ||
+           (this.config.TAILSCALE_HOSTNAME !== this.oldConfig.TAILSCALE_HOSTNAME) ||
+           (this.config.TAILSCALE_TAGS !== this.oldConfig.TAILSCALE_TAGS) ||
+           (this.config.TAILSCALE_EXTRA_ARGS !== this.oldConfig.TAILSCALE_EXTRA_ARGS) ||
+           (this.config.TAILSCALE_EXITNODE_ONLY !== this.oldConfig.TAILSCALE_EXITNODE_ONLY)) {
+          execCmds.push('tailscale restart');
         }
         if(this.config.DIGEST !== this.oldConfig.DIGEST) execCmds.push('lighttpd');
 
