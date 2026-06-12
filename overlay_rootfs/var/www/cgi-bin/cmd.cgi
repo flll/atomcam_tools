@@ -7,7 +7,7 @@ echo ""
 if [ "$REQUEST_METHOD" = "GET" ]; then
   NAME=${QUERY_STRING##name=}
   if [ "$NAME" = "" -o "$NAME" = "latest-ver" ] ; then
-    latest=`curl -w "%{redirect_url}" -s -o /dev/null https://github.com/mnakada/atomcam_tools/releases/latest`
+    latest=`curl -w "%{redirect_url}" -s -o /dev/null https://github.com/flll/atomcam_tools/releases/latest`
     echo LATESTVER=${latest##*Ver.}
   fi
   if [ "$NAME" = "" -o "$NAME" = "status" ] ; then

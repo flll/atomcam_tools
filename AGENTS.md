@@ -19,6 +19,8 @@ flll/atomcam_tools フォークとして独自開発しており、**upstream (m
 | `make linux-menuconfig` | カーネルの menuconfig (同上) |
 | `make savedefconfig` | defconfig の保存 (同上) |
 | `make sim-swing` | AtomSwing の QEMU シミュレータを起動 |
+| `make deploy` | 実機へ SSH デプロイ (`ATOMCAM_HOST=` で対象指定、既定 atomcam.local) |
+| `make deploy-test` | デプロイ + スモークテスト ([docs/development/remote-deploy.md](docs/development/remote-deploy.md)) |
 
 `make menuconfig` / `make linux-menuconfig` / `make savedefconfig` は root Makefile のラッパー経由で実行する。実体はコンテナ内 `/atomtools/build/buildroot-2026.02.1` にある Buildroot ツリー。
 
@@ -49,6 +51,7 @@ WebUI は `web/` ディレクトリ (Vue + webpack)。ビルド成果物は `bui
 - コミットメッセージは日本語 (`feat:` / `fix:` / `chore:` / `docs:` prefix)
 - `make build` が通る状態を維持する
 - main へ直コミット
+- 実機テストの Definition of Done: `make deploy-test` が exit 0 (全スモークケース pass) であること
 
 ### Ask first (事前に確認)
 
