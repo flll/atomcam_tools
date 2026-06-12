@@ -1,0 +1,40 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      # 各スクリプトは shebang を持つため shell 種別は自動判定に任せる。
+      # 除外ルール: デバイス側 busybox ash を前提とした意図的な記法や
+      # 現行ツリーで大量に出る警告を除外する（詳細は各 SC の wiki 参照）。
+      #   SC1091: source 先がリポジトリ外（デバイス上のみ存在）で追跡不能
+      #   SC2034: 未使用変数（source される設定ファイル由来）
+      #   SC2038/SC2046: find|xargs・$() の単語分割（デバイス上のパスは空白なし前提）
+      #   SC2154: source 先で代入される変数の参照
+      #   SC2155/SC2164/SC2166: 既存スクリプトの慣用記法（local 同時代入、cd、[ -a/-o ]）
+      #   SC2242: exit -1（busybox ash では 255 として動作する意図的な記法）
+      #   SC3014/SC3018/SC3037/SC3039/SC3060: POSIX 外だが busybox ash がサポートする機能
+      - name: Run shellcheck
+        run: |
+          find scripts buildscripts overlay_rootfs/scripts -maxdepth 1 -type f \
+            -print0 | xargs -0 shellcheck -S warning \
+            --exclude=SC1091,SC2034,SC2038,SC2046,SC2154,SC2155,SC2164,SC2166,SC2242,SC3014,SC3018,SC3037,SC3039,SC3060
+
+  markdown-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # --offline: 相対リンクのみ検査し、外部 URL 起因の flaky な失敗を避ける
+      - name: Check Markdown links (relative only)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress './*.md' './docs/**/*.md'
+          fail: true
