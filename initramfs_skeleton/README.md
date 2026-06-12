@@ -1,19 +1,16 @@
-# This is the initramfs embedded file system skeleton
+# initramfs スケルトン
 
-The reason for this skeleton is so you can put files in here that will be embedded in the kernel image itself. Be careful not to put too many files as the kernel needs to fit in about 2MB of memory. The exact number is detailed in buildscripts/postbuild-hook.sh but it is 0x200000 or 2,097,152 bytes.
+カーネルイメージに埋め込まれる initramfs のひな形です。ここに置いたファイルはカーネル本体に取り込まれるため、サイズに注意してください（カーネルは約 2MB に収める必要があります）。
 
-The skeleton is used because you cannot commit into git the empty directories or special dev nodes which are required to be created in the initramfs root tree. Thus the script src/buildscripts/make_initramfs.sh serves to create these dynamically. It then cpio's up the whole thing and puts it in
+git では空ディレクトリや dev ノードをコミットできないため、`buildscripts/make_initramfs.sh` が実行時にそれらを動的に作成し、このスケルトンと静的 busybox / fsck 類をまとめて cpio 化します。生成された cpio はカーネルの `CONFIG_INITRAMFS_SOURCE`（`<buildroot>/output/images/initramfs.cpio`）として埋め込まれます。
 
-```
-CONFIG_INITRAMFS_SOURCE="/atomtools/build/buildroot-2026.02.1/output/images/initramfs.cpio"
-```
-# Rebuilding
+このスクリプトは `buildscripts/linux_prebuild_hook.sh` 経由で Buildroot の `LINUX_PRE_BUILD_HOOKS`（`patches/linux_makefile.patch` で配線）から自動的に呼ばれます。
 
-To rebuild the initramfs and the firmware together:
+## 再ビルド
 
-```
-/src/buildscripts/linux_prebuild_hook.sh
-make rootfs-initramfs
+スケルトンを変更した後は、ホスト側で次を実行するとカーネルごと再生成されます。
+
+```bash
 make linux-rebuild
-make
+make build
 ```
