@@ -86,15 +86,27 @@ docker compose up -d
 
 ## よく使う make ターゲット
 
+いずれもホスト側（リポジトリルート）で実行します。コンテナが起動していなければ自動で起動し、コンテナ内の Buildroot ディレクトリで実行されます。
+
 | コマンド | 用途 |
 |----------|------|
-| `make build` | フルビルド |
+| `make build` | フルビルド（イメージ未作成なら `docker-build` も実行） |
 | `make menuconfig` | rootfs パッケージ選択 |
-| `make linux-rebuild` | カーネル・initramfs 再ビルド |
-| `make <package>-rebuild` | 個別パッケージ再ビルド |
-| `make busybox-menuconfig` | busybox 設定変更 |
 | `make linux-menuconfig` | カーネル設定変更 |
+| `make busybox-menuconfig` | busybox 設定変更 |
+| `make linux-rebuild` | カーネル・initramfs 再ビルド |
+| `make savedefconfig` | 設定変更を `configs/atomcam_defconfig` に書き戻し |
 | `make clean` | ビルド成果物のクリーン |
+| `make login` | コンテナへログイン |
+| `make distclean` | コンテナ・ボリューム・イメージの削除 |
+
+個別パッケージの再ビルドは `make login` でコンテナに入り、Buildroot ディレクトリで実行します。
+
+```bash
+make login
+# コンテナ内で
+make -C /atomtools/build/buildroot-2026.02.1 <package>-rebuild
+```
 
 変更後は `make build` で `target/` に成果物がコピーされます。
 

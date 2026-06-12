@@ -3,6 +3,8 @@
 
 DOCKER_IMAGE=$(shell sed -ne 's>^.*image:[ \t]*>>p' docker-compose.yml)
 DOCKER_ARCH=-$(shell uname -m | sed 's>x86_64>amd64>g; s>aarch64>arm64>g')
+BUILDROOT_DIR=/atomtools/build/buildroot-2026.02.1
+BR2_EXTERNAL=/src/custompackages
 
 define check_container_running
 	$(DOCKER_COMPOSE) ls | grep atomcam_tools > /dev/null
@@ -18,8 +20,7 @@ DOCKER_COMPOSE=$(shell \
 	fi)
 
 build:
-	-docker pull ${DOCKER_IMAGE} | \
-		awk '{ print } /Downloaded newer image/ { system("$(DOCKER_COMPOSE) down"); }'
+	docker image inspect ${DOCKER_IMAGE} > /dev/null 2>&1 || $(MAKE) docker-build
 
 	$(call check_container_running) || $(DOCKER_COMPOSE) up -d
 
@@ -33,8 +34,20 @@ build-local:
 		tee rebuild_`date +"%Y%m%d_%H%M%S"`.log
 
 docker-build:
-	docker build -t ${DOCKER_IMAGE}${DOCKER_ARCH} . | \
+	docker build -t ${DOCKER_IMAGE} -t ${DOCKER_IMAGE}${DOCKER_ARCH} . | \
 		tee docker-build_`date +"%Y%m%d_%H%M%S"`.log
+
+# Buildroot のターゲットをコンテナ内で実行するラッパー
+menuconfig linux-menuconfig busybox-menuconfig linux-rebuild:
+	$(call check_container_running) || $(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) exec builder \
+		make -C $(BUILDROOT_DIR) BR2_EXTERNAL=$(BR2_EXTERNAL) $@
+
+savedefconfig:
+	$(call check_container_running) || $(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) exec builder \
+		make -C $(BUILDROOT_DIR) BR2_EXTERNAL=$(BR2_EXTERNAL) \
+		savedefconfig BR2_DEFCONFIG=/src/configs/atomcam_defconfig
 
 login:
 	$(call check_container_running) || $(DOCKER_COMPOSE) up -d
@@ -59,8 +72,8 @@ sim-swing-92m:
 
 clean:
 	$(call check_container_running) && \
-		$(DOCKER_COMPOSE) exec builder bash -c "cd /atomtools/build/buildroot-2026.02.1 && make clean"
+		$(DOCKER_COMPOSE) exec builder make -C $(BUILDROOT_DIR) clean
 
 distclean:
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
-	docker image rm ${DOCKER_IMAGE}${DOCKER_ARCH} 2>/dev/null || :
+	docker image rm ${DOCKER_IMAGE} ${DOCKER_IMAGE}${DOCKER_ARCH} 2>/dev/null || :
