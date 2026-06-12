@@ -62,6 +62,16 @@ lima:
 	[ "`limactl list | awk '/lima-docker/ { print $2 }'`" = "Running" ] || \
 		limactl start lima-docker
 
+ATOMCAM_HOST ?= atomcam.local
+
+deploy:
+	chmod +x ./scripts/deploy_remote.sh
+	./scripts/deploy_remote.sh $(ATOMCAM_HOST)
+
+deploy-test: deploy
+	chmod +x ./scripts/smoke_test_remote.sh
+	./scripts/smoke_test_remote.sh $(ATOMCAM_HOST)
+
 sim-swing:
 	chmod +x ./scripts/sim_atomswing.sh
 	./scripts/sim_atomswing.sh swing-80m

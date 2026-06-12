@@ -146,8 +146,8 @@ do
     CUSTOM_ZIP=$(awk -F "=" '/^CUSTOM_ZIP *=/ {print $2}' $HACK_INI)
     ZIP_URL=$(awk -F "=" '/^CUSTOM_ZIP_URL *=/ {print $2}' $HACK_INI)
     if [ "$CUSTOM_ZIP" = "off" ] || [ "$ZIP_URL" = "" ]; then
-      latest=`curl -w "%{redirect_url}" -s -o /dev/null https://github.com/mnakada/atomcam_tools/releases/latest`
-      ZIP_URL="https://github.com/mnakada/atomcam_tools/releases/download/${latest##*tag/}/atomcam_tools.zip"
+      latest=`curl -w "%{redirect_url}" -s -o /dev/null https://github.com/flll/atomcam_tools/releases/latest`
+      ZIP_URL="https://github.com/flll/atomcam_tools/releases/download/${latest##*tag/}/atomcam_tools.zip"
     fi
     mkdir -p /media/mmc/update
     UPDATE_SEQ=1
