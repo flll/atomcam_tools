@@ -1,0 +1,666 @@
+{
+  "camera": {
+    "tab": "Camera image"
+  },
+  "CameraSettings": {
+    "tab": "Camera settings"
+  },
+  "FeatureSettings": {
+    "title": "Feature settings",
+    "nightVision": {
+      "title": "Nighght Vision",
+      "tooltip": "Black and white image for night vision when on, color image when off"
+    },
+    "nightCutThr": {
+      "title": "Conditions",
+      "text": [
+        "Duck",
+        "Dark"
+      ],
+      "tooltip": "Level of night vision switching"
+    },
+    "IrLED": {
+      "title": "IR light"
+    }
+  },
+  "AlarmSettings": {
+    "title": "Alarm settings",
+    "motionDet": {
+      "title": "Motion alarm"
+    },
+    "Level": {
+      "title": "sensitivity",
+      "text": [
+        "High",
+        "Mid",
+        "Low"
+      ]
+    },
+    "motionArea": {
+      "title": "Alarm zone",
+      "text": [
+        "All zone",
+        "Selected zone"
+      ]
+    },
+    "soundDet": {
+      "title": "Sound alarm"
+    },
+    "cautionDet": {
+      "title": "Fire/CO alarm detection"
+    },
+    "drawBoxSwitch": {
+      "title": "Motion Tagging",
+      "tooltip": "When motion detected, a green frame will be marked on the detect objects."
+    },
+    "recordType": {
+      "title": "Record mode",
+      "text": [
+        "Continuous",
+        "Motion",
+        "Off"
+      ]
+    }
+  },
+  "OtherSettings": {
+    "title": "Other",
+    "indicator": {
+      "title": "Camera light"
+    },
+    "rotate": {
+      "title": "Rotate Image 180°"
+    },
+    "audioRec": {
+      "title": "Record sound"
+    },
+    "timestamp": {
+      "title": "show Timestamp"
+    },
+    "watermark": {
+      "title": "Show Logo"
+    }
+  },
+  "AdvancedSettings": {
+    "title": "Advanced settings",
+    "contrast": {
+      "title": "contrast",
+      "tooltip": "Set the contrast of image effect."
+    },
+    "brightness": {
+      "title": "brightness",
+      "tooltip": "Set the brightness of image effect."
+    },
+    "saturation": {
+      "title": "saturation",
+      "tooltip": "Set the saturation of image effect."
+    },
+    "sharpness": {
+      "title": "sharpness",
+      "tooltip": "Set the sharpness of image effect."
+    },
+    "sinter": {
+      "title": "2D-NR intensity",
+      "tooltip": "Set 2D noise reduction intensity."
+    },
+    "temper": {
+      "title": "3D-NR intensity",
+      "tooltip": "Set 3D noise reduction intensity."
+    },
+    "dpc": {
+      "title": "DPC Strength",
+      "tooltip": "Set DPC Strength."
+    },
+    "drc": {
+      "title": "DRC Strength",
+      "tooltip": "Set DRC Strength."
+    },
+    "hilight": {
+      "title": "highlight intensity",
+      "tooltip": "Set highlight intensity controls."
+    },
+    "again": {
+      "title": "Max Analog Gain",
+      "tooltip": "Sets the Max value of sensor analog gain."
+    },
+    "dgain": {
+      "title": "Max Digital Gain",
+      "tooltip": "Set the Max value of sensor Digital gain."
+    },
+    "expmode": {
+      "title": "Exposure mode",
+      "tooltip": "Setting the exposure mode.",
+      "text": [
+        "auto",
+        "manual"
+      ]
+    },
+    "aecomp": {
+      "title": "AE compensation",
+      "tooltip": "Setting AE compensation."
+    },
+    "aeitmin": {
+      "title": "AE ITMin",
+      "tooltip": "The min value of integration time, the unit is line."
+    },
+    "aeitmax": {
+      "title": "AE ITMax",
+      "tooltip": "The max value of integration time, the unit is line."
+    },
+    "expline": {
+      "title": "Exposure line",
+      "tooltip": "Setting Exposure integration line."
+    }
+  },
+  "SDCard": {
+    "title": "SD Card",
+    "remainingCapacity": "remaining capacity"
+  },
+  "record": {
+    "tab": "Recording",
+    "periodicRec": {
+      "title": "Periodic Recording"
+    },
+    "alarmRec": {
+      "title": "Motion Sensor Recording"
+    },
+    "SDCard": {
+      "title": "SD-Card Recording",
+      "tooltip": "Record to a directory on the SD-Card",
+      "savePath": {
+        "title": "Save PATH",
+        "tooltip": "enter the storage PATH in strftime format ending with the file extension."
+      },
+      "automaticDeletion": {
+        "title": "Automatic Recording Deletion",
+        "tooltip": "Automatically delete recordings from SD card"
+      },
+      "daysToKeep": {
+        "title": "Number of Days to Keep",
+        "tooltip": "Indicate the number of days to keep"
+      }
+    },
+    "NAS": {
+      "title": "NAS Recording",
+      "tooltip": "Record to NAS(CIFS Server)",
+      "savePath": {
+        "title": "Save PATH",
+        "tooltip": "enter the storage PATH after the network name in strftime format ending with the file extension."
+      },
+      "automaticDeletion": {
+        "title": "Automatic Recording Deletion",
+        "tooltip": "Automatically delete recordings from the CIFS Server"
+      },
+      "daysToKeep": {
+        "title": "Number of Days to Keep",
+        "tooltip": "Indicate the number of days to keep"
+      }
+    },
+    "recordType": {
+      "comment": "Set the Record mode in the Camera settings to Continuous or Motion. If it is Off, no video will be recorded.\n"
+    },
+    "alarmRecWarn": {
+      "comment": "Turn on Motion alarm, Sound alarm, or Fire/CO alarm detection in the Camera settings. If all are turned off, no video will be recorded.\n"
+    },
+    "recordingSchedule": {
+      "title": "Recording Schedule",
+      "tooltip": "SD-Card/NAS Recording Time Window",
+      "text": [
+        "Schedule",
+        "Constant Recoring"
+      ]
+    },
+    "skipJpeg": {
+      "title": "Skip JPEG Recording",
+      "tooltip": "Stop recording JPEG files to record directory"
+    }
+  },
+  "timelapse": {
+    "tab": "Timelapse",
+    "title": "Timelapse Recording",
+    "setting": {
+      "title": "Sampling Setting"
+    },
+    "note": {
+      "comment": "Allow at least 5 minutes for processing between time lapse recordings.\nIf the time overlaps, it will not be recorded. Make sure that there is no overlap.\n"
+    },
+    "start": {
+      "title": "progress",
+      "tooltip": "timelapse in progress."
+    },
+    "stop": {
+      "title": "stop",
+      "tooltip": "abort timelapse.",
+      "button": "stop",
+      "comment": "Processing aborted: presently writing file."
+    },
+    "fps": {
+      "title": "output fps",
+      "tooltip": "Frame rate of output file"
+    }
+  },
+  "media": {
+    "tab": "Media setting"
+  },
+  "SDCardSettings": {
+    "title": "SD-Card setting",
+    "webAccess": {
+      "title": "Web Access",
+      "tooltip": "Show SD Card contents"
+    },
+    "smbAccess": {
+      "title": "smb Access",
+      "tooltip": "Broadcast SD-Card CIFS(smb) server on local network"
+    },
+    "directWrite": {
+      "title": "Direct Recording",
+      "tooltip": "Normally, the recording is made once on the RAM-DISK and then copied to the SD-Card, but to save RAM, the recording is made directly on the SD-Card."
+    }
+  },
+  "NASSettings": {
+    "title": "NAS setting",
+    "networkPath": {
+      "title": "Network PATH",
+      "tooltip": "enter the path of NAS Server (use //server/folder/ format)"
+    },
+    "account": {
+      "title": "Account",
+      "tooltip": "Set NAS username"
+    },
+    "password": {
+      "title": "Password",
+      "tooltip": "set NAS password"
+    }
+  },
+  "RTSP": {
+    "tab": "Streaming",
+    "title": "RTSP",
+    "main": {
+      "title": "Main",
+      "tooltip": "Start Main RTSP(1080p)",
+      "audio": {
+        "title": "Audio",
+        "tooltip": "Activaet Audio on Main RTSP",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "note": {
+        "comment": "To use RTMP, you must choose AAC.\n"
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "Copy and paste this URL into VLC etc."
+      }
+    },
+    "mainHEVC": {
+      "title": "Main HEVC",
+      "tooltip": "Start Main HEVC RTSP(1080p)",
+      "audio": {
+        "title": "Audio",
+        "tooltip": "Activaet Audio on Main HEVC RTSP",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "Copy and paste this URL into VLC etc."
+      }
+    },
+    "sub": {
+      "title": "Sub",
+      "tooltip": "Start Sub RTSP (360p/320p)",
+      "audio": {
+        "title": "Audio",
+        "tooltip": "Activate audio on Sub RTSP Sub",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "Copy and paste this URL into VLC etc."
+      }
+    },
+    "http": {
+      "title": "RTSP over HTTP",
+      "tooltip": "Use HTTP for RTSP streaming"
+    },
+    "auth": {
+      "title": "Authentication",
+      "tooltip": "Require password authentication for RTSP."
+    },
+    "account": {
+      "title": "Account",
+      "tooltip": "Set RTSP username"
+    },
+    "password": {
+      "title": "Password",
+      "tooltip": "set RTSP password"
+    }
+  },
+  "HomeKit": {
+    "title": "HomeKit",
+    "tooltip": "RTSP Main must be on.",
+    "unpair": {
+      "title": "Force Unpairing",
+      "tooltip": "Force HomeKit unpairing."
+    },
+    "note": {
+      "comment": "To output audio, the RTSP Main audio must be set to OPUS.\n"
+    }
+  },
+  "RTMP": {
+    "title": "RTMP",
+    "tooltip": "RTSP Main must be on and audio must be set to AAC.",
+    "URL": {
+      "title": "URL",
+      "tooltip": "Set the destination URL."
+    },
+    "Restart": "restart",
+    "IntervalRestart": {
+      "title": "Interval Restart",
+      "unit": "minutes",
+      "tooltip": "Restart the RTMP periodically."
+    }
+  },
+  "WebRTC": {
+    "title": "WebRTC",
+    "tooltip": "RTSP Main must be on.",
+    "URL": {
+      "title": "URL",
+      "tooltip": "Copy and paste this URL into browser."
+    },
+    "note": {
+      "comment": "To output audio, the RTSP Main audio must be set to OPUS.\n"
+    }
+  },
+  "event": {
+    "tab": "Notification",
+    "title": "WebHook",
+    "webhook": {
+      "title": "WebHook",
+      "tooltip": "Set a Webhook",
+      "URL": {
+        "title": "Notification URL",
+        "tooltip": "Enter the URL WebHook for send post notifcations"
+      },
+      "insecure": {
+        "title": "Allow Insecure Access",
+        "tooltip": "Allow insecure server connections when using TLS."
+      },
+      "alarm": {
+        "title": "Notification Alarm",
+        "tooltip": "Notify when an alarm triggers",
+        "comment": "type: alarmEvent"
+      },
+      "information": {
+        "title": "Notification Information",
+        "tooltip": "Send recognition information when an alarm triggers",
+        "comment": "type: recognitionNotify"
+      },
+      "recordingEnd": {
+        "title": "Notification Recording End",
+        "tooltip": "Notify when recording ends",
+        "comment": "type: uploadVideoFinish"
+      },
+      "recordingTransfer": {
+        "title": "Notification Recording Transfer",
+        "tooltip": "Send a video file when alarm triggers",
+        "comment": "mime: video/mp4"
+      },
+      "screenshotEnd": {
+        "title": "Notification Screenshot End",
+        "tooltip": "Notify with a still image file when an alarm ends",
+        "comment": "type: uploadPictureFinish"
+      },
+      "screenshotTransfer": {
+        "title": "Notification Screenshot Transfer",
+        "tooltip": "Transmit a still image file when an alarm triggers",
+        "comment": "mime: image/jpeg"
+      },
+      "recordingSave": {
+        "title": "Regular Recording Save",
+        "tooltip": "Notify on regular recording",
+        "comment": "type: recordEvent"
+      },
+      "startTimelapse": {
+        "title": "Start Time lapse",
+        "tooltip": "Notify on time lapse start",
+        "comment": "type: timelapseStart"
+      },
+      "recordTimelapse": {
+        "title": "Record Time lapse",
+        "tooltip": "Notify on time lapse event is occurring",
+        "comment": "type: timelapseEvent"
+      },
+      "endTimeLapse": {
+        "title": "End Time lapse",
+        "tooltip": "Notify when time lapse event ends",
+        "comment": "type: timelapseFinish"
+      }
+    }
+  },
+  "cruise": {
+    "tab": "Cruise",
+    "title": "Cruise",
+    "initialPosition": {
+      "title": "Swing Return to Original Position",
+      "tooltip": "Return the Swing to the original position",
+      "button": "Home"
+    },
+    "cameraMotion": {
+      "title": "Camera Motion",
+      "tooltip": "Make a full circuit cruise."
+    },
+    "direction": {
+      "tooltip": "Set the camera direction and speed. You can confirm it using the jpeg window.",
+      "pan": "pan",
+      "tilt": "tilt",
+      "speed": "speed"
+    },
+    "waitAfterMotion": {
+      "title": "waiting period after motion",
+      "unit": "sec",
+      "tooltip": "Set the waiting period after camera motion."
+    },
+    "detect": {
+      "title": "detect",
+      "tooltip": "Have the camera stay in position longer when detecting motion."
+    },
+    "follow": {
+      "title": "follow",
+      "tooltip": "Have the camera follow motion and extend the time it stays in position."
+    },
+    "waitAfterDetect": {
+      "title": "waiting after detect",
+      "unit": "sec",
+      "tooltip": "Set the amount of time to wait in position after motion is detected."
+    },
+    "followingSpeed": {
+      "title": "speed",
+      "tooltip": "Set the following speed.(1: low speed, 9: high speed)"
+    }
+  },
+  "systemSettings": {
+    "tab": "System Settings"
+  },
+  "deviceSettings": {
+    "title": "Device Settings",
+    "deviceName": {
+      "title": "Display Name",
+      "tooltip": "NAS Folder Name and Hostname for remote access"
+    },
+    "loginAuthentication": {
+      "title": "Login Authentication",
+      "tooltip": "Require Authentication to Login"
+    },
+    "account": {
+      "title": "Account",
+      "tooltip": "set login username"
+    },
+    "password": {
+      "title": "Password",
+      "tooltip": "set login password"
+    }
+  },
+  "tailscaleSettings": {
+    "title": "Tailscale",
+    "enable": {
+      "title": "Enable Tailscale",
+      "tooltip": "Start Tailscale and connect to your tailnet."
+    },
+    "authKey": {
+      "title": "Auth Key",
+      "tooltip": "Tailscale auth key (tskey-...)"
+    },
+    "hostname": {
+      "title": "Hostname",
+      "tooltip": "Leave empty to use the device hostname."
+    },
+    "tags": {
+      "title": "Tags",
+      "tooltip": "Tags passed to advertise-tags. Defaults to tag:cctv when empty."
+    },
+    "extraArgs": {
+      "title": "Extra Args",
+      "tooltip": "Additional arguments passed to tailscale up."
+    },
+    "exitNodeOnly": {
+      "title": "Tailscale-only Access",
+      "tooltip": "Close LAN-exposed ports (80/8080/8554) and allow access only over Tailscale."
+    }
+  },
+  "motionDetect": {
+    "title": "MotionDetect",
+    "sensorPeriod": {
+      "title": "Motion Sensor Period",
+      "tooltip": "Reduce new alarm window from 5 minutes to 30 seconds"
+    },
+    "uploadStop": {
+      "title": "Motion Sensor Video Upload Stop",
+      "tooltip": "Prevent upload of detection videos to AtomTech/Wyze servers. This will make it so they don't appear in the app. If you're concerned about sending stuff to their servers, check this option."
+    }
+  },
+  "videoSpec": {
+    "title": "video config",
+    "frameRate": {
+      "title": "frameRate",
+      "tooltip": "Set the number of frames per second. (1-28FPS)"
+    },
+    "bitrateMainAVC": {
+      "title": "Main bitrate",
+      "tooltip": "Set the bitrate of Main HD. (300-2000bps)"
+    },
+    "bitrateMainHEVC": {
+      "title": "MainHEVC bitrate",
+      "tooltip": "Set the bitrate of Main H.265/HEVC HD. (300-2000bps)"
+    },
+    "bitrateSub": {
+      "title": "Sub bitrate",
+      "tooltip": "Set the bitrate of Sub 360p/320p. (100-500bps)"
+    }
+  },
+  "watermark": {
+    "title": "Logo",
+    "image": {
+      "title": "PNG image",
+      "comment": "Create and drop a PNG file within 500px x 200px."
+    }
+  },
+  "maintenance": {
+    "tab": "Maintenance"
+  },
+  "monitoring": {
+    "title": "Monitoring",
+    "network": {
+      "title": "Network check",
+      "tooltip": "Periodically check that the Network is connected and reconnect if necessary."
+    },
+    "reboot": {
+      "title": "reboot",
+      "tooltip": "If reconnection fails, reboot the system."
+    },
+    "ping": {
+      "title": "ping",
+      "tooltip": "Enable Confirmation of Status via URL"
+    },
+    "URL": {
+      "title": "Notification URL",
+      "tooltip": "Send an http get requiest at one minute intervals to this url"
+    }
+  },
+  "update": {
+    "title": "Update",
+    "toolsUpdate": {
+      "title": "Update",
+      "tooltip": "Update the atomcam tools"
+    },
+    "customZip": {
+      "title": "Custom File URL",
+      "tooltip": "use a custom zip to update the atomcam tool",
+      "URL": {
+        "title": "URL",
+        "tooltip": "the url of the custom zipfile"
+      }
+    }
+  },
+  "reboot": {
+    "title": "Reboot",
+    "periodicRestart": {
+      "title": "Periodic Restart",
+      "tooltip": "Set the camera to restart on a schedule."
+    },
+    "reboot": {
+      "title": "Reboot",
+      "tooltip": "Reboot the AtomCam",
+      "button": "Reboot"
+    },
+    "eraseSDCard": {
+      "title": "Erase SD-Card",
+      "tooltip": "Erase the video contents from the SD-Card",
+      "button": "Erase"
+    }
+  },
+  "schedule": {
+    "allDay": "AllDay",
+    "startTime": "start",
+    "endTime": "end",
+    "time": "time",
+    "timelapse": {
+      "startTime": "start",
+      "endTime": " to {endTime}",
+      "interval": {
+        "title": "interval",
+        "unit": "sec",
+        "count": "times"
+      },
+      "tommorow": "tommorow",
+      "daysLater": "after {days} days"
+    },
+    "weekDays": [
+      "mon",
+      "tue",
+      "wed",
+      "thu",
+      "fri",
+      "sat",
+      "sun"
+    ]
+  },
+  "submit": "Submit",
+  "executing": "Updating. Please wait a bit.",
+  "erasing": "Erasing SD-Card. Please wait a bit.",
+  "downloading": "Downloading now. Please wait a bit.",
+  "downloadError": "Download failed. Please give it some time and try again.",
+  "rebooting": "Wait until reboot has completed (approximately 80sec)"
+}

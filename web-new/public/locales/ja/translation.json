@@ -1,0 +1,660 @@
+{
+  "camera": {
+    "tab": "カメラ画像"
+  },
+  "CameraSettings": {
+    "tab": "カメラ設定"
+  },
+  "FeatureSettings": {
+    "title": "機能設定",
+    "nightVision": {
+      "title": "ナイトビジョン",
+      "tooltip": "onにすると暗視の白黒画像、offにするとカラー画像、autoは自動切り替え"
+    },
+    "nightCutThr": {
+      "title": "切り替えタイミング",
+      "text": [
+        "暗い",
+        "非常に暗い"
+      ],
+      "tooltip": "ナイトビジョンの切り替えのレベル"
+    },
+    "IrLED": {
+      "title": "赤外線ライト"
+    }
+  },
+  "AlarmSettings": {
+    "title": "検出設定",
+    "motionDet": {
+      "title": "モーション検知"
+    },
+    "Level": {
+      "title": "感度調整",
+      "text": [
+        "高",
+        "中",
+        "低"
+      ]
+    },
+    "motionArea": {
+      "title": "検知エリア",
+      "text": [
+        "全領域",
+        "選択領域"
+      ]
+    },
+    "soundDet": {
+      "title": "サウンド検出"
+    },
+    "cautionDet": {
+      "title": "火災／CO警報機音検知"
+    },
+    "drawBoxSwitch": {
+      "title": "モーションタグ",
+      "tooltip": "モーション検知時に緑色の枠を表示します"
+    },
+    "recordType": {
+      "title": "録画モード",
+      "text": [
+        "連続",
+        "検知時",
+        "オフ"
+      ]
+    }
+  },
+  "OtherSettings": {
+    "title": "その他",
+    "indicator": {
+      "title": "ステータスランプ"
+    },
+    "rotate": {
+      "title": "画像180度反転"
+    },
+    "audioRec": {
+      "title": "録音"
+    },
+    "timestamp": {
+      "title": "タイムスタンプ"
+    },
+    "watermark": {
+      "title": "ロゴ"
+    }
+  },
+  "AdvancedSettings": {
+    "title": "詳細設定",
+    "contrast": {
+      "title": "contrast",
+      "tooltip": "Set the contrast of image effect."
+    },
+    "brightness": {
+      "title": "brightness",
+      "tooltip": "Set the brightness of image effect."
+    },
+    "saturation": {
+      "title": "saturation",
+      "tooltip": "Set the saturation of image effect."
+    },
+    "sharpness": {
+      "title": "sharpness",
+      "tooltip": "Set the sharpness of image effect."
+    },
+    "sinter": {
+      "title": "2D-NR intensity",
+      "tooltip": "Set 2D noise reduction intensity."
+    },
+    "temper": {
+      "title": "3D-NR intensity",
+      "tooltip": "Set 3D noise reduction intensity."
+    },
+    "dpc": {
+      "title": "DPC Strength",
+      "tooltip": "Set DPC Strength."
+    },
+    "drc": {
+      "title": "DRC Strength",
+      "tooltip": "Set DRC Strength."
+    },
+    "hilight": {
+      "title": "highlight intensity",
+      "tooltip": "Set highlight intensity controls."
+    },
+    "again": {
+      "title": "Max Analog Gain",
+      "tooltip": "Sets the Max value of sensor analog gain."
+    },
+    "dgain": {
+      "title": "Max Digital Gain",
+      "tooltip": "Set the Max value of sensor Digital gain."
+    },
+    "expmode": {
+      "title": "Exposure mode",
+      "tooltip": "Setting the exposure mode.",
+      "text": [
+        "auto",
+        "manual"
+      ]
+    },
+    "aecomp": {
+      "title": "AE compensation",
+      "tooltip": "Setting AE compensation."
+    },
+    "aeitmin": {
+      "title": "AE ITMin",
+      "tooltip": "The min value of integration time, the unit is line."
+    },
+    "aeitmax": {
+      "title": "AE ITMax",
+      "tooltip": "The max value of integration time, the unit is line."
+    },
+    "expline": {
+      "title": "Exposure line",
+      "tooltip": "Setting Exposure integration line."
+    }
+  },
+  "SDCard": {
+    "tab": "SD Card",
+    "remainingCapacity": "空き容量"
+  },
+  "record": {
+    "tab": "録画設定",
+    "periodicRec": {
+      "title": "連続録画"
+    },
+    "alarmRec": {
+      "title": "モーション検知録画"
+    },
+    "SDCard": {
+      "title": "SD-Card録画",
+      "tooltip": "SD-Cardへの記録をします",
+      "savePath": {
+        "title": "保存するPATH",
+        "tooltip": "録画するPATHをstrftimeの書式指定で記述します。最後に拡張子が付加されます"
+      },
+      "automaticDeletion": {
+        "title": "ファイルの自動削除",
+        "tooltip": "SD-Cardに録画したファイルを自動的に削除します"
+      },
+      "daysToKeep": {
+        "title": "保存日数",
+        "tooltip": "指定日数後に削除します"
+      }
+    },
+    "NAS": {
+      "title": "NAS録画",
+      "tooltip": "NAS(CIFS Server)への記録をします",
+      "savePath": {
+        "title": "保存するPATH",
+        "tooltip": "ネットワークPATH以降の録画するPATHをstrftimeの書式指定で記述します。最後に拡張子が付加されます"
+      },
+      "automaticDeletion": {
+        "title": "ファイルの自動削除",
+        "tooltip": "NAS(CIFS Server)に録画したファイルを自動的に削除します"
+      },
+      "daysToKeep": {
+        "title": "保存日数",
+        "tooltip": "指定日数後に削除します"
+      }
+    },
+    "recordTypeWarn": {
+      "comment": "カメラ設定の録画モードを連続もしくは検知時に設定してください。オフになっていると録画されません。\n"
+    },
+    "alarmRecWarn": {
+      "comment": "カメラ設定のモーション検知、サウンド検知、火災／ＣＯ警報機音検知のいずれかをオンにしてください。全てオフになっていると録画されません。\n"
+    },
+    "recordingSchedule": {
+      "title": "録画スケジュール",
+      "tooltip": "SD-Card/NASに録画される時間帯を設定します",
+      "text": [
+        "常時録画",
+        "スケジュール"
+      ]
+    },
+    "skipJpeg": {
+      "title": "JPEG記録の停止",
+      "tooltip": "recordディレクトリへのJPEGファイルの記録を停止"
+    }
+  },
+  "timelapse": {
+    "tab": "タイムラプス設定",
+    "title": "タイムラプス",
+    "setting": {
+      "title": "サンプリング設定"
+    },
+    "note": {
+      "comment": "録画の間は記録後の変換処理のため５分以上空けてください。\n時間が重なると記録されません。重複がないように設定してください。\n"
+    },
+    "start": {
+      "title": "動作状態",
+      "tooltip": "timelapse動作中です。"
+    },
+    "stop": {
+      "title": "中止",
+      "tooltip": "timelapseを中止します。",
+      "button": "中止",
+      "comment": "停止処理：ファイル書き込み中"
+    },
+    "fps": {
+      "title": "出力fps",
+      "tooltip": "出力ファイルのフレームレート"
+    }
+  },
+  "media": {
+    "tab": "メディア設定"
+  },
+  "SDCardSettings": {
+    "title": "SD-Card設定",
+    "smbAccess": {
+      "title": "smbアクセス",
+      "tooltip": "SD-CardをCIFS(smb) serverとしてLAN内に公開します"
+    },
+    "directWrite": {
+      "title": "録画を直接記録",
+      "tooltip": "通常は一旦RAM-DISKに録画した後SD-Cardにコピーしますが、RAMの節約のため直接SD-Cardに記録します"
+    },
+    "eraseSDCard": {
+      "title": "SD-Card消去",
+      "tooltip": "SD-Cardの録画フォルダを消去します",
+      "button": "Erase"
+    }
+  },
+  "NASSettings": {
+    "title": "NAS設定",
+    "networkPath": {
+      "title": "ネットワークPATH",
+      "tooltip": "NASのパスを設定。(//server/folder/の形式で指定)"
+    },
+    "account": {
+      "title": "アカウント",
+      "tooltip": "NASのユーザー名を設定します"
+    },
+    "password": {
+      "title": "パスワード",
+      "tooltip": "NASのパスワードを設定します"
+    }
+  },
+  "RTSP": {
+    "tab": "配信設定",
+    "title": "RTSP",
+    "main": {
+      "title": "Main",
+      "tooltip": "RTSP Main AVC(1080p)を開始します",
+      "audio": {
+        "title": "音声",
+        "tooltip": "RTSP Main AVCの音声を設定します",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "note": {
+        "comment": "RTMPを使うにはAACかoffを選択してください。\n"
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "VLC playerなどにURLをcopy&pasteしてください"
+      }
+    },
+    "mainHEVC": {
+      "title": "Main HEVC",
+      "tooltip": "RTSP Main HEVC(1080p)を開始します",
+      "audio": {
+        "title": "音声",
+        "tooltip": "RTSP Main HEVCの音声を設定します",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "VLC playerなどにURLをcopy&pasteしてください"
+      }
+    },
+    "sub": {
+      "title": "Sub",
+      "tooltip": "RTSP Sub(360p or 320p)を開始します",
+      "audio": {
+        "title": "音声",
+        "tooltip": "RTSP Subの音声を設定します",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "VLC playerなどにURLをcopy&pasteしてください"
+      }
+    },
+    "http": {
+      "title": "RTSP over HTTP",
+      "tooltip": "RTSPをHTTP経由で配信します"
+    },
+    "auth": {
+      "title": "パスワード認証",
+      "tooltip": "RTSPにパスワード認証を要求します"
+    },
+    "account": {
+      "title": "アカウント",
+      "tooltip": "RTSPのユーザー名を設定します"
+    },
+    "password": {
+      "title": "パスワード",
+      "tooltip": "RTSPのパスワードを設定します"
+    }
+  },
+  "HomeKit": {
+    "title": "HomeKit",
+    "tooltip": "RTSP Mainをonにする必要があります",
+    "unpair": {
+      "title": "強制接続解除",
+      "tooltip": "HomeKitの接続を強制的に解除します"
+    },
+    "note": {
+      "comment": "音声を出すにはRTSP Mainの音声をOPUSに設定してください。\n"
+    }
+  },
+  "RTMP": {
+    "title": "RTMP",
+    "tooltip": "RTSP Mainをonにして音声をAACかoffにする必要があります",
+    "URL": {
+      "title": "URL",
+      "tooltip": "送信先のURLを設定してください"
+    },
+    "Restart": "restart",
+    "IntervalRestart": {
+      "title": "周期リスタート",
+      "unit": "分",
+      "tooltip": "定期的にRTMPを再スタートします"
+    }
+  },
+  "WebRTC": {
+    "title": "WebRTC",
+    "tooltip": "RTSP Mainをonにする必要があります",
+    "URL": {
+      "title": "URL",
+      "tooltip": "ブラウザーにURLをcopy&pasteしてください"
+    },
+    "note": {
+      "comment": "音声を出すにはRTSP Mainの音声をOPUSに設定してください。\n"
+    }
+  },
+  "event": {
+    "tab": "イベント通知",
+    "webhook": {
+      "title": "WebHook",
+      "URL": {
+        "title": "通知URL",
+        "tooltip": "WebHookのイベント発生時にpostするURL"
+      },
+      "insecure": {
+        "title": "未認証接続許可",
+        "tooltip": "TLS使用時に認証されていない証明書のサーバーへの接続を許可する"
+      },
+      "alarm": {
+        "title": "動体検知",
+        "tooltip": "Alarm発生を通知します",
+        "comment": "type: alarmEvent"
+      },
+      "information": {
+        "title": "動体認識情報",
+        "tooltip": "Alarm発生時に認識情報を通知します",
+        "comment": "type: recognitionNotify"
+      },
+      "recordingEnd": {
+        "title": "動体検知録画終了",
+        "tooltip": "Alarm発生時に録画保存を通知します",
+        "comment": "type: uploadVideoFinish"
+      },
+      "recordingTransfer": {
+        "title": "動体検知録画転送",
+        "tooltip": "Alarm発生時に録画ファイルを転送します",
+        "comment": "mime: video/mp4"
+      },
+      "screenshotEnd": {
+        "title": "動体検知静止画保存",
+        "tooltip": "Alarm発生時に静止画保存を通知します",
+        "comment": "type: uploadPictureFinish"
+      },
+      "screenshotTransfer": {
+        "title": "動体検知静止画転送",
+        "tooltip": "Alarm発生時に静止画ファイルを転送します",
+        "comment": "mime: image/jpeg"
+      },
+      "recordingSave": {
+        "title": "定常録画保存",
+        "tooltip": "録画保存を通知します",
+        "comment": "type: recordEvent"
+      },
+      "startTimelapse": {
+        "title": "タイムラプス開始",
+        "tooltip": "タイムラプス開始を通知します",
+        "comment": "type: timelapseStart"
+      },
+      "recordTimelapse": {
+        "title": "タイムラプス記録",
+        "tooltip": "タイムラプスイベントを通知します",
+        "comment": "type: timelapseEvent"
+      },
+      "endTimeLapse": {
+        "title": "タイムラプス録画完了",
+        "tooltip": "タイムラプス録画完了を通知します",
+        "comment": "type: timelapseFinish"
+      }
+    }
+  },
+  "cruise": {
+    "tab": "クルーズ設定",
+    "title": "クルーズ",
+    "initialPosition": {
+      "title": "Swing座標初期化",
+      "tooltip": "Swingの座標を両側の端点当てで修正します",
+      "button": "初期化"
+    },
+    "cameraMotion": {
+      "title": "クルーズ動作",
+      "tooltip": "クルーズ軌道を設定し、巡回動作をします"
+    },
+    "direction": {
+      "tooltip": "カメラの向きと移動速度を設定。jpeg windowでも調整できます",
+      "pan": "pan",
+      "tilt": "tilt",
+      "speed": "速度"
+    },
+    "waitAfterMotion": {
+      "title": "動作後待機時間",
+      "unit": "秒",
+      "tooltip": "カメラ動作後の待機時間を設定します"
+    },
+    "detect": {
+      "title": "検知",
+      "tooltip": "待機中に動体検知すると待機時間を延長します"
+    },
+    "follow": {
+      "title": "追尾",
+      "tooltip": "待機中に動体検知すると追尾し、待機時間を延長します"
+    },
+    "waitAfterDetect": {
+      "title": "検知後待機時間",
+      "unit": "秒",
+      "tooltip": "動体検知終了後の待機時間を設定します"
+    },
+    "followingSpeed": {
+      "title": "追尾速度",
+      "tooltip": "追尾時の速度です。9が高速、1が低速です。"
+    }
+  },
+  "systemSettings": {
+    "tab": "システム設定"
+  },
+  "deviceSettings": {
+    "title": "デバイス設定",
+    "deviceName": {
+      "title": "デバイス名",
+      "tooltip": "NASの保存フォルダ名やリモートアクセスのための名前を設定します"
+    },
+    "loginAuthentication": {
+      "title": "ログイン認証",
+      "tooltip": "このページへのアクセスのためのログイン認証を有効にします"
+    },
+    "account": {
+      "title": "アカウント",
+      "tooltip": "ログインのためのユーザーアカウントを設定します"
+    },
+    "password": {
+      "title": "パスワード",
+      "tooltip": "ログインのためのパスワードを設定します"
+    }
+  },
+  "tailscaleSettings": {
+    "title": "Tailscale設定",
+    "enable": {
+      "title": "Tailscale有効化",
+      "tooltip": "Tailscaleを起動してテイルネットへ接続します"
+    },
+    "authKey": {
+      "title": "Auth Key",
+      "tooltip": "Tailscaleの認証キー (tskey-...)"
+    },
+    "hostname": {
+      "title": "ホスト名",
+      "tooltip": "空欄の場合はデバイス名を使用します"
+    },
+    "tags": {
+      "title": "タグ",
+      "tooltip": "advertise-tagsに渡すタグ。空欄時はtag:cctvを使用します"
+    },
+    "extraArgs": {
+      "title": "追加引数",
+      "tooltip": "tailscale upへ追加する引数を指定します"
+    },
+    "exitNodeOnly": {
+      "title": "Tailscale専用通信",
+      "tooltip": "LAN側の公開ポート(80/8080/8554)を閉じ、tailscale経由のみ許可します"
+    }
+  },
+  "motionDetect": {
+    "title": "動体検知",
+    "sensorPeriod": {
+      "title": "動体検知周期の短縮",
+      "tooltip": "Alarmの無検知時間5分を30秒に短縮します"
+    },
+    "uploadStop": {
+      "title": "動体検知録画upload停止",
+      "tooltip": "AtomTechサーバーへの検知動画転送を停止します。アプリから確認できなくなります。サーバーへの転送が気になる場合は設定してください。"
+    }
+  },
+  "videoSpec": {
+    "title": "ビデオ設定",
+    "frameRate": {
+      "title": "フレームレート",
+      "tooltip": "１秒あたりのフレーム数(1-28FPS)を設定します"
+    },
+    "bitrateMain": {
+      "title": "Mainの帯域",
+      "tooltip": "Main HDのビットレート(300-2000bps)を設定します"
+    },
+    "bitrateMainHEVC": {
+      "title": "MainHEVCの帯域",
+      "tooltip": "Main H.265/HEVC HDのビットレート(300-2000bps)を設定します"
+    },
+    "bitrateSub": {
+      "title": "Subの帯域",
+      "tooltip": "Sub360p/320pのビットレート(100-500bps)を設定します"
+    }
+  },
+  "watermark": {
+    "title": "ロゴ",
+    "image": {
+      "title": "PNGイメージ",
+      "comment": "PNGファイルを500px x 200px以内で作成してdropしてください。"
+    }
+  },
+  "maintenance": {
+    "tab": "メンテナンス"
+  },
+  "monitoring": {
+    "title": "モニタリング",
+    "network": {
+      "title": "Network確認",
+      "tooltip": "Networkが接続されていることを定期的に確認し、必要なら再接続する"
+    },
+    "reboot": {
+      "title": "異常時再起動",
+      "tooltip": "再接続ができない場合、システムの再起動をする"
+    },
+    "ping": {
+      "title": "ping",
+      "tooltip": "指定されたURLで疎通確認できるようにする"
+    },
+    "URL": {
+      "title": "通知URL",
+      "tooltip": "指定されたURLに１分毎にhttp getする"
+    }
+  },
+  "update": {
+    "title": "Update",
+    "toolsUpdate": {
+      "title": "Update",
+      "tooltip": "このtoolのupdateをします"
+    },
+    "customZip": {
+      "title": "カスタム更新ZIPファイル",
+      "tooltip": "localでカスタム更新ZIPを作成して運用できます",
+      "URL": {
+        "title": "URL",
+        "tooltip": "カスタム更新ZIPファイルの読み込みURLを指定します"
+      }
+    }
+  },
+  "reboot": {
+    "title": "再起動",
+    "periodicRestart": {
+      "title": "定期リスタート",
+      "tooltip": "定期的に再起動する設定をします"
+    },
+    "reboot": {
+      "title": "リブート",
+      "tooltip": "再起動します",
+      "button": "Reboot"
+    }
+  },
+  "schedule": {
+    "allDay": "終日",
+    "startTime": "開始時間",
+    "endTime": "終了時間",
+    "time": "設定時間",
+    "timelapse": {
+      "startTime": "開始時間",
+      "endTime": " 〜 {endTime}まで",
+      "interval": {
+        "title": "周期",
+        "unit": "秒",
+        "count": "回"
+      },
+      "tommorow": "翌日",
+      "daysLater": "{days}日後の"
+    },
+    "weekDays": [
+      "月",
+      "火",
+      "水",
+      "木",
+      "金",
+      "土",
+      "日"
+    ]
+  },
+  "submit": "設定",
+  "executing": "設定変更中。暫くお待ち下さい。",
+  "erasing": "SD-Card消去中。暫くお待ちください。",
+  "downloading": "ダウンロード中。暫くお待ちください。",
+  "downloadError": "ダウンロードに失敗しました。少し時間をおいて再度実行してください。",
+  "rebooting": "再起動中。起動するまで暫くお待ち下さい。(約80秒)"
+}

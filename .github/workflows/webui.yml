@@ -1,0 +1,72 @@
+name: webui
+
+on:
+  push:
+    branches: [main, experiment/webui-modern]
+    paths:
+      - 'web-new/**'
+      - '.github/workflows/webui.yml'
+  pull_request:
+    paths:
+      - 'web-new/**'
+      - '.github/workflows/webui.yml'
+
+# デモデプロイ（Pages）に必要な権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: webui-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web-new
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web-new/package-lock.json
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+      - name: Bundle budget (gzip 250KB 目標 / 500KB 上限)
+        run: npm run budget
+
+  demo:
+    # 共有レビュー用デモは experiment ブランチからもデプロイする
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/experiment/webui-modern' || github.ref == 'refs/heads/main')
+    needs: ci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web-new/package-lock.json
+      - run: npm ci
+        working-directory: web-new
+      # MSW モックを焼き込んだデモビルド（__DEMO__=true）
+      - run: npm run demo:build
+        working-directory: web-new
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web-new/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
