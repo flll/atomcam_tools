@@ -1,0 +1,48 @@
+{
+  "app": {
+    "title": "ATOMCam"
+  },
+  "nav": {
+    "live": "Live",
+    "settings": "Settings",
+    "camera": "Camera",
+    "recording": "Recording",
+    "storage": "Storage",
+    "streaming": "Streaming",
+    "events": "Events",
+    "cruise": "Cruise",
+    "system": "System",
+    "files": "SD Card",
+    "maintenance": "Maintenance"
+  },
+  "common": {
+    "theme": "Theme",
+    "language": "Language",
+    "dark": "Dark",
+    "light": "Light",
+    "online": "Online",
+    "offline": "Offline",
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "live": {
+    "title": "Live View",
+    "ptz": "Pan / Tilt",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "speed": "Speed",
+    "center": "Center",
+    "nightVision": "Night vision",
+    "snapshot": "Snapshot",
+    "fps": "{{fps}} fps",
+    "noSignal": "No signal (mock)",
+    "freeSpace": "Free space",
+    "model": "Model",
+    "firmware": "Firmware"
+  },
+  "placeholder": {
+    "comingSoon": "This page will be implemented in Phase 3 and later.",
+    "backToLive": "Back to Live"
+  }
+}
