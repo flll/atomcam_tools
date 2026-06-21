@@ -103,10 +103,14 @@ function Stage-Zip([object] $Cfg) {
     return $true
 }
 
-function Preserve-SdFiles([object] $Sd, [object] $Cfg) {
+function Preserve-SdFiles([object] $Sd, [object] $Cfg, [switch] $SkipOptionalBootstrap) {
     if (-not $Cfg.preserveFiles) { return }
     New-Item -ItemType Directory -Path $Cfg.preserveDir -Force | Out-Null
     foreach ($name in @($Cfg.preserveFiles)) {
+        if ($SkipOptionalBootstrap -and @($Cfg.optionalBootstrapFiles) -contains $name) {
+            Write-SdLogEvent 'preserve' 'skip' "$name (refresh zip)"
+            continue
+        }
         $src = Join-Path $Sd.RootPath $name
         if (Test-Path $src) {
             Copy-Item $src (Join-Path $Cfg.preserveDir $name) -Force
@@ -115,9 +119,12 @@ function Preserve-SdFiles([object] $Sd, [object] $Cfg) {
     }
 }
 
-function Restore-SdFiles([object] $Sd, [object] $Cfg) {
+function Restore-SdFiles([object] $Sd, [object] $Cfg, [switch] $SkipOptionalBootstrap) {
     if (-not $Cfg.preserveFiles) { return }
     foreach ($name in @($Cfg.preserveFiles)) {
+        if ($SkipOptionalBootstrap -and @($Cfg.optionalBootstrapFiles) -contains $name) {
+            continue
+        }
         $src = Join-Path $Cfg.preserveDir $name
         if (Test-Path $src) {
             Copy-Item $src (Join-Path $Sd.RootPath $name) -Force
@@ -126,13 +133,13 @@ function Restore-SdFiles([object] $Sd, [object] $Cfg) {
     }
 }
 
-function Copy-OptionalBootstrap([object] $Cfg, [object] $Sd) {
+function Copy-OptionalBootstrap([object] $Cfg, [object] $Sd, [switch] $ForceUpdate) {
     if (-not $Cfg.optionalBootstrapFiles) { return $true }
     foreach ($name in @($Cfg.optionalBootstrapFiles)) {
         $src = Join-Path $Cfg.stagingDir $name
         $dst = Join-Path $Sd.RootPath $name
         if (Test-Path $src) {
-            if (-not (Test-Path $dst)) {
+            if ($ForceUpdate -or -not (Test-Path $dst)) {
                 Copy-Item $src $dst -Force
                 Write-SdLogEvent 'copy_optional' 'ok' $name
             } else {
@@ -267,7 +274,7 @@ if (-not (Fetch-Zip $cfg)) {
     exit 30
 }
 
-Preserve-SdFiles $sd $cfg
+Preserve-SdFiles $sd $cfg -SkipOptionalBootstrap:$RefreshZip
 
 if ($Bootstrap) {
     if (-not (Format-SdCard $sd)) {
@@ -295,8 +302,8 @@ if (-not (Copy-PackageFiles $cfg $sd)) {
     Write-SdNdjsonLog $cfg 'sd_install_windows' 10 @{ mode = $mode }
     exit 10
 }
-Copy-OptionalBootstrap $cfg $sd | Out-Null
-Restore-SdFiles $sd $cfg
+Copy-OptionalBootstrap $cfg $sd -ForceUpdate:$RefreshZip | Out-Null
+Restore-SdFiles $sd $cfg -SkipOptionalBootstrap:$RefreshZip
 
 if (-not (Verify-SdInstall $cfg $sd)) {
     Write-SdNdjsonLog $cfg 'sd_install_windows' 10 @{ mode = $mode }
