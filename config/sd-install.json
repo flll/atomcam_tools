@@ -1,0 +1,35 @@
+{
+  "volumeGuid": "eaa85f17-6c63-11f1-9b6d-b40ede4d6349",
+  "partitionUniqueIdContains": "GLI020200315",
+  "expectedDiskSizeBytes": 15854469120,
+  "zipSourceHost": "lll-legacy",
+  "zipSourcePath": "/home/lll/atomcam_tools/target/sd_initial.zip",
+  "zipCacheRelative": "sim-results/sd-bootstrap/cache/sd_initial.zip",
+  "stagingDirRelative": "sim-results/sd-bootstrap/staging",
+  "logDirRelative": "sim-results/sd-bootstrap/logs",
+  "preserveDirRelative": "sim-results/sd-bootstrap/preserve",
+  "tailscaleEnv": "%USERPROFILE%\\.cursor\\secrets\\atomcam-tailscale.env",
+  "wifiEnv": "%USERPROFILE%\\.cursor\\secrets\\atomcam-wifi.env",
+  "packageFiles": [
+    "factory_t31_ZMC6tiIDQN",
+    "rootfs_hack.squashfs",
+    "hostname",
+    "authorized_keys",
+    "hack.ini"
+  ],
+  "optionalBootstrapFiles": [
+    "tools_configs"
+  ],
+  "expectedFiles": {
+    "factory_t31_ZMC6tiIDQN": 1952575,
+    "rootfs_hack.squashfs": 63389696,
+    "hostname": 8,
+    "authorized_keys": 0
+  },
+  "expectedHostnames": ["test", "atomcam33"],
+  "bootWaitSec": 300,
+  "sdWaitSec": 600,
+  "bootPollSec": 15,
+  "preserveFiles": ["tools_configs", "configs"],
+  "hackIniBootstrapFile": "config/hack.ini.bootstrap"
+}

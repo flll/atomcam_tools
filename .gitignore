@@ -11,3 +11,5 @@ bin/
 sim-results/
 .cursor/
 
+target/sd_initial.zip
+target/tools_configs

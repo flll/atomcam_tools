@@ -87,3 +87,19 @@ clean:
 distclean:
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
 	docker image rm ${DOCKER_IMAGE} ${DOCKER_IMAGE}${DOCKER_ARCH} 2>/dev/null || :
+
+sd-package:
+	chmod +x ./scripts/hil/sd-package.sh
+	./scripts/hil/sd-package.sh
+
+sd-package-verify: sd-package
+	chmod +x ./scripts/hil/sd-package-verify.sh
+	./scripts/hil/sd-package-verify.sh
+
+hil-status:
+	chmod +x ./scripts/hil/true-hil.sh ./scripts/deploy_remote.sh
+	./scripts/hil/true-hil.sh status
+
+hil-deploy-test:
+	chmod +x ./scripts/hil/true-hil.sh ./scripts/deploy_remote.sh ./scripts/smoke_test_remote.sh
+	./scripts/hil/true-hil.sh deploy-test
