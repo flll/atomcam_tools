@@ -1,0 +1,16 @@
+# Copy to ~/.cursor/secrets/atomcam-wifi.env (git 外) または tools_configs 生成に使用
+# WIFI_SSID=your-ssid
+# WIFI_PASS=your-password
+
+ctrl_interface=/var/run/wpa_supplicant
+update_config=1
+
+network={
+    ssid="YOUR_SSID"
+    scan_ssid=1
+    key_mgmt=WPA-PSK
+    proto=RSN
+    pairwise=CCMP
+    group=CCMP
+    psk="YOUR_PASSWORD"
+}
