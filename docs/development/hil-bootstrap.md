@@ -57,10 +57,23 @@ $env:ATOMCAM_TOOLS_ROOT = "\\path\to\atomcam_tools"   # または lll-legacy か
 Tailnet に出ない・SSH 不能のときだけ:
 
 ```powershell
-.\scripts\hil\sd-read-boot-artifacts-windows.ps1
+# 詳細デバッグバンドル（推奨）
+pwsh ~/.cursor/skills/atomcam-hil-loop/scripts/hil-windows.ps1 debug-collect
+
+# 後方互換
+pwsh .../hil-windows.ps1 read-artifacts
 ```
 
-ログは `sim-results/sd-bootstrap/logs/`。
+出力: `sim-results/sd-bootstrap/logs/debug-bundle-*/`
+
+| ファイル | 内容 |
+|---------|------|
+| `debug-report.md` / `debug-report.json` | 要約・hints・tailnet スナップショット |
+| `wpa_diag.json` | tools_configs 内 wpa（CRLF 検出含む） |
+| `hack_ini_diag.json` | 重複キー・実効 MONITORING_* 値 |
+| `highlights/` | ログ grep（Network/tailscale/wpa 等） |
+| `tails/` | 各ログ末尾 80 行 |
+| `tmp/` `update/` | ランタイムログ（サイズ上限付き） |
 
 ## 正本パス（atomcam_tools 内）
 

@@ -15,6 +15,8 @@ fi
 
 # shellcheck disable=SC1090
 source "$WIFI_ENV"
+WIFI_SSID="${WIFI_SSID//$'\r'/}"
+WIFI_PASS="${WIFI_PASS//$'\r'/}"
 
 if [[ -z "${WIFI_SSID:-}" || -z "${WIFI_PASS:-}" ]]; then
   echo "build-tools-configs: WIFI_SSID and WIFI_PASS required" >&2
@@ -25,11 +27,7 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
 mkdir -p "$WORK/configs/etc"
-if [[ -f "$EXAMPLE" ]]; then
-  sed -e "s/YOUR_SSID/${WIFI_SSID}/g" -e "s/YOUR_PASSWORD/${WIFI_PASS}/g" "$EXAMPLE" \
-    | grep -v '^#' | grep -v '^$' > "$WORK/wpa_supplicant.conf"
-else
-  cat > "$WORK/wpa_supplicant.conf" <<EOF
+cat > "$WORK/wpa_supplicant.conf" <<EOF
 ctrl_interface=/var/run/wpa_supplicant
 update_config=1
 
@@ -37,13 +35,13 @@ network={
     ssid="${WIFI_SSID}"
     scan_ssid=1
     key_mgmt=WPA-PSK
-    proto=RSN
-    pairwise=CCMP
-    group=CCMP
+    pairwise=CCMP TKIP
+    group=CCMP TKIP WEP104 WEP40
     psk="${WIFI_PASS}"
 }
 EOF
-fi
+# CRLF 混入防止（wpa_supplicant が ssid/psk を誤認する）
+sed -i 's/\r$//' "$WORK/wpa_supplicant.conf"
 
 rm -f "$OUT"
 dd if=/dev/zero of="$OUT" bs=1M count="$SIZE_MB" status=none
