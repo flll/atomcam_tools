@@ -173,6 +173,13 @@ function Patch-HackIni([object] $Cfg) {
         return $false
     }
     $merged = @($bootstrap) + @($baseLines) + @($tsLines)
+    # 重複キー除去（後勝ち → bootstrap/Tailscale 正本を優先）
+    $map = [ordered]@{}
+    foreach ($line in $merged) {
+        if ($line -match '^([A-Za-z0-9_]+)=(.*)$') { $map[$Matches[1]] = $line }
+        elseif ($line.Trim()) { $map["__raw_$([guid]::NewGuid().ToString('N').Substring(0,8))"] = $line }
+    }
+    $merged = @($map.Values)
     Set-Content -Path $hackIni -Value (($merged -join "`n") + "`n") -Encoding utf8
     Write-SdLogEvent 'patch_hackini' 'ok' "$($tsLines.Count) tailscale lines"
     return $true

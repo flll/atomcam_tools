@@ -194,3 +194,161 @@ function Find-TailnetPeer([string[]] $Hostnames) {
     }
     return $null
 }
+
+function Get-TailnetSnapshot([object] $Cfg) {
+    $hostnames = Get-ExpectedHostnames $Cfg
+    $peer = Find-TailnetPeer $hostnames
+    $raw = tailscale status --json 2>$null
+    $selfIp = $null
+    if ($raw) {
+        $j = $raw | ConvertFrom-Json
+        if ($j.Self.TailscaleIPs) { $selfIp = $j.Self.TailscaleIPs[0] }
+    }
+    return [ordered]@{
+        expected_hostnames = $hostnames
+        peer_found         = if ($peer) { $peer.Name } else { $null }
+        peer_online        = if ($peer) { $peer.Online } else { $false }
+        peer_ips           = if ($peer) { $peer.TailscaleIPs } else { @() }
+        local_tailscale_ip = $selfIp
+    }
+}
+
+function Copy-SdArtifacts([string] $RootPath, [string] $OutDir, [string[]] $Names) {
+    $report = @()
+    foreach ($name in $Names) {
+        $src = Join-Path $RootPath $name
+        if (Test-Path $src) {
+            Copy-Item $src (Join-Path $OutDir $name) -Force
+            $report += "${name}=$((Get-Item $src).Length)"
+        } else {
+            $report += "${name}=missing"
+        }
+    }
+    return $report
+}
+
+function Copy-SdTreeLogs {
+    param(
+        [string] $RootPath,
+        [string] $OutDir,
+        [long] $MaxFileBytes = 2MB,
+        [long] $MaxTotalBytes = 20MB
+    )
+    $report = @()
+    $total = 0L
+    foreach ($sub in @('tmp', 'update')) {
+        $srcDir = Join-Path $RootPath $sub
+        if (-not (Test-Path $srcDir)) { continue }
+        $dstDir = Join-Path $OutDir $sub
+        New-Item -ItemType Directory -Path $dstDir -Force | Out-Null
+        Get-ChildItem $srcDir -Recurse -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
+            if ($total -ge $MaxTotalBytes) { return }
+            if ($_.Length -gt $MaxFileBytes) {
+                $report += "$sub/$($_.Name)=skipped_large($($_.Length))"
+                return
+            }
+            $rel = $_.FullName.Substring($srcDir.Length).TrimStart('\')
+            $dest = Join-Path $dstDir $rel
+            $parent = Split-Path $dest -Parent
+            if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
+            Copy-Item $_.FullName $dest -Force
+            $total += $_.Length
+            $report += "$sub/$rel=$($_.Length)"
+        }
+    }
+    return $report
+}
+
+function Invoke-ToolsConfigsWpaExtract {
+    param(
+        [string] $ImagePath,
+        [string] $OutDir,
+        [string] $SshHost = 'lll-legacy'
+    )
+    $scp = 'C:\Windows\System32\OpenSSH\scp.exe'
+    $ssh = 'C:\Windows\System32\OpenSSH\ssh.exe'
+    $remoteImg = "/tmp/tools_configs_extract_$(Get-Date -Format 'yyyyMMddHHmmss')"
+    & $scp -o BatchMode=yes $ImagePath "${SshHost}:${remoteImg}" 2>$null
+    if ($LASTEXITCODE -ne 0) { return $null }
+    $jsonRaw = & $ssh -o BatchMode=yes $SshHost "chmod +x /home/lll/atomcam_tools/scripts/hil/extract-tools-configs-wpa.sh 2>/dev/null; /home/lll/atomcam_tools/scripts/hil/extract-tools-configs-wpa.sh $remoteImg; rm -f $remoteImg" 2>$null
+    if (-not $jsonRaw) { return $null }
+    $line = @($jsonRaw | Where-Object { $_ -match '^\{' }) | Select-Object -Last 1
+    if (-not $line) { return $null }
+    $obj = $line | ConvertFrom-Json
+    $obj | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $OutDir 'wpa_diag.json') -Encoding utf8
+    if ($obj.wpa_redacted) {
+        $obj.wpa_redacted | Set-Content (Join-Path $OutDir 'wpa_supplicant.redacted') -Encoding utf8
+    }
+    return $obj
+}
+
+function Analyze-HackIni([string] $Path) {
+    $lines = Get-Content $Path
+    $map = [ordered]@{}
+    $duplicates = @()
+    foreach ($line in $lines) {
+        if ($line -notmatch '^([A-Za-z0-9_]+)=(.*)$') { continue }
+        $k = $Matches[1]
+        $v = $Matches[2]
+        if ($map.Contains($k)) { $duplicates += $k }
+        $map[$k] = $v
+    }
+    $effective = [ordered]@{}
+    foreach ($k in @('MONITORING_NETWORK', 'MONITORING_REBOOT', 'REBOOT', 'HEALTHCHECK', 'TAILSCALE_ENABLE')) {
+        if ($map.Contains($k)) { $effective[$k] = $map[$k] }
+    }
+    $diag = [ordered]@{
+        line_count      = $lines.Count
+        duplicate_keys  = @($duplicates | Select-Object -Unique)
+        effective       = $effective
+        has_auth_key    = $map.Contains('TAILSCALE_AUTH_KEY')
+        auth_key_prefix = if ($map.TAILSCALE_AUTH_KEY) { $map.TAILSCALE_AUTH_KEY.Substring(0, [Math]::Min(12, $map.TAILSCALE_AUTH_KEY.Length)) } else { '' }
+    }
+    $diag | ConvertTo-Json -Depth 4 | Set-Content ((Join-Path (Split-Path $Path -Parent) 'hack_ini_diag.json')) -Encoding utf8
+    return $diag
+}
+
+function Write-DebugReportMarkdown {
+    param([object] $Report, [string] $OutPath)
+    $hints = @($Report.hints) -join ', '
+    $wpa = $Report.wpa
+    $hack = $Report.hack_ini
+    $md = @"
+# AtomCam SD デバッグレポート
+
+- 収集: $($Report.collected_at)
+- SD: $($Report.sd_root)
+- 出力: $($Report.artifacts_dir)
+
+## hints
+
+$hints
+
+## tailnet
+
+- 期待ホスト: $($Report.tailnet.expected_hostnames -join ', ')
+- 検出: $($Report.tailnet.peer_found) (online=$($Report.tailnet.peer_online))
+
+## hack.ini 実効値
+
+$(if ($hack) { ($hack.effective | ConvertTo-Json -Compress) } else { 'n/a' })
+
+重複キー: $(if ($hack) { $hack.duplicate_keys -join ', ' } else { 'n/a' })
+
+## wpa_supplicant (tools_configs)
+
+$(if ($wpa) { "- ssid: $($wpa.ssid)`n- ssid CR: $($wpa.ssid_diag.has_cr)`n- psk CR: $($wpa.psk_diag.has_cr)" } else { '抽出失敗' })
+
+## ファイル
+
+$(($Report.files | ForEach-Object { "- $_" }) -join "`n")
+
+## 詳細
+
+- ``debug-report.json`` — 機械可読
+- ``highlights/`` — ログ grep ヒット
+- ``tails/`` — 各ログ末尾行
+- ``wpa_diag.json`` / ``hack_ini_diag.json``
+"@
+    Set-Content -Path $OutPath -Value $md -Encoding utf8
+}
