@@ -6,7 +6,7 @@ ROOT="$(cd "$(dirname "$0")/../../" && pwd)"
 WIFI_ENV="${ATOMCAM_WIFI_ENV:-$HOME/.cursor/secrets/atomcam-wifi.env}"
 OUT="$ROOT/target/tools_configs"
 EXAMPLE="$ROOT/config/wpa_supplicant.conf.example"
-SIZE_MB="${TOOLS_CONFIGS_SIZE_MB:-8}"
+SIZE_MB="${TOOLS_CONFIGS_SIZE_MB:-1}"
 
 if [[ ! -f "$WIFI_ENV" ]]; then
   echo "build-tools-configs: missing $WIFI_ENV" >&2
@@ -35,8 +35,9 @@ network={
     ssid="${WIFI_SSID}"
     scan_ssid=1
     key_mgmt=WPA-PSK
-    pairwise=CCMP TKIP
-    group=CCMP TKIP WEP104 WEP40
+    proto=RSN
+    pairwise=CCMP
+    group=CCMP
     psk="${WIFI_PASS}"
 }
 EOF
@@ -57,5 +58,8 @@ quit
 EOF
 
 debugfs -w -f "$CMD" "$OUT" >/dev/null
+
+cp "$WORK/wpa_supplicant.conf" "$ROOT/target/wpa_supplicant.conf"
+echo "build-tools-configs: wrote $ROOT/target/wpa_supplicant.conf (FAT root fallback)"
 
 echo "build-tools-configs: wrote $OUT ($(wc -c <"$OUT") bytes)"
