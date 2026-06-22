@@ -18,7 +18,13 @@
     "hack.ini"
   ],
   "optionalBootstrapFiles": [
-    "tools_configs"
+    "tools_configs",
+    "wpa_supplicant.conf",
+    "atom-debug",
+    "atom-log",
+    "crontab",
+    "tailscale_wrapper.sh",
+    "wifi_audit.sh"
   ],
   "expectedFiles": {
     "factory_t31_ZMC6tiIDQN": 1952575,
