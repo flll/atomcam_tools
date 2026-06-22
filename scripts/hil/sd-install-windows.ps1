@@ -29,6 +29,7 @@ param(
     [Parameter(ParameterSetName = 'FilesOnly')]
     [switch] $FilesOnly,
     [switch] $RefreshZip,
+    [switch] $DebugBoot,
     [switch] $ImportTailscaleOnly,
     [switch] $VerifyOnly
 )
@@ -142,10 +143,40 @@ function Copy-OptionalBootstrap([object] $Cfg, [object] $Sd, [switch] $ForceUpda
             if ($ForceUpdate -or -not (Test-Path $dst)) {
                 Copy-Item $src $dst -Force
                 Write-SdLogEvent 'copy_optional' 'ok' $name
+                if ($name -eq 'wpa_supplicant.conf') {
+                    Write-AgentDebugLog -Location 'sd-install:copy_wpa_fat' -Message 'wpa_on_fat_root' -HypothesisId 'J' -RunId 'install' -Data @{
+                        path = $dst; size = (Get-Item $dst).Length
+                    }
+                }
             } else {
                 Write-SdLogEvent 'copy_optional' 'skip' "$name exists on SD"
             }
         }
+    }
+    return $true
+}
+
+function Apply-DebugBootMarkers([object] $Sd) {
+    $root = $Sd.RootPath
+    $debugDir = Join-Path (Get-RepoRoot) 'scripts/hil/debug'
+    if (-not (Test-Path $debugDir)) {
+        Write-SdLogEvent 'debug_boot' 'fail' "missing $debugDir"
+        return $false
+    }
+    New-Item -ItemType File -Path (Join-Path $root 'atom-debug') -Force | Out-Null
+    New-Item -ItemType File -Path (Join-Path $root 'atom-log') -Force | Out-Null
+    foreach ($name in @('wifi_audit.sh', 'tailscale_wrapper.sh', 'crontab')) {
+        $src = Join-Path $debugDir $name
+        if (-not (Test-Path $src)) {
+            Write-SdLogEvent 'debug_boot' 'fail' "missing $src"
+            return $false
+        }
+        $lines = @(Get-Content $src -ErrorAction Stop)
+        Write-LfOnlyText (Join-Path $root $name) $lines
+    }
+    Write-SdLogEvent 'debug_boot' 'ok' 'atom-debug wifi_audit tailscale_wrapper crontab from scripts/hil/debug'
+    Write-AgentDebugLog -Location 'sd-install:debug_boot' -Message 'debug_markers_applied' -HypothesisId 'L,S' -RunId 'install' -Data @{
+        atom_debug = $true; wifi_audit = $true; tailscale_wrapper = $true; crontab_lf_only = $true; debug_dir = $debugDir
     }
     return $true
 }
@@ -310,7 +341,20 @@ if (-not (Copy-PackageFiles $cfg $sd)) {
     exit 10
 }
 Copy-OptionalBootstrap $cfg $sd -ForceUpdate:$RefreshZip | Out-Null
+if ($DebugBoot) { Apply-DebugBootMarkers $sd }
 Restore-SdFiles $sd $cfg -SkipOptionalBootstrap:$RefreshZip
+if (-not (Write-CompatibleWpa $cfg $sd)) {
+    Write-SdNdjsonLog $cfg 'sd_install_windows' 10 @{ mode = $mode }
+    exit 10
+}
+$tcPath = Join-Path $sd.RootPath 'tools_configs'
+$wpaPath = Join-Path $sd.RootPath 'wpa_supplicant.conf'
+if (Test-Path $tcPath) {
+    $patched = Invoke-PatchToolsConfigsWpa -ImagePath $tcPath -WpaPath $wpaPath -SshHost $cfg.zipSourceHost
+    if (-not $patched) {
+        Write-SdLogEvent 'patch_tools_configs' 'skip' 'ssh patch failed; FAT wpa still updated'
+    }
+}
 
 if (-not (Verify-SdInstall $cfg $sd)) {
     Write-SdNdjsonLog $cfg 'sd_install_windows' 10 @{ mode = $mode }
