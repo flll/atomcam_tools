@@ -43,14 +43,26 @@ make sd-package
 | 反復 | `--FilesOnly`（既定） | しない | 常に preserve |
 
 ```powershell
-$env:ATOMCAM_TOOLS_ROOT = "\\path\to\atomcam_tools"   # または lll-legacy から scp した clone
-.\scripts\hil\sd-install-windows.ps1 --Bootstrap -RefreshZip
-# カメラに SD 挿入・電源 ON
-.\scripts\hil\boot-wait-windows.ps1
-.\scripts\hil\true-hil.sh status   # lll-legacy 上
+# リポジトリ正本（推奨）
+.\scripts\hil\hil-windows.ps1 install -DebugBoot
+.\scripts\hil\hil-windows.ps1 debug-collect
+
+# skill 経由（legacy から sync 後に同じ hil-windows.ps1 を実行）
+pwsh ~/.cursor/skills/atomcam-hil-loop/scripts/hil-windows.ps1 install -DebugBoot
 ```
 
 `--Bootstrap` は **tools_configs が既にあれば絶対に消さない**（preserve）。
+
+### WiFi 設定（AtomCam 互換）
+
+古い `wpa_supplicant` は `group=CCMP TKIP WEP104 WEP40` をパースできない。正本テンプレートは `config/wpa_supplicant.conf.example`（`group=CCMP` のみ）。
+
+検証済み成功指標（`wifi_audit.log` 末尾）:
+
+- `wpa_state=COMPLETED`
+- `ip_address=10.0.0.x`（169.254 以外）
+- `TARGET_SSID_SEEN`
+- ゲートウェイ ping 成功
 
 ### ブートストラップ未完了時のみ（例外パス）
 
@@ -77,7 +89,9 @@ pwsh .../hil-windows.ps1 read-artifacts
 
 ## 正本パス（atomcam_tools 内）
 
+- エントリ: `scripts/hil/hil-windows.ps1`
 - 設定: `config/sd-install.json`
+- デバッグ資産: `scripts/hil/debug/`（`wifi_audit.sh`, `tailscale_wrapper.sh`, `crontab`）
 - SD zip: `target/sd_initial.zip`（`make sd-package`、gitignore）
 - ログ: `sim-results/sd-bootstrap/`（gitignore）
 - Tailscale: `~/.cursor/secrets/atomcam-tailscale.env`（git 外）

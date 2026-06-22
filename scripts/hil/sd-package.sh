@@ -61,7 +61,10 @@ cp "$TARGET/authorized_keys" "$STAGE/"
   fi
 } > "$STAGE/hack.ini"
 
-# Optional: pre-built tools_configs (WiFi ext2) from target/
+# Optional: WiFi on FAT root (network_init.sh が最優先で読む)
+if [[ -f "$TARGET/wpa_supplicant.conf" ]]; then
+  cp "$TARGET/wpa_supplicant.conf" "$STAGE/wpa_supplicant.conf"
+fi
 if [[ -f "$TARGET/tools_configs" ]]; then
   cp "$TARGET/tools_configs" "$STAGE/tools_configs"
 fi
