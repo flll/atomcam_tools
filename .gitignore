@@ -13,3 +13,16 @@ sim-results/
 
 target/sd_initial.zip
 target/tools_configs
+
+# build profile runtime state (moved out of configs/)
+target/active_profile.name
+target/active_build_profile.env
+
+# generated build metadata / release artifacts
+target/BUILD_MANIFEST.json
+target/LATEST.txt
+target/releases/
+target/mmc_templates/
+target/hil-bootstrap/
+target/.staging_deploy.zip
+target/.deploy_ota.zip
