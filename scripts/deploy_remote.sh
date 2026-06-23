@@ -15,6 +15,7 @@
 set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+. "$ROOT/scripts/hil/agent-debug-log.sh"
 HOST="${ATOMCAM_HOST:-atomcam.local}"
 MODE="deploy"
 START_TS=$SECONDS
@@ -60,7 +61,13 @@ wait_for_boot() {
   sleep 15  # let the reboot actually start before probing
 
   while ((SECONDS < deadline)); do
-    if ! ping -c 1 -W 2 "$HOST" >/dev/null 2>&1; then
+    local ping_ok=0 icam_pid=""
+    if ping -c 1 -W 2 "$HOST" >/dev/null 2>&1; then ping_ok=1; fi
+    if [ "$ping_ok" -eq 1 ]; then
+      icam_pid="$(remote 'pidof iCamera_app 2>/dev/null' 2>/dev/null | tr -d '\r')"
+    fi
+    agent_debug_log "A" "deploy_remote.sh:wait_for_boot" "boot_probe" "{\"ping_ok\":$ping_ok,\"icam_pid\":\"$icam_pid\",\"elapsed\":$((SECONDS-START_TS))}" "pre-fix"
+    if [ "$ping_ok" -eq 0 ]; then
       if ((SECONDS > ping_deadline)); then
         echo "still no ping response from ${HOST} ..."
         ping_deadline=$((SECONDS + 60))
@@ -86,6 +93,9 @@ if [ "$MODE" = "status" ]; then
   VER="$(remote_version)"
   UPTIME="$(remote 'uptime' 2>/dev/null | tr -d '\r')"
   PID="$(remote 'pidof iCamera_app 2>/dev/null' 2>/dev/null | tr -d '\r')"
+  AD_FLAG="$(remote 'test -f /media/mmc/atom-debug && echo yes || echo no' 2>/dev/null | tr -d '\r')"
+  AUDIO_RES="$(remote '/scripts/cmd audio 2>&1 | head -1' 2>/dev/null | tr -d '\r')"
+  agent_debug_log "B" "deploy_remote.sh:status" "status_snapshot" "{\"pid\":\"$PID\",\"atom_debug\":\"$AD_FLAG\",\"audio\":\"$AUDIO_RES\"}" "pre-fix"
   echo "host:    ${HOST}"
   echo "version: ${VER:-unknown}"
   echo "uptime:  ${UPTIME}"
@@ -109,7 +119,22 @@ echo "current version on ${HOST}: ${FROM_VER:-unknown} (local build: ${EXPECTED}
 
 case "$MODE" in
   deploy)
-    SRC="$ROOT/atomcam_tools.zip"
+    # 正本は1本(スーパーセット)。OTA は hack.ini/tools_configs を除いた4ファイル zip を送る
+    CANON="$ROOT/atomcam_tools.zip"
+    if [[ ! -f "$CANON" ]]; then CANON="$ROOT/target/sd_initial.zip"; fi
+    OTA_ZIP="$ROOT/target/.deploy_ota.zip"
+    if [[ -f "$CANON" ]]; then
+      TMPD="$(mktemp -d)"
+      ( cd "$TMPD" && unzip -qo "$CANON" \
+          factory_t31_ZMC6tiIDQN rootfs_hack.squashfs hostname authorized_keys 2>/dev/null )
+      rm -f "$OTA_ZIP"
+      ( cd "$TMPD" && zip -qry "$OTA_ZIP" . )
+      rm -rf "$TMPD"
+      SRC="$OTA_ZIP"
+      echo "deploy: stripped OTA zip ($(unzip -l "$OTA_ZIP" 2>/dev/null | tail -1)) from $(basename "$CANON")"
+    else
+      SRC="$CANON"
+    fi
     DST="/media/mmc/update/atomcam_tools.zip"
     TIMEOUT=300
     ;;

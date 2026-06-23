@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Assemble target/sd_initial.zip for SD bootstrap (5 files + hack.ini).
+# Assemble the single canonical AtomCam zip (superset: 4 build files + hack.ini + WiFi).
+# これが正本。SD はそのまま使用。OTA deploy 時は deploy_remote が hack.ini/tools_configs を除く。
 # Tailscale keys are injected from ~/.cursor/secrets/atomcam-tailscale.env (git 外).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../" && pwd)"
 TARGET="$ROOT/target"
-OUT="$TARGET/sd_initial.zip"
+BUILD_ZIP="$TARGET/.sd_build.zip"
 BOOT_INI="$ROOT/config/hack.ini.bootstrap"
 TS_ENV="${ATOMCAM_TAILSCALE_ENV:-$HOME/.cursor/secrets/atomcam-tailscale.env}"
 WIFI_ENV="${ATOMCAM_WIFI_ENV:-$HOME/.cursor/secrets/atomcam-wifi.env}"
@@ -14,14 +15,8 @@ VERIFY=0
 for arg in "$@"; do
   case "$arg" in
     --verify) VERIFY=1 ;;
-    --help|-h)
-      echo "usage: $0 [--verify]"
-      exit 0
-      ;;
-    *)
-      echo "unknown option: $arg" >&2
-      exit 1
-      ;;
+    --help|-h) echo "usage: $0 [--verify]"; exit 0 ;;
+    *) echo "unknown option: $arg" >&2; exit 1 ;;
   esac
 done
 
@@ -32,7 +27,8 @@ required=(
   "$TARGET/authorized_keys"
 )
 
-for f in "$required"; do
+# 全要素を検査(以前は "$required" で先頭しか見ていなかった)
+for f in "${required[@]}"; do
   if [[ ! -f "$f" ]]; then
     echo "sd-package: missing $f (run make build first)" >&2
     exit 1
@@ -69,11 +65,15 @@ if [[ -f "$TARGET/tools_configs" ]]; then
   cp "$TARGET/tools_configs" "$STAGE/tools_configs"
 fi
 
-rm -f "$OUT"
-(cd "$STAGE" && zip -ry "$OUT" .)
+rm -f "$BUILD_ZIP"
+(cd "$STAGE" && zip -ry "$BUILD_ZIP" .)
+echo "sd-package: built canonical zip ($(wc -c <"$BUILD_ZIP") bytes, $(find "$STAGE" -maxdepth 1 -type f | wc -l) files)"
 
-echo "sd-package: wrote $OUT ($(wc -c <"$OUT") bytes, $(find "$STAGE" -maxdepth 1 -type f | wc -l) files)"
+# 短名で releases へ登録し、atomcam_tools.zip / target/sd_initial.zip の両 symlink を張る
+chmod +x "$ROOT/scripts/make/stage-release.sh" "$ROOT/scripts/make/build-metadata.sh" 2>/dev/null || true
+"$ROOT/scripts/make/stage-release.sh" canonical "$BUILD_ZIP"
+rm -f "$BUILD_ZIP"
 
 if [[ "$VERIFY" -eq 1 ]]; then
-  "$ROOT/scripts/hil/sd-package-verify.sh" "$OUT"
+  "$ROOT/scripts/hil/sd-package-verify.sh" "$TARGET/sd_initial.zip"
 fi
