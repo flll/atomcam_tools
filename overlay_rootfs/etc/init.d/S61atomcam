@@ -15,6 +15,23 @@ case "$1" in
   start)
     echo "setup atomcam environment"
 
+    # Feed BOTH hardware watchdogs (/dev/watchdog + /dev/watchdog0) so the system
+    # never hard-resets even when iCamera is not feeding them (e.g. iCamera crash).
+    if ! pgrep -f wdkeep >/dev/null 2>&1; then
+      cat > /tmp/wdkeep.sh <<'EOF'
+#!/bin/sh
+[ -e /dev/watchdog ]  && exec 8>/dev/watchdog  2>/dev/null
+[ -e /dev/watchdog0 ] && exec 9>/dev/watchdog0 2>/dev/null
+while true; do
+  printf '1' >&8 2>/dev/null
+  printf '1' >&9 2>/dev/null
+  sleep 3
+done
+EOF
+      chmod +x /tmp/wdkeep.sh
+      setsid /tmp/wdkeep.sh </dev/null >/dev/null 2>&1 &
+    fi
+
     mkdir -p /tmp/system/bin
     mount -o bind /atom_patch/system_bin /atom/tmp/system/bin
     mount -o bind /usr/bin/curl /atom/tmp/system/bin/curl
@@ -60,8 +77,8 @@ case "$1" in
       [ "$res" = "on" -o "$res" = "off" ] && echo "=== libcallback OK ====" && break;
       sleep 0.5
       let count++
-      if [ 200 -le $count ] ; then
-        echo "=== libcallback warning: skip reboot, continue boot ==="
+      if [ 40 -le $count ] ; then
+        echo "=== iCamera cmd not ready in 20s, continue (no reboot) ==="
         break
       fi
     done
