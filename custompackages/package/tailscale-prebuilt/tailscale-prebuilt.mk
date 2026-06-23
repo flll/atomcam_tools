@@ -2,13 +2,19 @@
 #
 # tailscale-prebuilt
 # Prebuilt mipsle binaries from Tailscale releases.
-# https://dl.tailscale.com/stable/tailscale_1.96.4_mipsle.tgz
+# https://dl.tailscale.com/stable/tailscale_1.92.3_mipsle.tgz
 #
 # Stock Buildroot 2026.02 ships a source-build tailscale package; AtomCam uses
 # the official prebuilt tarball for MIPS32r1/Ingenic T31 instead.
+#
+# NOTE: pinned to 1.92.3 (Go 1.25.5). tailscale >= 1.96 is built with Go 1.26,
+# which has a runtime regression (futex_time64 / uname parse) that crashes on
+# old 32-bit mipsle kernels like 3.10.14__isvp_swan_1.0__ before heap init.
+# Refs: golang/go#77730, golang/go#77930, tailscale#19039. Do NOT bump past
+# 1.94 until a Go >=1.26.2 (fix backport) tailscale mipsle build is available.
 ################################################################################
 
-TAILSCALE_PREBUILT_VERSION = 1.96.4
+TAILSCALE_PREBUILT_VERSION = 1.92.3
 TAILSCALE_PREBUILT_SOURCE = tailscale_$(TAILSCALE_PREBUILT_VERSION)_mipsle.tgz
 TAILSCALE_PREBUILT_SITE = https://dl.tailscale.com/stable
 TAILSCALE_PREBUILT_LICENSE = BSD-3-Clause
