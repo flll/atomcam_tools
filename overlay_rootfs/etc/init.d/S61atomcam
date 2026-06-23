@@ -60,13 +60,9 @@ case "$1" in
       [ "$res" = "on" -o "$res" = "off" ] && echo "=== libcallback OK ====" && break;
       sleep 0.5
       let count++
-      if [ 20 -le $count ] ; then
-        echo "=== libcallback error ==="
-        sync
-        sync
-        sync
-        reboot
-        exit 1
+      if [ 200 -le $count ] ; then
+        echo "=== libcallback warning: skip reboot, continue boot ==="
+        break
       fi
     done
     /scripts/set_icamera_config.sh

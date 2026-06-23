@@ -77,6 +77,8 @@ case "$1" in
     rm -f /media/mmc/tmp/*
     rm -f /media/mmc/timelapse.info
     rm -f /media/mmc/time_lapse.info
+    [ -f /media/mmc/S61atomcam.fixed ] && mount -o bind /media/mmc/S61atomcam.fixed /etc/init.d/S61atomcam
+    [ -f /media/mmc/atom_init.fixed ] && mount -o bind /media/mmc/atom_init.fixed /atom_patch/system_bin/atom_init.sh
   ;;
   stop)
     sync
