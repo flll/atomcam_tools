@@ -1,0 +1,3 @@
+# build profile: tailscale — 明示的に Tailscale を有効化（atomcam_defconfig と同等）
+BR2_PACKAGE_TAILSCALE_PREBUILT=y
+BR2_PACKAGE_TAILSCALE_PREBUILT_ENABLE=y

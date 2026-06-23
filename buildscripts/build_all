@@ -30,7 +30,17 @@ cp -dpf staging/usr/lib/libstdc++.so* target/usr/lib/
 find ./build -name ".stamp_target_installed*" -print | xargs rm -f
 cd "${BUILDROOT_DIR}"
 export BR2_EXTERNAL=/src/custompackages
+
+PROFILE_ENV=/src/target/active_build_profile.env
 cp /src/configs/atomcam_defconfig .config
 cat /src/configs/atomcam_toolchain_external.fragment >> .config
+if [ -f "${PROFILE_ENV}" ]; then
+	# shellcheck disable=SC1090
+	. "${PROFILE_ENV}"
+	if [ -n "${PROFILE_FRAGMENT:-}" ] && [ -f "${PROFILE_FRAGMENT}" ]; then
+		cat "${PROFILE_FRAGMENT}" >> .config
+		echo "build_all: applied profile fragment ${PROFILE_FRAGMENT} (BUILD_PROFILE=${BUILD_PROFILE:-?})"
+	fi
+fi
 make olddefconfig
 make
