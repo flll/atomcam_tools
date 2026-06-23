@@ -7,7 +7,12 @@ HEALTHCHECK=$(awk -F "=" '/^HEALTHCHECK *=/ {print $2}' $HACK_INI)
 HEALTHCHECK_PING_URL=$(awk -F "=" '/^HEALTHCHECK_PING_URL *=/ {print $2}' $HACK_INI)
 
 for retry in 0 1 2 3 4 5; do
-  ifconfig | grep 'Link encap:' | grep -v Loopback || break
+  # Boot: only lo may exist; old "|| break" skipped retries and triggered reboot ~1min.
+  if ! ifconfig 2>/dev/null | grep -E '^(wlan0|eth0)' >/dev/null 2>&1 ; then
+    echo $(date +"%Y/%m/%d %H:%M:%S : Network error (no wlan0/eth0) : ") $retry >> /media/mmc/healthcheck.log
+    sleep 10
+    continue
+  fi
 
   ERR=0
   [ -f /tmp/router_address ] && ROUTER=`cat /tmp/router_address`
@@ -47,6 +52,12 @@ for retry in 0 1 2 3 4 5; do
 done
 
 [ "$MONITORING_REBOOT" = "off" -o -f /media/mmc/atom-debug ] && exit 0
+
+BOOT_SEC=$(awk '{print int($1)}' /proc/uptime 2>/dev/null)
+if [ -n "$BOOT_SEC" ] && [ "$BOOT_SEC" -lt 300 ]; then
+  echo $(date +"%Y/%m/%d %H:%M:%S : skip reboot (boot grace ${BOOT_SEC}s)") >> /media/mmc/healthcheck.log
+  exit 0
+fi
 
 echo $(date +"%Y/%m/%d %H:%M:%S : retry error -> reboot") >> /media/mmc/healthcheck.log
 echo router=$ROUTER >> /media/mmc/healthcheck.log
