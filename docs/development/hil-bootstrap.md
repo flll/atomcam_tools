@@ -12,6 +12,8 @@
 
 ## 真 HIL（lll-legacy / main）
 
+詳細ハーネス: [debug-hil-loop.md](debug-hil-loop.md) (scripts/hil/debug-hil-loop.sh)
+
 ```bash
 cd ~/atomcam_tools   # main
 make build

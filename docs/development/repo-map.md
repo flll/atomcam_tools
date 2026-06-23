@@ -73,3 +73,38 @@ flowchart TB
 3. **overlay** (`overlay_rootfs/`): 最上層として被せるカスタムファイル群
 
 なお `libcallback/` は uClibc 製の LD_PRELOAD フックであり、上記 glibc rootfs とは**別の toolchain** でビルドされる点に注意。
+
+
+## scripts/make/ の内訳 (ホスト・make プロファイル基盤)
+
+| ファイル | 役割 |
+|---|---|
+| `build-profile.sh` | プロファイル list/show/apply/configure。状態は `target/active_*` |
+| `agent-detect.sh` | Cursor エージェント検出(対話 configure 用) |
+| `build-metadata.sh` | git/profile から **1本の短い zip 名**を算出 |
+| `stage-release.sh` | 正本 zip を releases へ登録し両 symlink + BUILD_MANIFEST |
+| `merge-authorized-keys.sh` | agent/full でデバッグ鍵を authorized_keys に統合 |
+| `post-build-profile.sh` | プロファイル別の後処理(HIL資産/mmcテンプレ/鍵/sd-package) |
+
+## configs/build_profiles/ (プロファイル定義)
+
+| ファイル | 役割 |
+|---|---|
+| `manifest.sh` | プロファイル定義(desc / 変数) |
+| `simple.fragment` / `tailscale.fragment` | defconfig へ追記する差分 |
+
+## 生成物 (すべて gitignore・コミット禁止)
+
+| パス | 内容 |
+|---|---|
+| `target/releases/atomcam-*.zip` | 正本 zip(版付き短名・**1本**) |
+| `atomcam_tools.zip` / `target/sd_initial.zip` | 正本への symlink(deploy / SD 別名) |
+| `target/BUILD_MANIFEST.json` / `target/LATEST.txt` | ビルドメタ |
+| `target/active_profile.name` / `target/active_build_profile.env` | 選択中プロファイルの実行時状態 |
+| `target/mmc_templates/` / `target/hil-bootstrap/` | HIL プロファイルのステージ物 |
+
+## zip 1本化 / OTA
+
+- 正本は **6ファイル**(build 4 + `hack.ini` + `tools_configs`)。SD はそのまま使用。
+- OTA は `scripts/deploy_remote.sh` が `hack.ini`/`tools_configs` を除いた **4ファイル**一時 zip を送る。
+- 詳細: [build-profiles.md](build-profiles.md) / 経緯: [refactor-notes.md](refactor-notes.md)

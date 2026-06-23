@@ -1,80 +1,88 @@
-# AGENTS.md
+# Agents — atomcam_tools
 
-## プロジェクト概要
+このリポジトリは **AI エージェントが会話だけでビルド・デプロイできる**ように設計されている。
+特殊な専用コマンドや Node 間連携は不要。`make` と短い自然言語で完結する。
 
-ATOMCam / ATOMCam2 / AtomSwing / WyzeCamV3 のファームウェアを拡張するプロジェクト。
-flll/atomcam_tools フォークとして独自開発しており、**upstream (mnakada/atomcam_tools) へは PR しない**。
+## いちばん大事な3点
 
-- ビルド基盤: Buildroot 2026.02.1 + br2-external ツリー (`custompackages/`)
-- ビルド環境: Ubuntu 26.04 ベースの Docker コンテナ
+1. **zip は1本**。`atomcam-{commit}[-{profile}].zip`(例 `atomcam-3ad28e8-harness.zip`、simple は `atomcam-3ad28e8.zip`)
+2. SD もデプロイも **同じ1本**を使う。OTA の時だけ `deploy_remote.sh` が中で余分な2ファイル(`hack.ini`/`tools_configs`)を自動で除く
+3. 版の真実は **`target/BUILD_MANIFEST.json`**(commit/tag/profile/時刻)。エージェントはここを読む
 
-## コマンド
+## ビルド(1コマンド)
 
-| コマンド | 説明 |
-|---|---|
-| `make docker-build` | 初回のみ。Docker イメージ作成 + Buildroot フルビルド (~55 分) |
-| `make build` | 反復ビルド。コンテナ内で `/src/buildscripts/build_all` を実行 |
-| `make login` | builder コンテナへシェルで入る |
-| `make menuconfig` | Buildroot の menuconfig (root Makefile のラッパー経由) |
-| `make linux-menuconfig` | カーネルの menuconfig (同上) |
-| `make savedefconfig` | defconfig の保存 (同上) |
-| `make sim-swing` | AtomSwing の QEMU シミュレータを起動 |
-| `make deploy` | 実機へ SSH デプロイ (`ATOMCAM_HOST=` で対象指定、既定 atomcam.local) |
-| `make deploy-test` | デプロイ + スモークテスト ([docs/development/remote-deploy.md](docs/development/remote-deploy.md)) |
+```bash
+cd ~/atomcam_tools          # lll-legacy が正本(main のみ)
 
-`make menuconfig` / `make linux-menuconfig` / `make savedefconfig` は root Makefile のラッパー経由で実行する。実体はコンテナ内 `/atomtools/build/buildroot-2026.02.1` にある Buildroot ツリー。
+make help                   # 一覧(既定ターゲット)
+make configure              # プロファイル対話選択(エージェント無しでも可)
 
-WebUI は `web/` ディレクトリ (Vue + webpack)。ビルド成果物は `buildscripts/local_build.sh` が rootfs へ配置する。
+make build                  # 既定 profile=tailscale。終わると 1本の zip ができる
+make build-harness          # HIL 反復デバッグ向け
+make build-simple           # Tailscale 無効・最小(zip 名に profile 付かない)
+make build-agent            # harness + デバッグ SSH 鍵
+```
 
-## ディレクトリマップ
+`make build` は docker ビルド → `sd-package` で **1本の正本 zip** を生成し、
+`atomcam_tools.zip`(deploy 別名) と `target/sd_initial.zip`(SD 別名) を同じ正本へ symlink する。
 
-| パス | 役割 (実行環境) |
-|---|---|
-| `buildscripts/` | Docker コンテナ内で実行される Buildroot フック群 |
-| `scripts/` | 開発ホストで実行 (`verify_tailscale_*`, `sim_atomswing.sh`) |
-| `overlay_rootfs/scripts/` | カメラ実機上で実行されるスクリプト |
-| `patches/` | `setup_buildroot.sh` が Buildroot / kernel ツリーへ手適用するパッチ |
-| `global_patches/` | `BR2_GLOBAL_PATCH_DIR` 経由で upstream パッケージへ自動適用されるパッチ |
-| `custompackages/` | br2-external ツリー (`external.desc` の name=ATOMCAM_TOOLS) |
-| `configs/` | defconfig / kernel.config / toolchain fragment |
-| `initramfs_skeleton/` | カーネル内蔵 initramfs のスケルトン |
-| `overlay_rootfs/` | `BR2_ROOTFS_OVERLAY` (rootfs 3 層: initramfs → Buildroot rootfs → overlay) |
-| `libcallback/` | uClibc 製 LD_PRELOAD フック (glibc rootfs とは別 toolchain でビルド) |
-| `web/` | WebUI ソース (Vue + webpack) |
-| `target/` | SD カード成果物のステージ (生成物はコミット禁止) |
-| `docs/` | webui-guide + development/{architecture,repo-map,libcallback,simulation} |
+## 成果物
 
-## 境界
+| パス | 意味 |
+|------|------|
+| `target/releases/atomcam-*.zip` | **正本(版付き短名・1本)** |
+| `atomcam_tools.zip` | deploy 用エイリアス(symlink) |
+| `target/sd_initial.zip` | SD 用エイリアス(symlink) |
+| `target/BUILD_MANIFEST.json` | 機械可読メタ(commit/tag/profile) |
+| `target/LATEST.txt` | 最新 zip 名の短い要約 |
 
-### Always (常に守る)
+```bash
+make release-info    # 次に作られる zip 名 + メタ(ビルド不要)
+make artifacts       # symlink と releases/ 一覧
+```
 
-- コミットメッセージは日本語 (`feat:` / `fix:` / `chore:` / `docs:` prefix)
-- `make build` が通る状態を維持する
-- main へ直コミット
-- 実機テストの Definition of Done: `make deploy-test` が exit 0 (全スモークケース pass) であること
+## デプロイ / HIL(現状は LAN)
 
-### Ask first (事前に確認)
+```bash
+# OTA(自動で hack.ini/tools_configs を除いた4ファイルを送る)
+ATOMCAM_HOST=10.0.0.228 make deploy
+ATOMCAM_HOST=10.0.0.228 ./scripts/deploy_remote.sh 10.0.0.228 --status
+ATOMCAM_HOST=10.0.0.228 make hil-debug-loop
+```
 
-- `configs/atomcam_defconfig` の変更
-- `patches/kernel/*` の追加
-- `custompackages/` へのパッケージ追加・削除
-- Tailscale バージョンの変更
+tailnet(`atomcam33`)はカメラ側 Tailscale 復旧後に `debug-hil-loop.sh resolve` が自動選択。
+現状は LAN `10.0.0.228` が有効経路。
 
-### Never (禁止)
+## 会話シミュレーション例(10件)
 
-- upstream (mnakada) への push / PR
-- 長命な feature ブランチの作成 (実験は `experiment/*` で数日以内に決着)
-- `target/` や `*.log` や `sim-results/` のコミット
-- secrets のコミット
+エージェントは下記のように自然言語を `make`/スクリプトへ写像する。
 
-## ブランチ方針
+1. 「harness でビルドして」→ `make build-harness` → `atomcam-3ad28e8-harness.zip`(1本)
+2. 「Tailscale なしの最小ビルド」→ `make build-simple` → `atomcam-3ad28e8.zip`(profile 無し)
+3. 「今のコミットだと zip 名どうなる？」→ `make release-info`(ビルド前プレビュー)
+4. 「SD に焼いて」→ `make build-harness` 後、Windows で `hil-windows.ps1 install -RefreshZip`(同じ1本)
+5. 「10.0.0.228 に入れて」→ `ATOMCAM_HOST=10.0.0.228 make deploy`(OTA は自動で4ファイルに絞る)
+6. 「カメラの状態見て」→ `./scripts/deploy_remote.sh 10.0.0.228 --status`
+7. 「デバッグループ回して」→ `ATOMCAM_HOST=10.0.0.228 make hil-debug-loop`
+8. 「この zip どのコミット？」→ 名前の `3ad28e8` と `target/BUILD_MANIFEST.json` を照合
+9. 「前の版に戻して」→ `./scripts/deploy_remote.sh 10.0.0.228 --rollback`(端末の .bak を書き戻し)
+10. 「zip って2個あったよね？」→「1本に統一済み。SD はそのまま、deploy 時だけ自動で2ファイル除く」+ `make artifacts`
 
-- trunk-main 方式。main へ直コミット
-- 実験のみ `experiment/*` を使用
-- アーカイブは `archive/*`
+## エージェントが居ない場合
 
-## 詳細リンク
+`make agent-hint` で検出。未検出時は `make configure`(番号選択)→ `make build` で完結。
+clone も不要(lll-legacy の `~/atomcam_tools` が正本)。
 
-- [docs/development/repo-map.md](docs/development/repo-map.md) — 全ディレクトリの詳細マップ
-- [docs/development/architecture.md](docs/development/architecture.md) — アーキテクチャ解説
-- [build.md](build.md) — ビルド手順の詳細
+## 前提 / 境界
+
+- ビルド: Docker + `make docker-build`(初回)
+- push/commit は **ユーザー明示時のみ**
+- 起動不能リスク領域(`initramfs_skeleton/` `patches/kernel/` u-boot)には触れない
+
+## 詳細
+
+- [docs/development/build-profiles.md](docs/development/build-profiles.md)
+- [docs/development/debug-hil-loop.md](docs/development/debug-hil-loop.md)
+- [docs/development/hil-bootstrap.md](docs/development/hil-bootstrap.md)
+- [docs/development/repo-map.md](docs/development/repo-map.md)
+- 作業経緯/未解決: [docs/development/refactor-notes.md](docs/development/refactor-notes.md)
