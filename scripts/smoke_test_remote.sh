@@ -15,6 +15,7 @@
 set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+. "$ROOT/scripts/hil/agent-debug-log.sh"
 HOST="${1:-${ATOMCAM_HOST:-atomcam.local}}"
 EXPECTED="${2:-}"
 FAILED=0
@@ -78,8 +79,15 @@ if ! nc -z -w 5 "$HOST" 8554 2>/dev/null; then
   fi
 elif command -v ffprobe >/dev/null 2>&1; then
   FRAME_RC=0
-  ffprobe -v error -rtsp_transport tcp -select_streams v:0 -show_frames -read_intervals '%+#1' \
-    "rtsp://${HOST}:8554/unicast" >/dev/null 2>&1 || FRAME_RC=$?
+  agent_debug_log "C" "smoke_test_remote.sh:rtsp" "ffprobe_start" "{\"host\":\"$HOST\"}" "pre-fix"
+  if command -v timeout >/dev/null 2>&1; then
+    timeout 20 ffprobe -v error -rtsp_transport tcp -select_streams v:0 -show_frames -read_intervals '%+#1' \
+      "rtsp://${HOST}:8554/unicast" >/dev/null 2>&1 || FRAME_RC=$?
+  else
+    ffprobe -v error -rtsp_transport tcp -select_streams v:0 -show_frames -read_intervals '%+#1' \
+      "rtsp://${HOST}:8554/unicast" >/dev/null 2>&1 || FRAME_RC=$?
+  fi
+  agent_debug_log "C" "smoke_test_remote.sh:rtsp" "ffprobe_end" "{\"rc\":$FRAME_RC}" "pre-fix"
   if [ "$FRAME_RC" -eq 0 ]; then
     report "rtsp" "pass" "{\"port_open\":true,\"ffprobe\":\"ok\"}"
   else
@@ -94,7 +102,9 @@ TS_ENABLE="$(remote "awk -F= '/^TAILSCALE_ENABLE *=/ {print \$2}' /tmp/hack.ini 
 if [ "$TS_ENABLE" != "on" ]; then
   report "tailscale" "skip" "{\"enable\":\"$(json_escape "$TS_ENABLE")\"}"
 else
+  agent_debug_log "D" "smoke_test_remote.sh:tailscale" "tailscale_check_start" "{}" "pre-fix"
   TS_VER="$(remote 'tailscale version 2>&1 | head -1' | tr -d '\r')"
+  agent_debug_log "D" "smoke_test_remote.sh:tailscale" "tailscale_check_end" "{\"version\":\"$TS_VER\"}" "pre-fix"
   TS_UP="$(remote 'pgrep -f tailscaled >/dev/null 2>&1 && echo yes || echo no' | tr -d '\r')"
   if [ "$TS_UP" = "yes" ]; then
     report "tailscale" "pass" "{\"version\":\"$(json_escape "$TS_VER")\",\"daemon\":\"running\"}"
