@@ -157,3 +157,35 @@
   3. ライブ映像を諦め、ネイティブ SD 録画のみで運用(現状の no-libcallback 安定化の延長)。
 - **起動安定化**: wdkeep の boot 常駐を inittab `respawn` 等で堅牢化する。
 - 実機が高負荷時に sshd banner timeout でリモート介入不能になるため、調査は SD オフラインが確実。
+
+### 追記(2026-06-24 後半): webhook awk 暴走の正体と確実な停止法
+- `S60webhook` が FIFO `/var/run/atomapp` を作り `/scripts/webhook.sh &` を起動。webhook.sh は
+  実体が `awk '...' /var/run/atomapp`(**awk に exec** するのでプロセス名は `webhook.sh` でなく
+  **`awk`**)。
+- iCamera を libcallback 無し + stdout→/dev/null にすると FIFO に **writer が居ない**。busybox awk
+  は writerless FIFO を**ノンブロッキングで空読みし続け 40-60% CPU で暴走** → wdkeep を枯渇させ
+  リブート誘発。
+- **停止が難しい罠**: `killall webhook.sh`(名前は awk なので不一致)、`pkill -f time_lapse_event`
+  /`fuser -k /var/run/atomapp`(busybox ps が長い awk script を切り詰める/awk が FIFO を常時保持
+  しないため不一致) すべて空振り。
+- **確実な停止**: `comm == awk` かつ `/proc/PID/cmdline` に `atomapp` を含む PID を kill。
+  `/media/mmc/killwebhook.sh`(下記)を S61 起動時 + 毎分 cron で実行。
+  ```sh
+  for p in $(ls -1 /proc | grep '^[0-9]'); do
+    [ "$(cat /proc/$p/comm 2>/dev/null)" = awk ] || continue
+    tr '\0' ' ' < /proc/$p/cmdline 2>/dev/null | grep -q atomapp && kill -9 "$p"
+  done
+  ```
+- 適用後: webhook awk=0、CPU 50% idle、uptime 連続増加、iCamera + RTSP(554) 稼働で**安定**。
+  (ライブ映像=Web UI 画像は依然 libcallback=F-3 が必要で未提供。RTSP も libcallback の
+  v4l2loopback 供給に依存するため、ライブ実frが出るかは要確認。ネイティブ SD 録画は動作。)
+
+#### 現在の安定運用(SD /media/mmc 上、ランタイム)
+- `S61atomcam.fixed`: 両watchdog給餌 wdkeep(setsid) + atom_init.fixed を chroot に bind +
+  `killall webhook.sh; killall awk`。
+- `atom_init.fixed`: iCamera を libcallback 無し・stdout→/dev/null で起動。
+- `crontab`(/media/mmc/crontab → set_crontab): wdkeep 存在確認再起動 + killwebhook.sh + wifi_audit
+  + tailscale_wrapper。
+- `wdkeep.sh` / `killwebhook.sh` / `tailscale_wrapper.sh`(state 永続化版)。
+- **弱点**: boot 直後 wdkeep が一瞬落ちることがあるが cron が60秒以内に復帰。完全な堅牢化は
+  inittab respawn 化が望ましい(未実施)。
