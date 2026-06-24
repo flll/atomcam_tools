@@ -93,3 +93,67 @@
   syscall 経由のため無効 → 廃止(start のみ)。
 - 残: 実機反映には **再ビルド+deploy** が必要(本コミットはソース修正のみ)。Go>=1.26.2 の
   tailscale mipsle build が出たら追従可。
+
+## 2026-06-24 調査記録: F-3 (libcallback SIGSEGV) と起動安定化の深掘り
+
+このセッションで実機(ATOM_CamV3C, app.ver 4.58.0.160, iCamera build "Mar 3 2025", 版2.5.20)を
+ランタイム証拠付きで調査した結果。**ライブ映像復旧は未解決**で、firmware/libcallback の
+リバースエンジニアリングが必要なことが判明した。
+
+### F-3 の本質: libcallback はファームの iCamera_app バイナリに密結合
+- `docs/development/libcallback.md` の通り、libcallback は iCamera_app の `.rodata/.text` を
+  **走査して関数アドレスを特定**し、`memset`/`strncmp`/`snprintf` 等を hook する。つまり
+  iCamera_app の**バイナリ配置(オフセット)に依存**する。
+- dmesg 実測: `do_page_fault() #2: sending SIGSEGV to iCamera_app for invalid read access`。
+  → libcallback がファームと合わないアドレスを参照して不正読み込みでクラッシュ。
+- **libcallback.so は 2.5.19 と 2.5.20 で完全同一**(md5 `e964529e321ec05b4fe8a75189a62482`,
+  129252B, GCC 3.3.2 / crosstool-NG 4.9.4)。つまり「2.5.20 の再ビルドで壊れた」のではなく、
+  **この個体のファーム版と libcallback の前提オフセットが不一致**(F-3 は版非依存の既存問題)。
+- 影響範囲(libcallback が担う機能):
+  - `command.c`: **port 4000** のコマンド IF(Web UI / `/scripts/cmd` が依存)
+  - `video_callback.c`: H264/265 フレームを **v4l2loopback** へ供給(=**ライブ映像/RTSP の実体**)
+  - `audio_callback.c`/`jpeg.c`/timelapse webhook 等
+- 帰結: **libcallback 無しでは「ライブ映像(Web UI 画像/RTSP の中身)」「port 4000」が出ない**。
+  iCamera のネイティブ録画(動体/連続を SD に mp4)は libcallback 無しでも動く。
+
+### 起動リブートループの連鎖(no-libcallback 運用時)
+1. libcallback 無し → **HW ウォッチドッグ未給餌**(libcallback がやっていた)→ SoC が
+   `CPU0 RESET ERROR` でハードリセット。
+2. ウォッチドッグは **2 デバイス**: `/dev/watchdog`(10,130) と `/dev/watchdog0`(252,0)。
+   片方給餌だけだと約235秒で他方が発火。**両方**給餌が必要。
+3. iCamera の stdout は `S60webhook` の FIFO `/var/run/atomapp` に流れ、`webhook.sh` の awk が
+   読む。libcallback 無しだと iCamera が大量ログを吐き、**awk が CPU 100% 暴走** → 給餌プロセス
+   (wdkeep)を枯渇させ → リブート。動体検知などのイベントで遅れて発火する時限爆弾。
+
+### 緩和策(このセッションで SD に適用、ただし完全安定は未確認)
+- `atom_init.fixed`: iCamera を **libcallback 無し**で起動し、stdout を **`/dev/null`** へ
+  (FIFO に流さない=awk 暴走を断つ)。
+- `S61atomcam.fixed`: `killall webhook.sh` + **両ウォッチドッグ給餌 wdkeep**(setsid 常駐)。
+- `/media/mmc/crontab`: 毎分 `wdkeep` 存在確認して再起動(自己修復)。
+- **未解決の弱点**: boot 時の wdkeep 常駐が不安定(init 文脈の setsid detach が落ちることがある)。
+  watchdog タイムアウト(~120s)に対し cron(1分粒度)は間に合わないことがある。要・堅牢化
+  (inittab respawn 等)。
+
+### tailnet (userspace-networking) の確定事項
+- カーネルに **TUN 無し**(`/dev/net/tun` なし・`tun.ko` なし)→ tailscaled は
+  `--tun=userspace-networking` 必須。**インバウンド(外からの直 SSH)は不可**、
+  到達は **Tailscale SSH** 経由(tailscaled が処理)。
+- tailscaled state を `/tmp` に置くと再起動毎に**別ノード登録**され `atomcam33-N` が増殖し
+  100.x IP が変動。→ state を **`/media/mmc` にバックアップ/復元**して単一ノード・固定 IP 化。
+- 永続キーは Tailscale **OAuth API**(`TS_OAUTH_CLIENT_ID/SECRET`)で発行可能(infra-secrets)。
+  reusable・非ephemeral・tag:server。description に記号不可(英数+空白)。
+- ACL は **grants モデル**。`group:admin → dst:* ip:*`。tag:server ノード同士は grant が無いと
+  相互に見えない(lll-legacy 自身も tag:server なので atomcam を見られない)。admin ユーザー機
+  (例: flll@ 所有の hx90)からは到達可。
+
+### F-9 補足(既出): tailscale 1.92.3 固定で Go 1.26 回帰回避済み。今回 1.92.3/Go1.25.5 で
+  クラッシュ無く動作確認。
+
+### 残課題 / 次の一手
+- **ライブ映像復旧 = F-3 解決**が必須。選択肢:
+  1. libcallback をこの個体のファーム iCamera_app に合わせて**再リバースエンジニアリング**
+     (オフセット/シグネチャ再特定)。重いが本筋。
+  2. カメラファームを libcallback が対応する版へ**ダウングレード**。
+  3. ライブ映像を諦め、ネイティブ SD 録画のみで運用(現状の no-libcallback 安定化の延長)。
+- **起動安定化**: wdkeep の boot 常駐を inittab `respawn` 等で堅牢化する。
+- 実機が高負荷時に sshd banner timeout でリモート介入不能になるため、調査は SD オフラインが確実。
