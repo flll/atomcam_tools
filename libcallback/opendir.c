@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <string.h>
@@ -10,6 +11,7 @@ static const char *MediaPath = "/media/mmc/";
 char TimeLapsePath[256];
 
 static void __attribute ((constructor)) opendir_hook_init(void) {
+  libcb_trace("opendir");
 
   original_opendir = dlsym(dlopen ("/lib/libc.so.0", RTLD_LAZY), "opendir");
 }

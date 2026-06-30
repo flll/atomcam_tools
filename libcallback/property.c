@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -284,6 +285,13 @@ extern unsigned int _fini;
 static const char *SearchStr = "[%s,%04d]----- p2p recv protocol set property -----\n";
 
 static void __attribute ((constructor)) set_property_init(void) {
+  libcb_trace("property");
+  // F-3 guard: the raw memory scan below (from &_fini up to iCamera's mapping end)
+  // reads unmapped pages on this firmware layout and SIGSEGVs. The property command is
+  // non-essential; skip the scan so the rest of libcallback (port 4000/video/jpeg/audio
+  // = live view) loads safely.
+  fprintf(stderr, "set_property_init: skipped (F-3 guard)\n");
+  return;
 
   char path[256];
   snprintf(path, 256, "/proc/%d/maps", getpid());

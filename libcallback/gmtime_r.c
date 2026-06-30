@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <time.h>
@@ -10,6 +11,7 @@ extern int swing;
 static struct tm *(*original_gmtime_r)(const time_t *timep, struct tm *result);
 
 static void __attribute ((constructor)) gmtime_r_hook_init(void) {
+  libcb_trace("gmtime_r");
 
   original_gmtime_r = dlsym(dlopen ("/lib/libc.so.0", RTLD_LAZY), "gmtime_r");
 }

@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <dlfcn.h>
@@ -109,6 +110,7 @@ static void *WaitMotionThread() {
 }
 
 static void __attribute ((constructor)) osd_rect_hook_init(void) {
+  libcb_trace("wait_motion");
 
   original_local_sdk_video_osd_update_rect = dlsym(dlopen ("/system/lib/liblocalsdk.so", RTLD_LAZY), "local_sdk_video_osd_update_rect");
 

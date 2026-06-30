@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <string.h>
@@ -8,6 +9,7 @@ static const char *HookPath = "/media/mmc/time_lapse/.setup";
 extern char TimeLapsePath[256];
 
 static void __attribute ((constructor)) remove_hook_init(void) {
+  libcb_trace("remove");
 
   original_remove = dlsym(dlopen ("/lib/libc.so.0", RTLD_LAZY), "remove");
 }
