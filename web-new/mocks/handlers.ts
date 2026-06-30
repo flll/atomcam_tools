@@ -63,6 +63,29 @@ export const handlers = [
     ),
   ),
 
+
+  http.post(cgi('video_isp.cgi'), async ({ request }) => {
+    const text = await request.text();
+    text.split('\n').forEach((line) => {
+      const key = line.split(/[ \t=]/)[0]?.trim();
+      if (!key) return;
+      mock.isp[key] = line.replace(new RegExp(`${key}[ \t=]*`), '').trim();
+    });
+    return HttpResponse.text('ok');
+  }),
+
+  http.get(cgi('watermark.cgi'), () => {
+    const width = 120;
+    const height = 40;
+    const buf = new Uint8Array(8 + width * height * 4);
+    const view = new DataView(buf.buffer);
+    view.setUint16(0, height, true);
+    view.setUint16(4, width, true);
+    return new HttpResponse(buf, { headers: { 'Content-Type': 'application/octet-stream' } });
+  }),
+
+  http.post(cgi('watermark.cgi'), () => HttpResponse.text('ok')),
+
   // go2rtc HomeKit（最小）
   http.get(/:1984\/api\/homekit\/pairing$/, () => HttpResponse.json({ paired: false })),
 ];
