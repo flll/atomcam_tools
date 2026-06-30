@@ -1,4 +1,14 @@
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Crosshair, Wifi, WifiOff } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Crosshair,
+  Moon,
+  RefreshCw,
+  Wifi,
+  WifiOff,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/api';
@@ -17,11 +27,12 @@ function formatBytes(n: number): string {
 export default function Live() {
   const { t } = useTranslation();
   const { src, online, fps } = useJpegStream(500);
-  const { motor, media } = useCameraStatus();
+  const { motor, media, status } = useCameraStatus();
   const { config } = useHackIni();
   const [speed, setSpeed] = useState(5);
 
   const isSwing = config?.PRODUCT_MODEL === 'ATOM_CAKP1JZJP';
+  const isAtom = config?.PRODUCT_MODEL?.startsWith('ATOM') && !isSwing;
 
   async function move(dPan: number, dTilt: number) {
     const pan = (motor?.pan ?? 177) + dPan;
@@ -56,31 +67,51 @@ export default function Live() {
           <div className="absolute left-3 top-3 rounded bg-black/55 px-2 py-1 font-mono text-xs text-white">
             {t('live.fps', { fps })}
           </div>
+          <div className="absolute bottom-3 right-3 flex flex-wrap gap-1">
+            <Button size="sm" variant="secondary" onClick={() => api.exec('night on')}>
+              <Moon className="size-3.5" /> on
+            </Button>
+            <Button size="sm" variant="secondary" onClick={() => api.exec('night auto')}>
+              auto
+            </Button>
+            <Button size="sm" variant="secondary" onClick={() => api.exec('night off')}>
+              off
+            </Button>
+            {isSwing && (
+              <Button size="sm" variant="outline" onClick={() => api.exec(`move 177 90 ${speed}`)}>
+                <Crosshair className="size-3.5" /> {t('live.center')}
+              </Button>
+            )}
+            {isAtom && (
+              <Button size="sm" variant="outline" onClick={() => api.exec('flip')}>
+                <RefreshCw className="size-3.5" /> flip
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {/* PTZ パッド（AtomSwing 時のみ操作可） */}
         <section className="rounded-xl border border-border bg-card p-4">
           <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t('live.ptz')}</h2>
           <div className="flex items-center gap-6">
             <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
               <span />
-              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(0, 10)} aria-label={t('live.tilt')}>
+              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(0, 10)}>
                 <ChevronUp />
               </Button>
               <span />
-              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(-10, 0)} aria-label={t('live.pan')}>
+              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(-10, 0)}>
                 <ChevronLeft />
               </Button>
-              <Button variant="outline" size="icon" disabled={!isSwing} onClick={() => api.exec('move 177 90 ' + speed)} aria-label={t('live.center')}>
+              <Button variant="outline" size="icon" disabled={!isSwing} onClick={() => api.exec(`move 177 90 ${speed}`)}>
                 <Crosshair />
               </Button>
-              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(10, 0)} aria-label={t('live.pan')}>
+              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(10, 0)}>
                 <ChevronRight />
               </Button>
               <span />
-              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(0, -10)} aria-label={t('live.tilt')}>
+              <Button variant="secondary" size="icon" disabled={!isSwing} onClick={() => move(0, -10)}>
                 <ChevronDown />
               </Button>
               <span />
@@ -100,12 +131,12 @@ export default function Live() {
               />
               <div className="pt-1 text-xs text-muted-foreground">
                 pan {motor?.pan ?? '–'} / tilt {motor?.tilt ?? '–'}
+                {status?.FLIP != null && ` / flip ${status.FLIP}`}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ステータス */}
         <section className="rounded-xl border border-border bg-card p-4">
           <h2 className="mb-3 text-sm font-semibold text-muted-foreground">{t('nav.system')}</h2>
           <dl className="space-y-2 text-sm">
