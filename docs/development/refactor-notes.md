@@ -189,3 +189,52 @@
 - `wdkeep.sh` / `killwebhook.sh` / `tailscale_wrapper.sh`(state 永続化版)。
 - **弱点**: boot 直後 wdkeep が一瞬落ちることがあるが cron が60秒以内に復帰。完全な堅牢化は
   inittab respawn 化が望ましい(未実施)。
+
+## F-3 libcallback 復旧 (2026-06-24 再開)
+
+### ビルド成果物
+- `libcallback.f3-noscan.so` (md5 f9885ff3, 110692B): property/user_config/alarm_config を CC_SRCS から除外
+- `libcallback.f3-trace.so` (md5 9298a39a, 116832B): 上記除外 + property F-3 ガード + 全コンストラクタ計装(`/media/mmc/libcb-trace.log`)
+
+### 手動 chroot 試験の落とし穴
+- `command_init` は `getenv(PRODUCT_MODEL)` を NULL チェック無しで `strcmp` する。S61 経由起動では親が `export PRODUCT_MODEL` するが、手動 `chroot /atom /tmp/system/bin/atom_init.sh` では **export 必須**（修正: command.c に `p &&` ガード追加済み）。
+- atom_init.fixed 内でも iCamera 起動前に `export PRODUCT_MODEL=...` が必要。
+
+### 初回 LD_PRELOAD 試験結果
+- PRODUCT_MODEL 未 export の手動再起動 → iCamera 即死（テスト手順バグ）。安定版 atom_init.fixed.bak-f3test へ復元済み。
+- 走査系3ファイル除外ビルドの正当な試験は trace 版 + export 修正後の `scripts/hil/f3-preload-test.sh` で実施予定。
+
+### 実機状態 (18:10 JST 頃)
+- LAN SSH が断続的 `No route to host`（リブートループ or 高負荷の疑い）。tailnet `atomcam33-2` も offline。
+- 次: 電源安定後に `f3-preload-test.sh` 実行、または SD 直編集で atom_init.fixed が no-preload であることを確認。
+
+## 2026-06-25 plan-exec 実行記録
+
+### 実施
+- scripts/hil/plan-exec.sh / flash-fix.sh 追加
+- libcallback.f3-trace.so 再ビルド md5 2c3dfc5e
+- 短い SSH 窓で crontab repo 版を mmc 配信成功
+
+### 未完了
+- 10.0.0.228 LAN 喪失 (Destination Host Unreachable)
+- F-3 f3-preload-test 再実行未了
+- overlay OTA 未実施
+
+### 次
+1. カメラ電源/LAN 確認
+2. flash-fix.sh → f3-preload-test.sh
+3. scp ConnectTimeout=8 必須
+
+### F-3 (解決 2026-06-30): iCamera_app + libcallback.so SIGSEGV
+- **原因**: `property.c` の iCamera バイナリ走査が本 FW レイアウトで未マップ領域を読み SIGSEGV。
+  加えて `command.c` の `PRODUCT_MODEL` NULL 参照、試験時の FIFO (`>> /var/run/atomapp`) による webhook 暴走・stale PID 誤判定が調査を混乱させた。
+- **修正**:
+  - `property.c`: `set_property_init` 先頭で走査スキップ (F-3 guard)
+  - `command.c`: `getenv("PRODUCT_MODEL")` NULL ガード + `unsetenv("LD_PRELOAD")`
+  - `atom_init`: LD_PRELOAD 復帰、`iCamera_app` stdout を `/dev/null` へ（FIFO 回避）
+  - HIL: `f3-chroot-test.sh` / `atom_init.f3icamera-only.fixed`（insmod なし単体再起動 + trap 復元）
+- **検証**: tier t0..full 全 PASS、`full` + port **4000** LISTEN、`/scripts/cmd audio` 応答。
+  成果物 md5 `ebcebb7a` (`libcallback.f3-full.so`)。
+- **overlay**: `atom_init.sh` に LD_PRELOAD 行を戻した（次回 `make build` で焼き込み）。
+- **mmc 暫定**: `atom_init.preload.fixed` で `/media/mmc/libcallback.so` 経由の本番同等試験可能。
+  恒久化後は wdkeep/killwebhook/no-preload ハックを段階撤去。
