@@ -1,12 +1,14 @@
 import {
   parseHackIni,
+  parseIspSettings,
+  parseProperty,
   parseStatus,
+  rgbaToBgra,
   serializeHackIni,
+  serializeIspSettings,
 } from './parse';
-import type { CameraStatus, CmdPort, HackIni } from './types';
+import type { CameraProperty, CameraStatus, CmdPort, HackIni, IspSettings } from './types';
 
-// 実機では lighttpd の / 直下に SPA が配信され、CGI は ./cgi-bin/ に同居する。
-// go2rtc は同一ホストの :1984。デモ/開発では MSW がこれらを横取りする。
 const CGI_BASE = './cgi-bin';
 
 function go2rtcBase(): string {
@@ -22,12 +24,10 @@ async function getText(path: string): Promise<string> {
 }
 
 export const api = {
-  // hack.ini 全体を取得
   async getHackIni(): Promise<HackIni> {
     return parseHackIni(await getText(`${CGI_BASE}/hack_ini.cgi`));
   },
 
-  // hack.ini を保存（差分ではなく全量 POST が現行仕様）
   async saveHackIni(config: HackIni): Promise<void> {
     const res = await fetch(`${CGI_BASE}/hack_ini.cgi`, {
       method: 'POST',
@@ -37,20 +37,17 @@ export const api = {
     if (!res.ok) throw new Error(`POST hack_ini.cgi -> ${res.status}`);
   },
 
-  // カメラステータス（既定 or name 指定）
   async getStatus(name?: 'status' | 'media-size' | 'latest-ver'): Promise<CameraStatus> {
     const q = name ? `?name=${name}` : '';
     return parseStatus(await getText(`${CGI_BASE}/cmd.cgi${q}`));
   },
 
-  // ライブ JPEG を Blob URL として取得（呼び出し側で revoke する）
   async getJpegObjectUrl(): Promise<string> {
     const res = await fetch(`${CGI_BASE}/get_jpeg.cgi?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`GET get_jpeg.cgi -> ${res.status}`);
     return URL.createObjectURL(await res.blob());
   },
 
-  // コマンド実行（PTZ / night など）
   async exec(cmd: string, port: CmdPort = 'socket'): Promise<string> {
     const res = await fetch(`${CGI_BASE}/cmd.cgi?port=${port}`, {
       method: 'POST',
@@ -61,7 +58,57 @@ export const api = {
     return res.text();
   },
 
-  // go2rtc HomeKit ペアリング情報
+  async getProperty(): Promise<CameraProperty> {
+    return parseProperty(await this.exec('property', 'socket'));
+  },
+
+  async setProperty(key: string, value: string): Promise<void> {
+    await this.exec(`property ${key} ${value}`, 'socket');
+  },
+
+  async getIspSettings(): Promise<IspSettings> {
+    return parseIspSettings(await getText(`${CGI_BASE}/video_isp.cgi`));
+  },
+
+  async saveIspSettings(settings: IspSettings): Promise<void> {
+    const res = await fetch(`${CGI_BASE}/video_isp.cgi`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+      body: serializeIspSettings(settings),
+    });
+    if (!res.ok) throw new Error(`POST video_isp.cgi -> ${res.status}`);
+  },
+
+  async applyIspLive(key: keyof IspSettings, settings: IspSettings): Promise<void> {
+    if (['aeitmin', 'aeitmax', 'expmode', 'expline'].includes(key)) {
+      await this.exec(
+        `video expr ${settings.expmode} ${settings.expline} ${settings.aeitmin} ${settings.aeitmax}`,
+        'socket',
+      );
+    } else {
+      await this.exec(`video ${key} ${settings[key]}`, 'socket');
+    }
+  },
+
+  async getWatermark(): Promise<ArrayBuffer> {
+    const res = await fetch(`${CGI_BASE}/watermark.cgi?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`GET watermark.cgi -> ${res.status}`);
+    return res.arrayBuffer();
+  },
+
+  async saveWatermarkFromCanvas(canvas: HTMLCanvasElement): Promise<void> {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('canvas 2d unavailable');
+    const { width, height } = canvas;
+    const imageData = ctx.getImageData(0, 0, width, height).data;
+    const body = rgbaToBgra(imageData, width, height);
+    const res = await fetch(`${CGI_BASE}/watermark.cgi`, {
+      method: 'POST',
+      body,
+    });
+    if (!res.ok) throw new Error(`POST watermark.cgi -> ${res.status}`);
+  },
+
   async homekitPairing(): Promise<unknown> {
     const res = await fetch(`${go2rtcBase()}/api/homekit/pairing`);
     if (!res.ok) throw new Error(`homekit pairing -> ${res.status}`);

@@ -7,5 +7,10 @@ export {
   parseStatus,
   parseMotorPos,
   parseMediaSize,
+  parseIspSettings,
+  serializeIspSettings,
+  parseProperty,
+  parseWatermarkDimensions,
+  rgbaToBgra,
   serializeHackIni,
 } from './parse';

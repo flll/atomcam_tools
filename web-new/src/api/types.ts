@@ -89,4 +89,42 @@ export interface IspSettings {
 
 // cmd.cgi POST の宛先。socket は go2rtc 制御ポート(localhost:4000)直、
 // 既定は /var/run/webcmd 経由。
+
+export interface CameraProperty {
+  valid?: boolean;
+  nightVision?: string;
+  nightCutThr?: string;
+  IrLED?: string;
+  motionDet?: string;
+  motionLevel?: string;
+  motionArea?: string;
+  soundDet?: string;
+  soundLevel?: string;
+  cautionDet?: string;
+  drawBoxSwitch?: string;
+  recordType?: string;
+  indicator?: string;
+  rotate?: string;
+  audioRec?: string;
+  timestamp?: string;
+  watermark?: string;
+  [key: string]: string | boolean | undefined;
+}
+
+export interface ScheduleEntry {
+  dayOfWeekSelect: number[];
+  startTime: string;
+  endTime: string;
+}
+
+export interface TimelapseScheduleEntry extends ScheduleEntry {
+  interval: number;
+  count: number;
+}
+
+export interface RebootSchedule {
+  dayOfWeekSelect: number[];
+  startTime: string;
+}
+
 export type CmdPort = 'socket' | 'fifo';
