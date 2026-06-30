@@ -54,6 +54,7 @@ build_web_new() {
     /src/web-new/tailwind.config.ts /src/web-new/components.json \
     /src/web-new/eslint.config.js ${WEB_DIR}/
   cp -pr /src/web-new/src /src/web-new/public /src/web-new/scripts ${WEB_DIR}/
+  cp -pr /src/web-new/mocks ${WEB_DIR}/
   cd ${WEB_DIR}
   npm ci
   [ $? != 0 ] && exit 1
