@@ -143,8 +143,8 @@ do
   fi
   if [ "$cmd" = "update" -a "$UPDATE_SEQ" = "" ]; then
     HACK_INI=/tmp/hack.ini
-    CUSTOM_ZIP=$(awk -F "=" '/^CUSTOM_ZIP *=/ {print $2}' $HACK_INI)
-    ZIP_URL=$(awk -F "=" '/^CUSTOM_ZIP_URL *=/ {print $2}' $HACK_INI)
+    CUSTOM_ZIP=$(awk -F "=" '/CUSTOM_ZIP *=/ {gsub(/^[ \t]+/,"",$2); print $2; exit}' $HACK_INI)
+    ZIP_URL=$(awk -F "=" '/CUSTOM_ZIP_URL *=/ {gsub(/^[ \t]+/,"",$2); print $2; exit}' $HACK_INI)
     if [ "$CUSTOM_ZIP" = "off" ] || [ "$ZIP_URL" = "" ]; then
       latest=`curl -w "%{redirect_url}" -s -o /dev/null https://github.com/flll/atomcam_tools/releases/latest`
       ZIP_URL="https://github.com/flll/atomcam_tools/releases/download/${latest##*tag/}/atomcam_tools.zip"
