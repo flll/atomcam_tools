@@ -51,7 +51,7 @@ build_web_new() {
     /src/web-new/tsconfig.json /src/web-new/tsconfig.app.json \
     /src/web-new/tsconfig.node.json /src/web-new/vite.config.ts \
     /src/web-new/index.html /src/web-new/postcss.config.js \
-    /src/web-new/tailwind.config.js /src/web-new/components.json \
+    /src/web-new/tailwind.config.ts /src/web-new/components.json \
     /src/web-new/eslint.config.js ${WEB_DIR}/
   cp -pr /src/web-new/src /src/web-new/public /src/web-new/scripts ${WEB_DIR}/
   cd ${WEB_DIR}
