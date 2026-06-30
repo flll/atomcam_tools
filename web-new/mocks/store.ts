@@ -7,6 +7,7 @@ export interface MockState {
   horSwitch: number;
   verSwitch: number;
   hackIni: Record<string, string>;
+  isp: Record<string, string>;
 }
 
 const DEFAULT_HACK_INI: Record<string, string> = {
@@ -34,6 +35,7 @@ export const mock: MockState = {
   horSwitch: 0,
   verSwitch: 0,
   hackIni: { ...DEFAULT_HACK_INI },
+  isp: { cont: '128', bri: '128', expmode: 'auto' },
 };
 
 // AtomSwing 風に move コマンドへ反応する（pan/tilt をクランプ）。
@@ -45,6 +47,10 @@ export function applyExec(cmd: string): string {
     return 'ok';
   }
   if (args[0] === 'night') return 'ok';
+  if (args[0] === 'property' && args.length === 1) {
+    return 'nightVision=auto\nmotionDet=on\nrecordType=cont\nwatermark=off\nok';
+  }
+  if (args[0] === 'property') return 'ok';
   return 'ok';
 }
 
