@@ -1,0 +1,14 @@
+#!/bin/sh
+# Minimal F-3 test init: no insmod (drivers already loaded from stable boot).
+export PATH=/tmp/system/bin:/system/bin:/bin:/sbin:/usr/bin:/usr/sbin
+export LD_LIBRARY_PATH=/thirdlib:/system/lib:/tmp:/tmp/system/lib/modules/
+PRODUCT_CONFIG=/configs/.product_config
+export PRODUCT_MODEL=ATOM_CamV3C
+export ASSIS_LOG=/dev/null
+export TOOLS_LOG=/dev/null
+[ -f /media/mmc/atom-debug ] && exit 0
+/system/bin/ver-comp
+/system/bin/assis >> $ASSIS_LOG 2>&1 &
+/system/bin/hl_client >> /dev/null 2>&1 &
+LD_PRELOAD=/media/mmc/libcallback.so /system/bin/iCamera_app >/dev/null 2>&1 &
+[ "$PRODUCT_MODEL" = "AC1" -o "$PRODUCT_MODEL" = "ATOM_CamV3C" ] && /system/bin/dongle_app >> /dev/null &

@@ -1,0 +1,35 @@
+#!/bin/sh
+# Production-like mmc atom_init with LD_PRELOAD (F-3 fixed libcallback).
+# stdout to /dev/null — avoids webhook FIFO awk CPU storm.
+export PATH=/tmp/system/bin:/system/bin:/bin:/sbin:/usr/bin:/usr/sbin
+export LD_LIBRARY_PATH=/thirdlib:/system/lib:/tmp:/tmp/system/lib/modules/
+PRODUCT_CONFIG=/configs/.product_config
+export PRODUCT_MODEL=$(awk -F "=" '/^PRODUCT_MODEL *=/ {print $2}' $PRODUCT_CONFIG)
+if [ -f /media/mmc/atom-log ]; then
+  export ASSIS_LOG="/tmp/log/assis.log"
+  export TOOLS_LOG="/media/mmc/tools.log"
+else
+  export ASSIS_LOG="/dev/null"
+  export TOOLS_LOG="/dev/console"
+fi
+
+insmod /system/driver/tx-isp-t31.ko isp_clk=220000000 2>/dev/null
+if [ "ATOM_CAKP1JZJP" = "$PRODUCT_MODEL" ] ; then
+  insmod /system/driver/audio.ko spk_gpio=-1 alc_mode=0 mic_gain=0 2>/dev/null
+else
+  insmod /system/driver/audio.ko spk_gpio=-1 2>/dev/null
+fi
+insmod /system/driver/avpu.ko 2>/dev/null
+insmod /system/driver/sinfo.ko 2>/dev/null
+insmod /system/driver/sample_pwm_core.ko 2>/dev/null
+insmod /system/driver/sample_pwm_hal.ko 2>/dev/null
+insmod /system/driver/speaker_ctl.ko 2>/dev/null
+[ "ATOM_CAKP1JZJP" = "$PRODUCT_MODEL" ] && insmod /system/driver/sample_motor.ko vstep_offset=0 hmaxstep=2130 vmaxstep=1580 2>/dev/null
+
+[ -f /media/mmc/atom-debug ] && exit 0
+
+/system/bin/ver-comp
+/system/bin/assis >> $ASSIS_LOG 2>&1 &
+/system/bin/hl_client >> /dev/null 2>&1 &
+LD_PRELOAD=/media/mmc/libcallback.so /system/bin/iCamera_app >/dev/null 2>&1 &
+[ "AC1" = "$PRODUCT_MODEL" -o "ATOM_CamV3C" = "$PRODUCT_MODEL" ] && /system/bin/dongle_app >> /dev/null &

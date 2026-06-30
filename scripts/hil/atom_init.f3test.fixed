@@ -1,0 +1,22 @@
+#!/bin/sh
+# F-3 test only ??activate via f3-preload-test.sh, not for normal boot
+export PATH=/tmp/system/bin:/system/bin:/bin:/sbin:/usr/bin:/usr/sbin
+export LD_LIBRARY_PATH=/thirdlib:/system/lib:/tmp:/tmp/system/lib/modules/
+export PRODUCT_MODEL=ATOM_CamV3C
+PRODUCT_CONFIG=/configs/.product_config
+[ -f /media/mmc/atom-log ] && export ASSIS_LOG="/tmp/log/assis.log" TOOLS_LOG="/media/mmc/tools.log" || export ASSIS_LOG="/dev/null" TOOLS_LOG="/dev/console"
+insmod /system/driver/tx-isp-t31.ko isp_clk=220000000 2>/dev/null
+insmod /system/driver/audio.ko spk_gpio=-1 2>/dev/null
+insmod /system/driver/avpu.ko 2>/dev/null
+insmod /system/driver/sinfo.ko 2>/dev/null
+insmod /system/driver/sample_pwm_core.ko 2>/dev/null
+insmod /system/driver/sample_pwm_hal.ko 2>/dev/null
+insmod /system/driver/speaker_ctl.ko 2>/dev/null
+[ "$PRODUCT_MODEL" = "ATOM_CAKP1JZJP" ] && insmod /system/driver/sample_motor.ko vstep_offset=0 hmaxstep=2130 vmaxstep=1580 2>/dev/null
+[ -f /media/mmc/atom-debug ] && exit 0
+/system/bin/ver-comp
+/system/bin/assis >> $ASSIS_LOG 2>&1 &
+/system/bin/hl_client >> /dev/null 2>&1 &
+LD_PRELOAD=/media/mmc/libcallback.so /system/bin/iCamera_app >/dev/null 2>&1 &
+[ "$PRODUCT_MODEL" = "AC1" -o "$PRODUCT_MODEL" = "ATOM_CamV3C" ] && /system/bin/dongle_app >> /dev/null &
+
