@@ -69,7 +69,8 @@ build_web_new() {
   cp -pr dist/* $TARGET_DIR/var/www/
 
   # lighttpd serves .js/.css via rewrite to .gz — drop uncompressed copies when .gz exists.
-  find $TARGET_DIR/var/www -type f \( -name '*.js' -o -name '*.css' \) ! -name '*.gz' ! -name '*.br' | while read -r f; do
+  # .js は lighttpd rewrite で .gz を配信。.css は実機 lighttpd 未更新時の互換のため非圧縮も残す。
+  find $TARGET_DIR/var/www -type f -name '*.js' ! -name '*.gz' ! -name '*.br' | while read -r f; do
     [ -f "${f}.gz" ] && rm -f "$f"
   done
 }
