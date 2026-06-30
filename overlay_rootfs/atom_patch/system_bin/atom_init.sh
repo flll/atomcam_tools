@@ -31,6 +31,6 @@ insmod /system/driver/speaker_ctl.ko
 /system/bin/ver-comp
 /system/bin/assis >> $ASSIS_LOG 2>&1 &
 /system/bin/hl_client >> /dev/null 2>&1 &
-# F-3: libcallback(LD_PRELOAD) triggers SIGSEGV on this build; run iCamera without it.
-/system/bin/iCamera_app >> /var/run/atomapp 2>> /$TOOLS_LOG &
+# F-3 resolved (2026-06-30): LD_PRELOAD restored; stdout to /dev/null avoids FIFO awk storm.
+LD_PRELOAD=/tmp/system/lib/modules/libcallback.so /system/bin/iCamera_app >/dev/null 2>&1 &
 [ "AC1" = "$PRODUCT_MODEL" -o "ATOM_CamV3C" = "$PRODUCT_MODEL" ] && /system/bin/dongle_app >> /dev/null &
