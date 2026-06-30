@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <stdio.h>
@@ -178,6 +179,7 @@ static int userBitrate[4] = { 0, 0, 0, 0 };
 static int appBitrate[4] = { 960, 180, 0, 800 };
 
 static void __attribute ((constructor)) video_control_init(void) {
+  libcb_trace("video_control");
 
   real_local_sdk_video_set_kbps = dlsym(dlopen ("/system/lib/liblocalsdk.so", RTLD_LAZY), "local_sdk_video_set_kbps");
   real_local_sdk_video_set_fps = dlsym(dlopen ("/system/lib/liblocalsdk.so", RTLD_LAZY), "local_sdk_video_set_fps");

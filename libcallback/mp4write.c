@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <dlfcn.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,6 +21,7 @@ extern int VideoControl_UserFps;
 extern int VideoControl_AppFps;
 
 static void __attribute ((constructor)) mp4write_init(void) {
+  libcb_trace("mp4write");
 
   original_mp4write_start_handler = dlsym(dlopen("/system/lib/libmp4rw.so", RTLD_LAZY), "mp4write_start_handler");
 }

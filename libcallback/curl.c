@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <stdlib.h>
@@ -72,6 +73,7 @@ static int disable = 0;
 static int debug = 0;
 
 static void __attribute ((constructor)) curl_hook_init(void) {
+  libcb_trace("curl");
 
   original_curl_easy_perform = dlsym(dlopen("/thirdlib/libcurl.so", RTLD_LAZY), "curl_easy_perform");
 }

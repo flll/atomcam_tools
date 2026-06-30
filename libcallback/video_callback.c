@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <stdio.h>
@@ -113,6 +114,7 @@ extern int AudioBitrate;
 extern int wyze;
 
 static void __attribute ((constructor)) video_callback_init(void) {
+  libcb_trace("video_callback");
 
   if(wyze) {
     VideoChNum = 2;

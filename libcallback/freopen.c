@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <string.h>
@@ -5,6 +6,7 @@
 static FILE * (*original_freopen)(const char *pathname, const char *mode, FILE *stream);
 
 static void __attribute ((constructor)) freopen_hook_init(void) {
+  libcb_trace("freopen");
 
   original_freopen = dlsym(dlopen ("/lib/libc.so.0", RTLD_LAZY), "freopen");
 }

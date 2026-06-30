@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 
 #include <stdio.h>
 #include <dlfcn.h>
@@ -42,6 +43,7 @@ extern int local_sdk_video_osd_set_logo_bitmap(struct bitmapInfo_st *info);
 extern int sdkosd_update_logo_data(unsigned int *buf, int num, int den);
 
 static void __attribute ((constructor)) watermark_init(void) {
+  libcb_trace("watermark");
 
   real_IMP_OSD_SetRgnAttr = dlsym(dlopen("/system/lib/libimp.so", RTLD_LAZY), "IMP_OSD_SetRgnAttr");
 }

@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -221,11 +222,12 @@ void Dump(const char *str, void *start, int size) {
 }
 
 static void __attribute ((constructor)) command_init(void) {
+  libcb_trace("command");
 
   unsetenv("LD_PRELOAD");
   char *p = getenv("PRODUCT_MODEL");
-  if(!strcmp(p, "WYZE_CAKP2JFUS")) wyze = 1;
-  if(!strcmp(p, "ATOM_CAKP1JZJP")) swing = 1;
+  if(p && !strcmp(p, "WYZE_CAKP2JFUS")) wyze = 1;
+  if(p && !strcmp(p, "ATOM_CAKP1JZJP")) swing = 1;
 
   if(pipe(SelfPipe)) {
     fprintf(stderr, "pipe error\n");

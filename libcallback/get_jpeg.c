@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <string.h>
@@ -6,6 +7,7 @@ static int (*real_local_sdk_video_get_jpeg)(int ch, char *path);
 static int skipRecordJpeg = 0;
 
 static void __attribute ((constructor)) get_jpeg_init(void) {
+  libcb_trace("get_jpeg");
 
   real_local_sdk_video_get_jpeg = dlsym(dlopen("/system/lib/liblocalsdk.so", RTLD_LAZY), "local_sdk_video_get_jpeg");
 }

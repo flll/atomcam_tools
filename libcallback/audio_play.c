@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -130,6 +131,7 @@ char *AudioPlay(int fd, char *tokenPtr) {
 }
 
 static void __attribute ((constructor)) AudioPlayInit(void) {
+  libcb_trace("audio_play");
 
   set_pa_mode = local_sdk_speaker_set_ap_mode;
   if(!set_pa_mode) set_pa_mode = local_sdk_speaker_set_pa_mode;

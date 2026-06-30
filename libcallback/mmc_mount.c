@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <dlfcn.h>
 #include <string.h>
@@ -5,6 +6,7 @@
 static int (*real_local_sdk_device_open)(int id, char *buf);
 
 static void __attribute ((constructor)) mmc_mount_init(void) {
+  libcb_trace("mmc_mount");
 
   real_local_sdk_device_open = dlsym(dlopen("/system/lib/liblocalsdk.so", RTLD_LAZY), "local_sdk_device_open");
 }

@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <stdio.h>
@@ -135,6 +136,7 @@ int local_sdk_audio_set_pcm_frame_callback(int ch, framecb callback) {
 }
 
 static void __attribute ((constructor)) audio_callback_init(void) {
+  libcb_trace("audio_callback");
 
   if(wyze) AudioConfig = &AudioConfig_wyzecam;
 

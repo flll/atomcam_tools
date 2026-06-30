@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -175,6 +176,7 @@ static void *JpegCaptureThread() {
 }
 
 static void __attribute ((constructor)) JpegInit(void) {
+  libcb_trace("jpeg");
 
   pthread_mutex_lock(&JpegDataMutex);
   pthread_t thread;

@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <dlfcn.h>
@@ -16,6 +17,7 @@ int GetUserConfig(const char *key);
 int SetUserConfig(const char *key, int value);
 
 static void __attribute ((constructor)) alarmInterval_init(void) {
+  libcb_trace("user_config");
 
   original_strncmp = dlsym(dlopen ("/lib/libc.so.0", RTLD_LAZY), "strncmp");
 }

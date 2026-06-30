@@ -1,3 +1,4 @@
+#include "libcb_trace.h"
 /*
   usage:
    timelapse <file> <interval> <count> [<out-fps>]  : start timelapse record
@@ -174,6 +175,7 @@ static char *AppendMoov();
 static void *TimelapseThread();
 
 static void __attribute ((constructor)) TimelapseInit(void) {
+  libcb_trace("timelapse");
 
   pthread_mutex_lock(&TimelapseMutex);
   pthread_t thread;
