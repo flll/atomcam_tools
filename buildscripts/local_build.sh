@@ -67,6 +67,10 @@ build_web_new() {
   rm -rf $TARGET_DIR/var/www/assets
   rm -f $TARGET_DIR/var/www/index.html $TARGET_DIR/var/www/index.html.gz $TARGET_DIR/var/www/index.html.br
   cp -pr dist/* $TARGET_DIR/var/www/
+  # 実機 lighttpd が .css rewrite 未適用でも動くよう index を .css.gz 参照にする
+  if [ -f "$TARGET_DIR/var/www/index.html" ]; then
+    sed -i 's/\.css"/.css.gz"/g; s/\.css\x27/.css.gz\x27/g' "$TARGET_DIR/var/www/index.html"
+  fi
 
   # lighttpd serves .js/.css via rewrite to .gz — drop uncompressed copies when .gz exists.
   # .js は lighttpd rewrite で .gz を配信。.css は実機 lighttpd 未更新時の互換のため非圧縮も残す。
