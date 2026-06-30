@@ -35,3 +35,11 @@ pwsh ~/.cursor/skills/atomcam-hil-loop/scripts/hil-windows.ps1 install -DebugBoo
 
 - `crontab` に `network_init.sh restart` を入れない（毎分 `wpa_supplicant` が kill される）
 - WPA 設定は `group=CCMP` のみ（古い wpa_supplicant は `CCMP TKIP WEP104 WEP40` をパースできない）
+
+## F-3 解決後 (2026-06-30)
+
+- `atom_init.nopreload.fixed` — 旧安定化（LD_PRELOAD なし）。退避用。
+- `scripts/hil/atom_init.preload.fixed` — **本番同等** mmc 上書き（`/media/mmc/libcallback.so` + LD_PRELOAD）。
+- `F3_PRELOAD=1 bash scripts/hil/flash-fix.sh` で preload 版を配信。
+- overlay `atom_init.sh` も LD_PRELOAD 復帰済み（次回 `make build` で焼き込み）。
+- wdkeep / killwebhook は当面維持。overlay 焼き後に段階撤去。

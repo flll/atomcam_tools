@@ -1,9 +1,16 @@
 #!/bin/sh
+mount -o remount,rw /media/mmc 2>/dev/null
 LOG=/media/mmc/wifi_audit.log
 TS=$(date "+%Y/%m/%d %H:%M:%S")
 echo "===== $TS wifi_audit =====" >> "$LOG"
 awk '{print $1}' /proc/uptime >> "$LOG" 2>&1
 ifconfig >> "$LOG" 2>&1
+
+# Sync hack.ini to /tmp without CRLF (Windows-edited SD breaks DIGEST= auth)
+if [ -f /media/mmc/hack.ini ]; then
+  tr -d '\r' < /media/mmc/hack.ini > /tmp/hack.ini 2>/dev/null || cp /media/mmc/hack.ini /tmp/hack.ini
+fi
+
 TARGET=$(awk -F"\"" '/ssid=/{print $2; exit}' /media/mmc/wpa_supplicant.conf 2>/dev/null)
 if ! pidof wpa_supplicant >/dev/null 2>&1; then
   echo "--- start wpa_supplicant (was not running) ---" >> "$LOG"
@@ -28,6 +35,24 @@ if [ -n "$TARGET" ]; then
 fi
 echo "--- wpa_supplicant.log tail ---" >> "$LOG"
 tail -20 /tmp/log/wpa_supplicant.log >> "$LOG" 2>&1
+
+# Default route: udhcpc sometimes leaves wlan0 up without 0.0.0.0/0
+if ip addr show wlan0 2>/dev/null | grep -q 'inet '; then
+  if ! ip route 2>/dev/null | grep -q '^default'; then
+    echo "--- no default route: renew dhcp ---" >> "$LOG"
+    killall udhcpc 2>/dev/null
+    udhcpc -i wlan0 -b -n -q -t 5 >> "$LOG" 2>&1
+    sleep 2
+    if ! ip route 2>/dev/null | grep -q '^default'; then
+      GW=$(ip -4 addr show wlan0 | awk '/inet / {split($2,a,"."); print a[1]"."a[2]"."a[3]".254"}')
+      if [ -n "$GW" ]; then
+        echo "--- fallback route add gw $GW ---" >> "$LOG"
+        route add default gw "$GW" dev wlan0 2>>"$LOG"
+      fi
+    fi
+  fi
+fi
+
 echo "--- route ping ---" >> "$LOG"
 route -n >> "$LOG" 2>&1
 ROUTER=$(ip route 2>/dev/null | awk '/default/ {print $3}')
