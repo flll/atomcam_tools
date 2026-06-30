@@ -21,10 +21,12 @@
     "i18next": "^26.3.1",
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-http-backend": "^4.0.0",
+    "konva": "^9.3.20",
     "lucide-react": "^1.17.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-i18next": "^17.0.8",
+    "react-konva": "^19.0.5",
     "react-router-dom": "^7.17.0",
     "swr": "^2.4.1",
     "tailwind-merge": "^3.6.0"
