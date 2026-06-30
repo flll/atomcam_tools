@@ -2,8 +2,16 @@ import { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 
-// 初回ロードは Live のみ同梱。設定ページ群は遅延ロード（ページ単位 code splitting）。
 const Live = lazy(() => import('@/pages/Live'));
+const Camera = lazy(() => import('@/pages/Camera'));
+const Recording = lazy(() => import('@/pages/Recording'));
+const Storage = lazy(() => import('@/pages/Storage'));
+const Streaming = lazy(() => import('@/pages/Streaming'));
+const Events = lazy(() => import('@/pages/Events'));
+const Cruise = lazy(() => import('@/pages/Cruise'));
+const System = lazy(() => import('@/pages/System'));
+const Files = lazy(() => import('@/pages/Files'));
+const Maintenance = lazy(() => import('@/pages/Maintenance'));
 const Placeholder = lazy(() => import('@/pages/Placeholder'));
 
 export default function App() {
@@ -11,15 +19,20 @@ export default function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<Live />} />
-        <Route path="settings/camera" element={<Placeholder titleKey="nav.camera" />} />
-        <Route path="settings/recording" element={<Placeholder titleKey="nav.recording" />} />
-        <Route path="settings/storage" element={<Placeholder titleKey="nav.storage" />} />
-        <Route path="settings/streaming" element={<Placeholder titleKey="nav.streaming" />} />
-        <Route path="settings/events" element={<Placeholder titleKey="nav.events" />} />
-        <Route path="settings/cruise" element={<Placeholder titleKey="nav.cruise" />} />
-        <Route path="settings/system" element={<Placeholder titleKey="nav.system" />} />
-        <Route path="files" element={<Placeholder titleKey="nav.files" />} />
-        <Route path="maintenance" element={<Placeholder titleKey="nav.maintenance" />} />
+        <Route path="settings/camera" element={<Camera />} />
+        <Route path="settings/recording" element={<Recording section="periodic" />} />
+        <Route path="settings/recording/alarm" element={<Recording section="alarm" />} />
+        <Route path="settings/recording/timelapse" element={<Recording section="timelapse" />} />
+        <Route path="settings/storage" element={<Storage />} />
+        <Route path="settings/streaming" element={<Streaming section="rtsp" />} />
+        <Route path="settings/streaming/rtmp" element={<Streaming section="rtmp" />} />
+        <Route path="settings/streaming/webrtc" element={<Streaming section="webrtc" />} />
+        <Route path="settings/events" element={<Events />} />
+        <Route path="settings/cruise" element={<Cruise />} />
+        <Route path="settings/system" element={<System section="device" />} />
+        <Route path="settings/system/tailscale" element={<System section="tailscale" />} />
+        <Route path="files" element={<Files />} />
+        <Route path="maintenance" element={<Maintenance />} />
         <Route path="*" element={<Placeholder titleKey="nav.live" />} />
       </Route>
     </Routes>
