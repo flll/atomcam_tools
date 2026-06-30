@@ -104,7 +104,7 @@ export const api = {
     const body = rgbaToBgra(imageData, width, height);
     const res = await fetch(`${CGI_BASE}/watermark.cgi`, {
       method: 'POST',
-      body,
+      body: body.buffer as ArrayBuffer,
     });
     if (!res.ok) throw new Error(`POST watermark.cgi -> ${res.status}`);
   },
