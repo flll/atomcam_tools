@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHackIni } from '@/hooks/useHackIni';
 import { useIspSettings } from '@/hooks/useIspSettings';
@@ -6,7 +6,6 @@ import { useJpegStream } from '@/hooks/useJpegStream';
 import { usePropertyCmd } from '@/hooks/usePropertyCmd';
 import type { IspSettings } from '@/api';
 import {
-  FormActions,
   Section,
   SettingSelect,
   SettingSlider,

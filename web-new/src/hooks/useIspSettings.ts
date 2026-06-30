@@ -7,8 +7,8 @@ export function useIspSettings() {
   const { data, error, isLoading, mutate } = useSWR('video_isp', () => api.getIspSettings(), {
     revalidateOnFocus: false,
   });
-  const fileTimer = useRef<ReturnType<typeof setTimeout>>();
-  const liveTimer = useRef<ReturnType<typeof setTimeout>>();
+  const fileTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const liveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const apply = useCallback(
     (key: keyof IspSettings, next: IspSettings) => {
