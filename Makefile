@@ -9,6 +9,9 @@ BR2_EXTERNAL=/src/custompackages
 PROFILE ?=
 BUILD_PROFILE_SCRIPT=./scripts/make/build-profile.sh
 
+
+# Web UI: web-new (React/Vite, default) or web (legacy Vue2)
+WEB_UI ?= web-new
 .DEFAULT_GOAL := help
 
 define check_container_running
@@ -50,7 +53,11 @@ help:
 	echo "  build-cyclo        HIL サイクル（hil と同じ）"
 	echo "  build-harness      反復デバッグループ（mmc テンプレ + sd-package）"
 	echo "  build-agent        harness + デバッグ SSH 鍵"
-	echo "  build-full         すべて有効"
+	echo "  build-full         すべて有効"	echo ""
+	echo "Web UI:"
+	echo "  WEB_UI=web-new     React/Vite UI (default, local_build.sh)"
+	echo "  WEB_UI=web         Legacy Vue2 UI"
+
 	echo ""
 	echo "プロファイル管理:"
 	echo "  configure          対話式選択（Cursor 不要）"
