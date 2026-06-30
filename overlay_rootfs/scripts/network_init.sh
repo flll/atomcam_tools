@@ -91,6 +91,14 @@ while ! ip link | grep wlan0 > /dev/null ; do
   [ 20 -le $count ] && break
 done
 
+# udhcpc may leave wlan0 up without default route on this firmware
+if ip addr show wlan0 2>/dev/null | grep -q 'inet '; then
+  if ! ip route 2>/dev/null | grep -q '^default'; then
+    GW=$(ip -4 addr show wlan0 | awk '/inet / {split($2,a,"."); print a[1]"."a[2]"."a[3]".254"}')
+    [ -n "$GW" ] && route add default gw "$GW" dev wlan0 2>/dev/null
+  fi
+fi
+
 HWADDR=$(awk -F "=" '/(CONFIG_INFO|NETRELATED_MAC)=/ { print substr($2,1,2) ":" substr($2,3,2) ":" substr($2,5,2) ":" substr($2,7,2) ":" substr($2,9,2) ":" substr($2,11,2); exit;}' /atom/configs/.product_config)
 ifconfig wlan0 hw ether $HWADDR up
 wpa_supplicant -f /tmp/log/wpa_supplicant.log -D nl80211 -i wlan0 -c /configs/etc/wpa_supplicant.conf -B
@@ -103,3 +111,11 @@ do
   let count++
   [ 20 -le $count ] && break
 done
+
+# udhcpc may leave wlan0 up without default route on this firmware
+if ip addr show wlan0 2>/dev/null | grep -q 'inet '; then
+  if ! ip route 2>/dev/null | grep -q '^default'; then
+    GW=$(ip -4 addr show wlan0 | awk '/inet / {split($2,a,"."); print a[1]"."a[2]"."a[3]".254"}')
+    [ -n "$GW" ] && route add default gw "$GW" dev wlan0 2>/dev/null
+  fi
+fi
