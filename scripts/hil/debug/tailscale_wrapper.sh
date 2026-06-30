@@ -21,6 +21,11 @@ BAK=/media/mmc/tailscaled.state
 SOCK=/var/run/tailscale/tailscaled.sock
 mkdir -p /tmp/tailscale /var/run/tailscale
 
+# skip churn when WAN route missing (wifi_audit repairs route first)
+if ! ip route 2>/dev/null | grep -q '^default'; then
+  exit 0
+fi
+
 # restore persisted identity on boot
 [ -f "$BAK" ] && [ ! -f "$STATE" ] && cp "$BAK" "$STATE"
 

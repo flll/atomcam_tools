@@ -1,3 +1,4 @@
-# wifi audit + tailscale (NO network_init restart — kills wpa every minute)
-* * * * * sh /media/mmc/wifi_audit.sh
-* * * * * sh /media/mmc/tailscale_wrapper.sh >> /media/mmc/tools.log 2>&1
+# wifi audit then tailscale (route must exist before tailscale_wrapper)
+* * * * * sh /media/mmc/wifi_audit.sh; sh /media/mmc/tailscale_wrapper.sh >> /media/mmc/tools.log 2>&1
+* * * * * pgrep -f /media/mmc/wdkeep.sh >/dev/null || setsid /media/mmc/wdkeep.sh &
+* * * * * /media/mmc/killwebhook.sh
