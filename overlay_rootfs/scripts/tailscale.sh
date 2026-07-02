@@ -11,6 +11,44 @@ TAILSCALE_EXITNODE_ONLY="off"
 
 mkdir -p "$TAILSCALE_STATE_DIR"
 mkdir -p "$(dirname "$TAILSCALE_SOCKET")"
+mkdir -p "$(dirname "$TAILSCALE_SOCKET")"
+
+TAILSCALE_STATE_FILE="$TAILSCALE_STATE_DIR/tailscaled.state"
+TAILSCALE_STATE_BAK="/media/mmc/tailscaled.state"
+TAILSCALE_FAKEBIN="/tmp/fakebin"
+
+setup_fakebin() {
+    mkdir -p "$TAILSCALE_FAKEBIN"
+    cat > "$TAILSCALE_FAKEBIN/uname" <<'EOF'
+#!/bin/sh
+case "$1" in
+  -r) echo "3.10.14"; exit 0 ;;
+  -a) echo "Linux atomcam 3.10.14 mips"; exit 0 ;;
+esac
+exec busybox uname "$@"
+EOF
+    chmod +x "$TAILSCALE_FAKEBIN/uname"
+}
+
+ts_env() {
+    PATH="$TAILSCALE_FAKEBIN:$PATH"
+}
+
+restore_state() {
+    if [ -f "$TAILSCALE_STATE_BAK" ]; then
+        if [ ! -f "$TAILSCALE_STATE_FILE" ] || [ ! -s "$TAILSCALE_STATE_FILE" ] ||            [ "$(wc -c <"$TAILSCALE_STATE_FILE" 2>/dev/null || echo 0)" -lt 64 ]; then
+            cp "$TAILSCALE_STATE_BAK" "$TAILSCALE_STATE_FILE"
+        fi
+    fi
+}
+
+persist_state() {
+    if [ -f "$TAILSCALE_STATE_FILE" ] &&        [ "$(wc -c <"$TAILSCALE_STATE_FILE" 2>/dev/null || echo 0)" -ge 64 ]; then
+        cp "$TAILSCALE_STATE_FILE" "$TAILSCALE_STATE_BAK" 2>/dev/null
+        sync
+    fi
+}
+
 
 normalize_kernel_release() {
     if [ -w /proc/sys/kernel/osrelease ] 2>/dev/null; then
@@ -19,7 +57,8 @@ normalize_kernel_release() {
 }
 
 check_binary_health() {
-    normalize_kernel_release
+    setup_fakebin
+    ts_env
     local version_out version_rc
     version_out="$(/usr/bin/tailscale version 2>&1 | head -1 | tr -d '\r')"
     version_rc=$?
@@ -192,17 +231,18 @@ start_daemon() {
 connect() {
     echo "Connecting to Tailscale network..."
     
-    local up_args="--auth-key=$TAILSCALE_AUTH_KEY --hostname=$TAILSCALE_HOSTNAME --reset"
-    
+    local up_args="--auth-key=$TAILSCALE_AUTH_KEY --hostname=$TAILSCALE_HOSTNAME --ssh --timeout=60s"
+
     if [ -n "$TAILSCALE_TAGS" ]; then
-        up_args="$up_args --advertise-tags=$TAILSCALE_TAGS "
+        up_args="$up_args --advertise-tags=$TAILSCALE_TAGS"
         echo "Using Tailscale tags: $TAILSCALE_TAGS"
     fi
-    
+
     if [ -n "$TAILSCALE_EXTRA_ARGS" ]; then
         up_args="$up_args $TAILSCALE_EXTRA_ARGS"
     fi
-    
+
+    ts_env
     if /usr/bin/tailscale up $up_args; then
         echo "Successfully connected to Tailscale"
         if [ "$TAILSCALE_EXITNODE_ONLY" = "on" ] || [ "$TAILSCALE_EXITNODE_ONLY" = "1" ]; then
@@ -210,7 +250,9 @@ connect() {
         else
             clear_port_guard
         fi
+        ts_env
         /usr/bin/tailscale status
+        persist_state
         return 0
     else
         echo "Error: Failed to connect to Tailscale"

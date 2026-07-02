@@ -113,3 +113,47 @@ cd web-new && npm ci && npm run build && npm run budget
 
 デモ/CI: `.github/workflows/webui.yml` が `web-new` の lint / typecheck / build / bundle budget を検証する。
 
+## Tailscale (mmc wrapper)
+
+ATOMCam の busybox には **`flock` コマンドがない**。`flock -n` を使う wrapper は cron 毎分実行でも即 exit し、Tailscale が一切起動しない。
+
+| 項目 | 正本 |
+|------|------|
+| 起動スクリプト | `/media/mmc/tailscale_wrapper.sh`（`scripts/hil/debug/tailscale_wrapper.sh` と同期） |
+| 設定 | `/media/mmc/hack.ini`（`TAILSCALE_AUTH_KEY` / `TAILSCALE_HOSTNAME` / `TAILSCALE_TAGS`） |
+| 状態永続化 | `/media/mmc/tailscaled.state` → `/tmp/tailscale/tailscaled.state` |
+| ログ | `/tmp/tsd.log` |
+
+### `TAILSCALE_ENABLE=off` の意味
+
+squashfs の `S80tailscale` → `/scripts/tailscale.sh start` と mmc cron の wrapper が**二重起動**しないよう、`hack.ini` で `TAILSCALE_ENABLE=off` にすると boot 時の S80 はスキップされる。**Tailscale の実質正本は mmc wrapper + crontab**。
+
+次回 squashfs 再デプロイ時は `overlay_rootfs/scripts/tailscale.sh` も fakebin・state 復元・`--reset` 削除済み版に更新される（S80 を再有効化する場合の競合防止）。
+
+### 相互排他（busybox 互換）
+
+`flock` の代わりに **mkdir ロック**を使う:
+
+```sh
+LOCKDIR=/var/run/tailscale_wrapper.lock.d
+if ! mkdir "$LOCKDIR" 2>/dev/null; then exit 0; fi
+trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT INT TERM
+```
+
+### トラブルシュート
+
+| 症状 | 確認 |
+|------|------|
+| `/tmp/tsd.log` が無い | wrapper が一度も完走していない（`flock: not found` 等） |
+| stale socket | `/var/run/tailscale/tailscaled.sock` が残り `pidof tailscaled` が空 → socket と pid を削除して再実行 |
+| `invalid key` | `hack.ini` の `TAILSCALE_AUTH_KEY` を更新。**重複行があると先頭行が使われる**ので 1 行に統一すること |
+| `tailscale up` タイムアウト | mips 実機は LocalBackend 起動に数分かかる。wrapper は `timeout 420` / `--timeout=180s` を想定。高 load 時は再起動後に再試行 |
+
+### 手動確認（SSH）
+
+```bash
+# lll-legacy 経由の例
+ssh root@10.0.0.228 'sh /media/mmc/tailscale_wrapper.sh; pidof tailscaled; tail -20 /tmp/tsd.log'
+PATH=/tmp/fakebin:$PATH tailscale status   # カメラ上
+tailscale status | grep atomcam             # tailnet 側
+```
