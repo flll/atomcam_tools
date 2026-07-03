@@ -1,4 +1,11 @@
 import { lazy, useEffect, useRef, useState } from 'react';
+
+function parseRectProperty(raw: string | undefined): { x: number; y: number; w: number; h: number } | null {
+  if (!raw || raw === 'all' || raw === 'rect') return null;
+  const parts = raw.split(/\s+/);
+  if (parts.length < 5) return null;
+  return { x: Number(parts[1]), y: Number(parts[2]), w: Number(parts[3]), h: Number(parts[4]) };
+}
 import type { CameraProperty } from '@/api';
 
 const Stage = lazy(() => import('react-konva').then((m) => ({ default: m.Stage })));
@@ -14,7 +21,9 @@ export default function MotionAreaOverlay({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 640, h: 480 });
-  const [rect, setRect] = useState({ x: 80, y: 60, w: 200, h: 150 });
+  // 編集差分 ?? property からの導出(effect での同期を持たない)
+  const [rectEdit, setRectEdit] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const rect = rectEdit ?? parseRectProperty(property.motionArea) ?? { x: 80, y: 60, w: 200, h: 150 };
 
   useEffect(() => {
     const el = containerRef.current?.parentElement;
@@ -24,21 +33,8 @@ export default function MotionAreaOverlay({
     return () => ro.disconnect();
   }, []);
 
-  useEffect(() => {
-    const raw = property.motionArea;
-    if (!raw || raw === 'all' || raw === 'rect') return;
-    const parts = raw.split(/\s+/);
-    if (parts.length >= 5) {
-      const sx = Number(parts[1]);
-      const sy = Number(parts[2]);
-      const w = Number(parts[3]);
-      const h = Number(parts[4]);
-      setRect({ x: sx, y: sy, w, h });
-    }
-  }, [property.motionArea]);
-
   function commit(next: typeof rect) {
-    setRect(next);
+    setRectEdit(next);
     onRectChange(`rect ${next.x} ${next.y} ${next.w} ${next.h}`);
   }
 

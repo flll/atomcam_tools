@@ -1,24 +1,11 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormActions, Section, SettingInput, SettingInputNumber, SettingSwitch } from '@/components/settings';
+import { Section, SettingInput, SettingInputNumber, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { WatermarkEditor } from '@/components/watermark/WatermarkEditor';
-import { parseRebootSchedule, serializeRebootSchedule } from '@/lib/schedule';
-import type { RebootSchedule } from '@/api';
 
 export default function SystemPage({ section }: { section?: 'device' | 'tailscale' }) {
   const { t } = useTranslation('translation');
   const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
-  const [reboot, setReboot] = useState<RebootSchedule>({ dayOfWeekSelect: [6], startTime: '02:00' });
-
-  useEffect(() => {
-    setReboot(parseRebootSchedule(draft.REBOOT_SCHEDULE));
-  }, [draft.REBOOT_SCHEDULE]);
-
-  async function save() {
-    patch({ REBOOT_SCHEDULE: serializeRebootSchedule(reboot) });
-    await submit();
-  }
 
   const showDevice = !section || section === 'device';
   const showTailscale = !section || section === 'tailscale';
@@ -58,7 +45,7 @@ export default function SystemPage({ section }: { section?: 'device' | 'tailscal
         </Section>
       )}
 
-      <FormActions dirty={dirty} saving={isLoading} onSave={() => void save()} onCancel={reset} />
+      <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => submit()} onCancel={reset} />
     </div>
   );
 }

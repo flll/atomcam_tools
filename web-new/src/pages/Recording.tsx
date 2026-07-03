@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  FormActions,
   Section,
   SettingComment,
   SettingInput,
   SettingInputNumber,
   SettingSwitch,
+  UnsavedBar,
 } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { usePropertyCmd } from '@/hooks/usePropertyCmd';
@@ -55,23 +55,32 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
   const { t } = useTranslation('translation');
   const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
   const { property } = usePropertyCmd();
-  const [periodic, setPeriodic] = useState<ScheduleEntry[]>([]);
-  const [alarm, setAlarm] = useState<ScheduleEntry[]>([]);
-  const [timelapse, setTimelapse] = useState<TimelapseScheduleEntry[]>([]);
+  // スケジュールは「編集差分 ?? draft からの導出」。effect での同期を持たず、
+  // 編集した瞬間から dirty(未保存バー)に反映される。
+  const [periodicEdit, setPeriodicEdit] = useState<ScheduleEntry[] | null>(null);
+  const [alarmEdit, setAlarmEdit] = useState<ScheduleEntry[] | null>(null);
+  const [timelapseEdit, setTimelapseEdit] = useState<TimelapseScheduleEntry[] | null>(null);
 
-  useEffect(() => {
-    setPeriodic(parsePeriodicAlarmSchedule(draft.PERIODICREC_SCHEDULE_LIST));
-    setAlarm(parsePeriodicAlarmSchedule(draft.ALARMREC_SCHEDULE_LIST));
-    setTimelapse(parseTimelapseSchedule(draft.TIMELAPSE_SCHEDULE));
-  }, [draft.PERIODICREC_SCHEDULE_LIST, draft.ALARMREC_SCHEDULE_LIST, draft.TIMELAPSE_SCHEDULE]);
+  const periodic = periodicEdit ?? parsePeriodicAlarmSchedule(draft.PERIODICREC_SCHEDULE_LIST);
+  const alarm = alarmEdit ?? parsePeriodicAlarmSchedule(draft.ALARMREC_SCHEDULE_LIST);
+  const timelapse = timelapseEdit ?? parseTimelapseSchedule(draft.TIMELAPSE_SCHEDULE);
+  const scheduleDirty = periodicEdit !== null || alarmEdit !== null || timelapseEdit !== null;
+
+  function clearEdits() {
+    setPeriodicEdit(null);
+    setAlarmEdit(null);
+    setTimelapseEdit(null);
+  }
 
   async function saveAll() {
-    patch({
-      PERIODICREC_SCHEDULE_LIST: serializePeriodicAlarmSchedule(periodic),
-      ALARMREC_SCHEDULE_LIST: serializePeriodicAlarmSchedule(alarm),
-      TIMELAPSE_SCHEDULE: serializeTimelapseSchedule(timelapse),
-    });
-    await submit();
+    // 編集したスケジュールだけ直列化して submit に合成する
+    // (patch → submit の stale-state 問題を避ける)
+    const overrides: Parameters<typeof patch>[0] = {};
+    if (periodicEdit) overrides.PERIODICREC_SCHEDULE_LIST = serializePeriodicAlarmSchedule(periodicEdit);
+    if (alarmEdit) overrides.ALARMREC_SCHEDULE_LIST = serializePeriodicAlarmSchedule(alarmEdit);
+    if (timelapseEdit) overrides.TIMELAPSE_SCHEDULE = serializeTimelapseSchedule(timelapseEdit);
+    await submit(overrides);
+    clearEdits();
   }
 
   const showPeriodic = !section || section === 'periodic';
@@ -93,7 +102,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
               )}
               {property?.recordType === 'off' && <SettingComment i18nKey="record.recordTypeWarn" tone="danger" />}
               <SettingSwitch i18nKey="record.recordingSchedule" value={draft.PERIODICREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ PERIODICREC_SCHEDULE: v })} />
-              {draft.PERIODICREC_SCHEDULE === 'on' && <ScheduleEditor entries={periodic} onChange={setPeriodic} />}
+              {draft.PERIODICREC_SCHEDULE === 'on' && <ScheduleEditor entries={periodic} onChange={setPeriodicEdit} />}
             </>
           )}
         </Section>
@@ -106,7 +115,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
             <>
               <SettingInput i18nKey="record.SDCard.savePath" value={draft.ALARMREC_SDCARD_PATH ?? ''} onChange={(v) => patch({ ALARMREC_SDCARD_PATH: v })} />
               <SettingSwitch i18nKey="record.recordingSchedule" value={draft.ALARMREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ ALARMREC_SCHEDULE: v })} />
-              {draft.ALARMREC_SCHEDULE === 'on' && <ScheduleEditor entries={alarm} onChange={setAlarm} />}
+              {draft.ALARMREC_SCHEDULE === 'on' && <ScheduleEditor entries={alarm} onChange={setAlarmEdit} />}
             </>
           )}
         </Section>
@@ -119,13 +128,21 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
             <>
               <SettingInput i18nKey="record.SDCard.savePath" value={draft.TIMELAPSE_SDCARD_PATH ?? ''} onChange={(v) => patch({ TIMELAPSE_SDCARD_PATH: v })} />
               <SettingInputNumber i18nKey="timelapse.fps" value={Number(draft.TIMELAPSE_FPS ?? 20)} min={1} max={60} onChange={(v) => patch({ TIMELAPSE_FPS: String(v) })} />
-              <ScheduleEditor entries={timelapse} onChange={(e) => setTimelapse(e as TimelapseScheduleEntry[])} />
+              <ScheduleEditor entries={timelapse} onChange={(e) => setTimelapseEdit(e as TimelapseScheduleEntry[])} />
             </>
           )}
         </Section>
       )}
 
-      <FormActions dirty={dirty} saving={isLoading} onSave={() => void saveAll()} onCancel={reset} />
+      <UnsavedBar
+        dirty={dirty || scheduleDirty}
+        disabled={isLoading}
+        onSave={saveAll}
+        onCancel={() => {
+          reset();
+          clearEdits();
+        }}
+      />
     </div>
   );
 }

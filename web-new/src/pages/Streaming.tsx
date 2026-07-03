@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormActions, Section, SettingInput, SettingInputNumber, SettingSelect, SettingSwitch, SettingComment } from '@/components/settings';
+import { Section, SettingInput, SettingInputNumber, SettingSelect, SettingSwitch, SettingComment, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
 import { Button } from '@/components/ui/button';
 import { api } from '@/api';
+import { runCmd } from '@/lib/runCmd';
 
 function rtspUrl(host: string, stream: string, auth: boolean, user: string, pass: string) {
   const cred = auth && user ? `${user}:${pass}@` : '';
@@ -65,7 +66,7 @@ export default function StreamingPage({ section }: { section?: 'rtsp' | 'rtmp' |
           {draft.RTMP_ENABLE === 'on' && (
             <>
               <SettingInput i18nKey="RTMP.URL" value={draft.RTMP_URL ?? ''} onChange={(v) => patch({ RTMP_URL: v })} />
-              <Button variant="secondary" onClick={() => void api.exec('rtmp_restart')}>{t('RTMP.Restart')}</Button>
+              <Button variant="secondary" onClick={() => runCmd(api.exec('rtmp_restart'))}>{t('RTMP.Restart')}</Button>
               <SettingInputNumber i18nKey="RTMP.IntervalRestart" value={Math.abs(Number(draft.RTMP_RESTART ?? 240))} min={20} max={2880} onChange={(v) => patch({ RTMP_RESTART: String(-v) })} />
             </>
           )}
@@ -84,7 +85,7 @@ export default function StreamingPage({ section }: { section?: 'rtsp' | 'rtmp' |
         </Section>
       )}
 
-      <FormActions dirty={dirty} saving={isLoading} onSave={() => void submit()} onCancel={reset} />
+      <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => submit()} onCancel={reset} />
     </div>
   );
 }
