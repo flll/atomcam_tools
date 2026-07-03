@@ -26,3 +26,8 @@ target/mmc_templates/
 target/hil-bootstrap/
 target/.staging_deploy.zip
 target/.deploy_ota.zip
+
+# libcallback F-3 デバッグ探索の産物（tier ビルド・バックアップ）
+libcallback/*.so
+libcallback/*.bak
+libcallback/*.orig
