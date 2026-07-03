@@ -48,12 +48,20 @@ export const handlers = [
   http.get(cgi('hack_ini.cgi'), () => HttpResponse.text(hackIniText())),
 
   http.post(cgi('hack_ini.cgi'), async ({ request }) => {
-    const text = await request.text();
-    text.split('\n').forEach((line) => {
-      const key = line.split(/[ \t=]/)[0]?.trim();
-      if (!key) return;
-      mock.hackIni[key] = line.replace(new RegExp(`${key}[ \t=]*`), '').trim();
-    });
+    // 実機の hack_ini.cgi は awk で {"KEY":"value",...} の JSON を前提とし、
+    // システム由来キーを除外した上でファイルを全置換する。同じ挙動を模擬して
+    // クライアントが誤った形式(テキスト行)を送ると E2E で落ちるようにする。
+    const body = (await request.json().catch(() => null)) as Record<string, string> | null;
+    if (!body) return HttpResponse.text('bad request', { status: 400 });
+    const SYSTEM_KEYS = ['appver', 'PRODUCT_MODEL', 'HOSTNAME', 'KERNELVER', 'ATOMHACKVER', 'HWADDR'];
+    const next: Record<string, string> = {};
+    for (const k of SYSTEM_KEYS) {
+      if (k in mock.hackIni) next[k] = mock.hackIni[k];
+    }
+    for (const [k, v] of Object.entries(body)) {
+      if (!SYSTEM_KEYS.includes(k)) next[k] = String(v);
+    }
+    mock.hackIni = next;
     return HttpResponse.text('ok');
   }),
 

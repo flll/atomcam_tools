@@ -12,5 +12,4 @@ export {
   parseProperty,
   parseWatermarkDimensions,
   rgbaToBgra,
-  serializeHackIni,
 } from './parse';
