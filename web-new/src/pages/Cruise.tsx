@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormActions, Section, SettingSwitch } from '@/components/settings';
+import { Section, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
 import { Button } from '@/components/ui/button';
 import { api } from '@/api';
+import { runCmd } from '@/lib/runCmd';
 
 interface CruisePoint { pan: number; tilt: number; speed: number; wait: number; detect: boolean }
 
@@ -30,8 +31,10 @@ function serializeCruiseList(list: CruisePoint[]): string {
 export default function CruisePage() {
   const { t } = useTranslation('translation');
   const { config } = useHackIni();
-  const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
-  const [points, setPoints] = useState<CruisePoint[]>(() => parseCruiseList(config?.CRUISE_LIST));
+  const { draft, patch, submit, reset, dirty } = useHackIniForm();
+  // 編集差分 ?? config からの導出(初期ロード完了前の空配列で固定されない)
+  const [pointsEdit, setPointsEdit] = useState<CruisePoint[] | null>(null);
+  const points = pointsEdit ?? parseCruiseList(config?.CRUISE_LIST);
   const isSwing = config?.PRODUCT_MODEL === 'ATOM_CAKP1JZJP';
 
   if (!isSwing) {
@@ -39,26 +42,37 @@ export default function CruisePage() {
   }
 
   async function save() {
-    patch({ CRUISE_LIST: serializeCruiseList(points), CRUISE: points.length ? 'on' : 'off' });
-    await submit();
+    // 直列化した最新値を submit に合成する(patch → submit の stale 回避)
+    await submit({
+      CRUISE_LIST: serializeCruiseList(points),
+      CRUISE: points.length ? 'on' : 'off',
+    });
+    setPointsEdit(null);
   }
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-xl font-semibold">{t('cruise.title')}</h1>
       <Section title={t('cruise.title')}>
-        <Button variant="outline" onClick={() => void api.exec('moveinit')}>{t('cruise.initialPosition.title')}</Button>
+        <Button variant="outline" onClick={() => runCmd(api.exec('moveinit'))}>{t('cruise.initialPosition.title')}</Button>
         <SettingSwitch i18nKey="cruise.cameraMotion" value={draft.CRUISE ?? 'off'} onChange={(v) => patch({ CRUISE: v })} />
         <ul className="space-y-1 text-sm font-mono">
           {points.map((p, i) => (
             <li key={i}>#{i + 1} pan {p.pan} tilt {p.tilt} wait {p.wait}s</li>
           ))}
         </ul>
-        <Button variant="secondary" onClick={() => setPoints([...points, { pan: 177, tilt: 90, speed: 5, wait: 10, detect: false }])}>
+        <Button variant="secondary" onClick={() => setPointsEdit([...points, { pan: 177, tilt: 90, speed: 5, wait: 10, detect: false }])}>
           + point
         </Button>
       </Section>
-      <FormActions dirty={dirty || points.length > 0} saving={isLoading} onSave={() => void save()} onCancel={reset} />
+      <UnsavedBar
+        dirty={dirty || pointsEdit !== null}
+        onSave={save}
+        onCancel={() => {
+          reset();
+          setPointsEdit(null);
+        }}
+      />
     </div>
   );
 }

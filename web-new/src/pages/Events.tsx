@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FormActions, Section, SettingInput, SettingSwitch } from '@/components/settings';
+import { Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
 
@@ -21,7 +21,7 @@ export default function EventsPage() {
         <SettingSwitch i18nKey="event.webhook.screenshotTransfer" value={draft.WEBHOOK_ALERM_PICT ?? 'off'} onChange={(v) => patch({ WEBHOOK_ALERM_PICT: v })} />
         <SettingSwitch i18nKey="event.webhook.startTimelapse" value={draft.WEBHOOK_TIMELAPSE_START ?? 'off'} onChange={(v) => patch({ WEBHOOK_TIMELAPSE_START: v })} />
       </Section>
-      <FormActions dirty={dirty} saving={isLoading} onSave={() => void submit()} onCancel={reset} />
+      <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => submit()} onCancel={reset} />
     </div>
   );
 }

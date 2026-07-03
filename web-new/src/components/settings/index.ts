@@ -5,4 +5,4 @@ export { SettingSlider } from './SettingSlider';
 export { SettingInput } from './SettingInput';
 export { SettingInputNumber } from './SettingInputNumber';
 export { SettingComment } from './SettingComment';
-export { FormActions } from './FormActions';
+export { UnsavedBar } from './UnsavedBar';
