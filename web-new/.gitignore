@@ -5,3 +5,5 @@ dist-demo
 .DS_Store
 .eslintcache
 *.tsbuildinfo
+playwright-report/
+test-results/
