@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ScheduleListEditor,
   Section,
   SettingComment,
   SettingInput,
   SettingInputNumber,
   SettingSwitch,
+  TimelapseScheduleEditor,
   UnsavedBar,
 } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -15,41 +17,10 @@ import {
   parseTimelapseSchedule,
   serializePeriodicAlarmSchedule,
   serializeTimelapseSchedule,
+  validateScheduleEntry,
+  validateTimelapseEntry,
 } from '@/lib/schedule';
 import type { ScheduleEntry, TimelapseScheduleEntry } from '@/api';
-
-function ScheduleEditor({
-  entries,
-  onChange,
-}: {
-  entries: ScheduleEntry[];
-  onChange: (e: ScheduleEntry[]) => void;
-}) {
-  const { t } = useTranslation('translation');
-  return (
-    <div className="space-y-2">
-      {entries.map((e, i) => (
-        <div key={i} className="rounded border border-border p-2 text-sm">
-          <label className="block">{t('schedule.startTime')}</label>
-          <input className="rounded border px-2 py-1" value={e.startTime} onChange={(ev) => {
-            const next = [...entries];
-            next[i] = { ...e, startTime: ev.target.value };
-            onChange(next);
-          }} />
-          <label className="mt-1 block">{t('schedule.endTime')}</label>
-          <input className="rounded border px-2 py-1" value={e.endTime} onChange={(ev) => {
-            const next = [...entries];
-            next[i] = { ...e, endTime: ev.target.value };
-            onChange(next);
-          }} />
-        </div>
-      ))}
-      <button type="button" className="text-sm text-primary" onClick={() => onChange([...entries, { dayOfWeekSelect: [0,1,2,3,4,5,6], startTime: '00:00', endTime: '23:59' }])}>
-        + schedule
-      </button>
-    </div>
-  );
-}
 
 export default function RecordingPage({ section }: { section?: 'periodic' | 'alarm' | 'timelapse' }) {
   const { t } = useTranslation('translation');
@@ -65,6 +36,10 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
   const alarm = alarmEdit ?? parsePeriodicAlarmSchedule(draft.ALARMREC_SCHEDULE_LIST);
   const timelapse = timelapseEdit ?? parseTimelapseSchedule(draft.TIMELAPSE_SCHEDULE);
   const scheduleDirty = periodicEdit !== null || alarmEdit !== null || timelapseEdit !== null;
+  const schedulesValid =
+    periodic.every((e) => validateScheduleEntry(e).length === 0) &&
+    alarm.every((e) => validateScheduleEntry(e).length === 0) &&
+    timelapse.every((e) => validateTimelapseEntry(e).length === 0);
 
   function clearEdits() {
     setPeriodicEdit(null);
@@ -102,7 +77,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
               )}
               {property?.recordType === 'off' && <SettingComment i18nKey="record.recordTypeWarn" tone="danger" />}
               <SettingSwitch i18nKey="record.recordingSchedule" value={draft.PERIODICREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ PERIODICREC_SCHEDULE: v })} />
-              {draft.PERIODICREC_SCHEDULE === 'on' && <ScheduleEditor entries={periodic} onChange={setPeriodicEdit} />}
+              {draft.PERIODICREC_SCHEDULE === 'on' && <ScheduleListEditor entries={periodic} onChange={setPeriodicEdit} />}
             </>
           )}
         </Section>
@@ -115,7 +90,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
             <>
               <SettingInput i18nKey="record.SDCard.savePath" value={draft.ALARMREC_SDCARD_PATH ?? ''} onChange={(v) => patch({ ALARMREC_SDCARD_PATH: v })} />
               <SettingSwitch i18nKey="record.recordingSchedule" value={draft.ALARMREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ ALARMREC_SCHEDULE: v })} />
-              {draft.ALARMREC_SCHEDULE === 'on' && <ScheduleEditor entries={alarm} onChange={setAlarmEdit} />}
+              {draft.ALARMREC_SCHEDULE === 'on' && <ScheduleListEditor entries={alarm} onChange={setAlarmEdit} />}
             </>
           )}
         </Section>
@@ -128,7 +103,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
             <>
               <SettingInput i18nKey="record.SDCard.savePath" value={draft.TIMELAPSE_SDCARD_PATH ?? ''} onChange={(v) => patch({ TIMELAPSE_SDCARD_PATH: v })} />
               <SettingInputNumber i18nKey="timelapse.fps" value={Number(draft.TIMELAPSE_FPS ?? 20)} min={1} max={60} onChange={(v) => patch({ TIMELAPSE_FPS: String(v) })} />
-              <ScheduleEditor entries={timelapse} onChange={(e) => setTimelapseEdit(e as TimelapseScheduleEntry[])} />
+              <TimelapseScheduleEditor entries={timelapse} onChange={setTimelapseEdit} />
             </>
           )}
         </Section>
@@ -136,7 +111,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
 
       <UnsavedBar
         dirty={dirty || scheduleDirty}
-        disabled={isLoading}
+        disabled={isLoading || !schedulesValid}
         onSave={saveAll}
         onCancel={() => {
           reset();

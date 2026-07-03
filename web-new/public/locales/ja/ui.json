@@ -51,5 +51,13 @@
   "placeholder": {
     "comingSoon": "ページが見つかりません。",
     "backToLive": "ライブへ戻る"
+  },
+  "schedule": {
+    "add": "追加",
+    "delete": "削除",
+    "errNoDays": "曜日を1つ以上選択してください",
+    "errTimeRange": "終了時間は開始時間より後にしてください",
+    "errInterval": "周期は1以上を指定してください",
+    "errCount": "回数は1以上を指定してください"
   }
 }

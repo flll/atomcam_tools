@@ -1,15 +1,26 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { RebootScheduleEditor, Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { Button } from '@/components/ui/button';
 import { api } from '@/api';
 import { runCmd } from '@/lib/runCmd';
+import { parseRebootSchedule, serializeRebootSchedule } from '@/lib/schedule';
+import type { RebootSchedule } from '@/api';
 
 export default function MaintenancePage() {
   const { t } = useTranslation('translation');
   const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
   const [busy, setBusy] = useState('');
+  // 定期再起動スケジュール: 編集差分 ?? draft からの導出
+  const [rebootEdit, setRebootEdit] = useState<RebootSchedule | null>(null);
+  const reboot = rebootEdit ?? parseRebootSchedule(draft.REBOOT_SCHEDULE);
+  const rebootValid = reboot.dayOfWeekSelect.length > 0;
+
+  async function save() {
+    await submit(rebootEdit ? { REBOOT_SCHEDULE: serializeRebootSchedule(rebootEdit) } : undefined);
+    setRebootEdit(null);
+  }
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -35,9 +46,18 @@ export default function MaintenancePage() {
       </Section>
       <Section title={t('reboot.title')}>
         <SettingSwitch i18nKey="reboot.periodicRestart" value={draft.REBOOT ?? 'off'} onChange={(v) => patch({ REBOOT: v })} />
+        {draft.REBOOT === 'on' && <RebootScheduleEditor value={reboot} onChange={setRebootEdit} />}
         <Button variant="destructive" onClick={() => runCmd(api.exec('reboot'))}>{t('reboot.reboot.button')}</Button>
       </Section>
-      <UnsavedBar dirty={dirty} disabled={isLoading || !!busy} onSave={() => submit()} onCancel={reset} />
+      <UnsavedBar
+        dirty={dirty || rebootEdit !== null}
+        disabled={isLoading || !!busy || !rebootValid}
+        onSave={save}
+        onCancel={() => {
+          reset();
+          setRebootEdit(null);
+        }}
+      />
     </div>
   );
 }

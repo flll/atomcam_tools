@@ -1,5 +1,28 @@
 import type { RebootSchedule, ScheduleEntry, TimelapseScheduleEntry } from '@/api';
 
+export const TIMELAPSE_DEFAULT_INTERVAL = 60;
+export const TIMELAPSE_DEFAULT_COUNT = 960;
+
+// エラーは ui.json の schedule.<キー> に対応する
+export type ScheduleError = 'errNoDays' | 'errTimeRange' | 'errInterval' | 'errCount';
+
+export function validateScheduleEntry(entry: ScheduleEntry): ScheduleError[] {
+  const errors: ScheduleError[] = [];
+  if (entry.dayOfWeekSelect.length === 0) errors.push('errNoDays');
+  if (parseTimeToMinutes(entry.endTime) <= parseTimeToMinutes(entry.startTime)) {
+    errors.push('errTimeRange');
+  }
+  return errors;
+}
+
+export function validateTimelapseEntry(entry: TimelapseScheduleEntry): ScheduleError[] {
+  const errors: ScheduleError[] = [];
+  if (entry.dayOfWeekSelect.length === 0) errors.push('errNoDays');
+  if (!Number.isFinite(entry.interval) || entry.interval < 1) errors.push('errInterval');
+  if (!Number.isFinite(entry.count) || entry.count < 1) errors.push('errCount');
+  return errors;
+}
+
 function parseTimeToMinutes(hhmm: string): number {
   const [h, m] = hhmm.split(':').map(Number);
   return (h ?? 0) * 60 + (m ?? 0);
@@ -90,8 +113,11 @@ export function serializeTimelapseSchedule(entries: TimelapseScheduleEntry[]): s
       .sort((a, b) => a - b)
       .map((d) => ((d + 1) % 7).toString())
       .join(':');
+    // interval/count 欠損時は既定値で防御(壊れた cron 行を hack.ini に書かない)
+    const interval = Number.isFinite(schedule.interval) && schedule.interval >= 1 ? schedule.interval : TIMELAPSE_DEFAULT_INTERVAL;
+    const count = Number.isFinite(schedule.count) && schedule.count >= 1 ? schedule.count : TIMELAPSE_DEFAULT_COUNT;
     str +=
-      `${parseInt(schedule.startTime.slice(-2), 10)} ${parseInt(schedule.startTime.slice(0, 2), 10)} * * ${days} /scripts/timelapse.sh start ${schedule.interval} ${schedule.count};`;
+      `${parseInt(schedule.startTime.slice(-2), 10)} ${parseInt(schedule.startTime.slice(0, 2), 10)} * * ${days} /scripts/timelapse.sh start ${interval} ${count};`;
     return str;
   }, '');
 }
