@@ -13,7 +13,9 @@
     "cruise": "Cruise",
     "system": "System",
     "files": "SD Card",
-    "maintenance": "Maintenance"
+    "maintenance": "Maintenance",
+    "tools": "Tools",
+    "more": "More"
   },
   "common": {
     "theme": "Theme",
@@ -30,7 +32,8 @@
     "saved": "Saved",
     "saveFailed": "Failed to save",
     "saving": "Saving…",
-    "execFailed": "Operation failed"
+    "execFailed": "Operation failed",
+    "close": "Close"
   },
   "live": {
     "title": "Live View",
