@@ -77,11 +77,26 @@ else
   ASSET_GZ_CT="000"
 fi
 if [ "$SPA_INDEX_RC" -eq 0 ] && [ "$SPA_INDEX_CT" = "200" ] && [ "$SPA_HAS_VITE" -eq 1 ] && [ "$ASSET_GZ_RC" -eq 0 ] && [ "$ASSET_GZ_CT" = "200" ]; then
-  report "webui_spa" "pass" "{"index_http":200,"asset":"$(json_escape "$ASSET_PATH")","asset_http":200}"
+  report "webui_spa" "pass" "{\"index_http\":200,\"asset\":\"$(json_escape "$ASSET_PATH")\",\"asset_http\":200}"
 elif [ "$SPA_INDEX_RC" -eq 0 ] && [ "$SPA_INDEX_CT" = "200" ] && echo "$SPA_BODY" | grep -q 'bundle_'; then
-  report "webui_spa" "skip" "{"reason":"legacy vue bundle UI"}"
+  report "webui_spa" "skip" "{\"reason\":\"legacy vue bundle UI\"}"
 else
-  report "webui_spa" "fail" "{"index_http":"$(json_escape "$SPA_INDEX_CT")","has_vite":${SPA_HAS_VITE},"asset":"$(json_escape "$ASSET_PATH")","asset_http":"$(json_escape "$ASSET_GZ_CT")"}"
+  report "webui_spa" "fail" "{\"index_http\":\"$(json_escape "$SPA_INDEX_CT")\",\"has_vite\":${SPA_HAS_VITE},\"asset\":\"$(json_escape "$ASSET_PATH")\",\"asset_http\":\"$(json_escape "$ASSET_GZ_CT")\"}"
+fi
+
+# --- case: webui_css (CSS 404 再発防止: index が参照する CSS が正しく配信されるか) ---
+CSS_PATH="$(curl -sf -m 10 "http://${HOST}/" 2>/dev/null | grep -oE '(\./)?assets/[^"'"'"']+\.css(\.gz)?' | head -1 | sed 's|^\./||')"
+if [ -z "$CSS_PATH" ]; then
+  report "webui_css" "fail" "{\"error\":\"no stylesheet reference in index\"}"
+else
+  CSS_HEAD="$(curl -sfI -m 10 "http://${HOST}/${CSS_PATH}" 2>/dev/null)" || true
+  CSS_CODE="$(printf '%s' "$CSS_HEAD" | awk 'NR==1{print $2}')"
+  CSS_TYPE="$(printf '%s' "$CSS_HEAD" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print $2}')"
+  if [ "$CSS_CODE" = "200" ] && printf '%s' "$CSS_TYPE" | grep -qi 'text/css'; then
+    report "webui_css" "pass" "{\"css\":\"$(json_escape "$CSS_PATH")\",\"http\":200,\"content_type\":\"$(json_escape "$CSS_TYPE")\"}"
+  else
+    report "webui_css" "fail" "{\"css\":\"$(json_escape "$CSS_PATH")\",\"http\":\"$(json_escape "$CSS_CODE")\",\"content_type\":\"$(json_escape "$CSS_TYPE")\"}"
+  fi
 fi
 
 # --- case: webui -------------------------------------------------------------
@@ -134,6 +149,19 @@ else
     report "tailscale" "pass" "{\"version\":\"$(json_escape "$TS_VER")\",\"daemon\":\"running\"}"
   else
     report "tailscale" "fail" "{\"version\":\"$(json_escape "$TS_VER")\",\"daemon\":\"not running\"}"
+  fi
+fi
+
+# --- case: go2rtc (WebRTC 有効時のみ :1984 API の応答を確認) -------------------
+WEBRTC_ENABLE="$(remote "awk -F= '/^WEBRTC_ENABLE *=/ {print \$2}' /tmp/hack.ini 2>/dev/null" | tr -d '\r')"
+if [ "$WEBRTC_ENABLE" != "on" ]; then
+  report "go2rtc" "skip" "{\"webrtc_enable\":\"$(json_escape "$WEBRTC_ENABLE")\"}"
+else
+  GO2RTC_CODE="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}:1984/api/streams" 2>/dev/null)" || GO2RTC_CODE="000"
+  if [ "$GO2RTC_CODE" = "200" ]; then
+    report "go2rtc" "pass" "{\"api_streams_http\":200}"
+  else
+    report "go2rtc" "fail" "{\"api_streams_http\":\"$(json_escape "$GO2RTC_CODE")\"}"
   fi
 fi
 
