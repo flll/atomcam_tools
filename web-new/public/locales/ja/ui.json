@@ -13,7 +13,9 @@
     "cruise": "クルーズ",
     "system": "システム",
     "files": "SDカード",
-    "maintenance": "メンテナンス"
+    "maintenance": "メンテナンス",
+    "tools": "ツール",
+    "more": "その他"
   },
   "common": {
     "theme": "テーマ",
@@ -30,7 +32,8 @@
     "saved": "保存しました",
     "saveFailed": "保存に失敗しました",
     "saving": "保存中…",
-    "execFailed": "操作に失敗しました"
+    "execFailed": "操作に失敗しました",
+    "close": "閉じる"
   },
   "live": {
     "title": "ライブビュー",
