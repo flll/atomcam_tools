@@ -1,6 +1,7 @@
 import { Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { runCmd } from '@/lib/runCmd';
 
 // ja <-> en のトグル。選択は localStorage(locale) に永続化される。
 export function LangSwitch() {
@@ -12,7 +13,7 @@ export function LangSwitch() {
       variant="ghost"
       size="sm"
       className="gap-1.5"
-      onClick={() => void i18n.changeLanguage(next)}
+      onClick={() => runCmd(i18n.changeLanguage(next), { quiet: true })}
       aria-label={t('common.language')}
       title={t('common.language')}
     >

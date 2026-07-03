@@ -6,6 +6,7 @@ import { LangSwitch } from './LangSwitch';
 import { ThemeToggle } from './ThemeToggle';
 import { NAV, type NavItem } from './nav';
 import { useHackIni } from '@/hooks/useHackIni';
+import { Toaster } from '@/components/ui/toaster';
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return cn(
@@ -61,6 +62,8 @@ export function AppLayout() {
           </Suspense>
         </main>
       </div>
+
+      <Toaster />
 
       <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-border bg-card/95 backdrop-blur md:hidden">
         {nav.filter((i) => i.primary).map((item) => (

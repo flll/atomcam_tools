@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next';
 // locale JSON は public/locales/{lng}/translation.json から遅延ロードする。
 // 言語は localStorage > navigator.language の順で検出（現行 LOCALE 互換は
 // hack.ini 取得後に i18n.changeLanguage で上書きする）。
-void i18n
+i18n
   .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -25,6 +25,9 @@ void i18n
       lookupLocalStorage: 'locale',
       caches: ['localStorage'],
     },
+  })
+  .catch((e: unknown) => {
+    console.error('i18n init failed', e);
   });
 
 export default i18n;

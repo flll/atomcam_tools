@@ -26,4 +26,17 @@ export default tseslint.config(
     files: ['scripts/**/*.mjs', 'mocks/**/*.ts'],
     languageOptions: { globals: { ...globals.node } },
   },
+  // src のみ type-aware lint: fire-and-forget な Promise は runCmd を通す
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-floating-promises': ['error', { ignoreVoid: false }],
+    },
+  },
 );

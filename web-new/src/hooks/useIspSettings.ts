@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import useSWR from 'swr';
 import { api } from '@/api';
 import type { IspSettings } from '@/api';
+import { runCmd } from '@/lib/runCmd';
 
 export function useIspSettings() {
   const { data, error, isLoading, mutate } = useSWR('video_isp', () => api.getIspSettings(), {
@@ -13,12 +14,11 @@ export function useIspSettings() {
   const apply = useCallback(
     (key: keyof IspSettings, next: IspSettings) => {
       clearTimeout(liveTimer.current);
-      liveTimer.current = setTimeout(() => void api.applyIspLive(key, next), 300);
+      // ライブプレビューは高頻度なので失敗を通知しない
+      liveTimer.current = setTimeout(() => runCmd(api.applyIspLive(key, next), { quiet: true }), 300);
       clearTimeout(fileTimer.current);
-      fileTimer.current = setTimeout(async () => {
-        await api.saveIspSettings(next);
-      }, 1500);
-      void mutate(next, { revalidate: false });
+      fileTimer.current = setTimeout(() => runCmd(api.saveIspSettings(next)), 1500);
+      runCmd(mutate(next, { revalidate: false }), { quiet: true });
     },
     [mutate],
   );

@@ -24,7 +24,13 @@
     "offline": "Offline",
     "loading": "Loading…",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "unsavedChanges": "You have unsaved changes",
+    "discard": "Discard",
+    "saved": "Saved",
+    "saveFailed": "Failed to save",
+    "saving": "Saving…",
+    "execFailed": "Operation failed"
   },
   "live": {
     "title": "Live View",
