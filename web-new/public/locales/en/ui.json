@@ -49,7 +49,11 @@
     "connecting": "Connecting…",
     "freeSpace": "Free space",
     "model": "Model",
-    "firmware": "Firmware"
+    "firmware": "Firmware",
+    "webrtcHint": "Enable RTSP main + WebRTC in streaming settings for low-latency view:",
+    "audioOn": "Unmute audio",
+    "audioOff": "Mute audio",
+    "watchOnLive": "Watch on the Live page"
   },
   "placeholder": {
     "comingSoon": "Page not found.",

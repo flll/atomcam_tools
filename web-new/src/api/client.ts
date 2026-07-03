@@ -114,6 +114,30 @@ export const api = {
     if (!res.ok) throw new Error(`homekit pairing -> ${res.status}`);
     return res.json();
   },
+
+  // go2rtc(:1984) が応答するか軽く確認する(WebRTC 有効時のみ呼ぶ)
+  async probeGo2rtc(timeoutMs = 3000): Promise<boolean> {
+    try {
+      const res = await fetch(`${go2rtcBase()}/api/streams`, {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
+  // WHEP 相当: offer SDP を POST し answer SDP を受け取る(go2rtc /api/webrtc)
+  async whepOffer(sdp: string, src = 'video0'): Promise<string> {
+    const res = await fetch(`${go2rtcBase()}/api/webrtc?src=${encodeURIComponent(src)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/sdp' },
+      body: sdp,
+    });
+    if (!res.ok) throw new Error(`POST go2rtc webrtc -> ${res.status}`);
+    return res.text();
+  },
 };
 
 export type Api = typeof api;
