@@ -36,13 +36,14 @@
     "nightVision": "ナイトビジョン",
     "snapshot": "スナップショット",
     "fps": "{{fps}} fps",
-    "noSignal": "映像なし（モック）",
+    "noSignal": "映像なし",
+    "connecting": "接続中…",
     "freeSpace": "空き容量",
     "model": "モデル",
     "firmware": "ファームウェア"
   },
   "placeholder": {
-    "comingSoon": "このページは Phase 3 以降で実装予定です。",
+    "comingSoon": "ページが見つかりません。",
     "backToLive": "ライブへ戻る"
   }
 }
