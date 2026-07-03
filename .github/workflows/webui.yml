@@ -39,15 +39,55 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Unit tests (vitest)
+        run: npm run test
       - name: Build
         run: npm run build
       - name: Bundle budget (gzip 250KB 目標 / 500KB 上限)
         run: npm run budget
 
-  demo:
-    # 共有レビュー用デモは experiment ブランチからもデプロイする
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/experiment/webui-modern' || github.ref == 'refs/heads/main')
+  e2e:
+    # 実機と同じ gzip-only 配信(lighttpd-sim)上で UI フローと CSS 404 再発を検証
     needs: ci
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web-new
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web-new/package-lock.json
+      - run: npm ci
+      - name: Playwright ブラウザキャッシュ
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('web-new/package-lock.json') }}
+      - name: Install chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install chromium deps (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: E2E (demo build + playwright)
+        run: npm run e2e
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: web-new/playwright-report
+          retention-days: 7
+
+  demo:
+    # 共有レビュー用デモは experiment ブランチからもデプロイする。
+    # e2e を通過しない限りデプロイしない(壊れたデモの公開防止)
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/experiment/webui-modern' || github.ref == 'refs/heads/main')
+    needs: [ci, e2e]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
