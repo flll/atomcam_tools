@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-// Phase 3 以降で実装する設定ページの仮表示。
+// 未実装ルート用の 404 フォールバック表示。
 export default function Placeholder({ titleKey }: { titleKey: string }) {
   const { t } = useTranslation();
   return (

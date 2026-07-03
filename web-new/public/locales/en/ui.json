@@ -36,13 +36,14 @@
     "nightVision": "Night vision",
     "snapshot": "Snapshot",
     "fps": "{{fps}} fps",
-    "noSignal": "No signal (mock)",
+    "noSignal": "No signal",
+    "connecting": "Connecting…",
     "freeSpace": "Free space",
     "model": "Model",
     "firmware": "Firmware"
   },
   "placeholder": {
-    "comingSoon": "This page will be implemented in Phase 3 and later.",
+    "comingSoon": "Page not found.",
     "backToLive": "Back to Live"
   }
 }
