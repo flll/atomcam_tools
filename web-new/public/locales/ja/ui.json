@@ -49,7 +49,11 @@
     "connecting": "接続中…",
     "freeSpace": "空き容量",
     "model": "モデル",
-    "firmware": "ファームウェア"
+    "firmware": "ファームウェア",
+    "webrtcHint": "配信設定で RTSP メイン + WebRTC を有効にすると低遅延表示になります:",
+    "audioOn": "音声を再生",
+    "audioOff": "音声をミュート",
+    "watchOnLive": "ライブページで視聴する"
   },
   "placeholder": {
     "comingSoon": "ページが見つかりません。",

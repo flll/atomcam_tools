@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Section, SettingInput, SettingInputNumber, SettingSelect, SettingSwitch, SettingComment, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
@@ -80,6 +81,9 @@ export default function StreamingPage({ section }: { section?: 'rtsp' | 'rtmp' |
             <>
               {draft.RTSP_AUDIO0 !== 'OPUS' && draft.RTSP_AUDIO0 !== 'off' && <SettingComment i18nKey="WebRTC.note" tone="danger" />}
               <SettingInput i18nKey="WebRTC.URL" value={urls.webrtc} readOnly />
+              <Link to="/" className="inline-block text-sm text-primary underline-offset-2 hover:underline">
+                {t('ui:live.watchOnLive')}
+              </Link>
             </>
           )}
         </Section>
