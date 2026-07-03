@@ -15,10 +15,12 @@ export function parsePeriodicAlarmSchedule(raw: string | undefined): ScheduleEnt
   if (!raw) return [];
   const out: ScheduleEntry[] = [];
   let index = -1;
+  let continueTime: number | null = null;
   for (const part of raw.split(';')) {
     if (!part) continue;
     if (/\[index_.*\]/.test(part)) {
       index += 1;
+      continueTime = null;
       out[index] = { dayOfWeekSelect: [], startTime: '00:00', endTime: '23:59' };
       continue;
     }
@@ -33,13 +35,12 @@ export function parsePeriodicAlarmSchedule(raw: string | undefined): ScheduleEnt
     if (k === 'StartTime') {
       const st = Number(v);
       entry.startTime = minutesToTime(st);
-      const ct = (entry as { continueTimeNum?: number }).continueTimeNum;
-      if (ct != null) entry.endTime = minutesToTime(st + ct - 1);
+      if (continueTime != null) entry.endTime = minutesToTime(st + continueTime - 1);
     }
     if (k === 'ContinueTime') {
-      (entry as { continueTimeNum?: number }).continueTimeNum = Number(v);
+      continueTime = Number(v);
       const st = parseTimeToMinutes(entry.startTime);
-      entry.endTime = minutesToTime(st + Number(v) - 1);
+      entry.endTime = minutesToTime(st + continueTime - 1);
     }
   }
   return out.filter(Boolean);
