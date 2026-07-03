@@ -44,7 +44,8 @@ export function useJpegStream(intervalMs = 500, enabled = true): JpegStream {
       }
     }
 
-    tick();
+    // tick は内部で例外処理済みのため reject しない
+    tick().catch(() => {});
     return () => {
       cancelled = true;
       clearTimeout(timer);

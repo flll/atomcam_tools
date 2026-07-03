@@ -79,6 +79,8 @@ export function serializeHackIni(config: HackIni): string {
 // cmd.cgi property 応答: `key=value` 行
 export function parseProperty(text: string): CameraProperty {
   const out: CameraProperty = { valid: false };
+  // cmd.cgi は NUL 区切りで返すことがあるため \x00 も行区切りとして扱う
+  // eslint-disable-next-line no-control-regex
   for (const line of text.split(/[\n\x00]/)) {
     if (!line || line === 'ok') continue;
     const eq = line.indexOf('=');

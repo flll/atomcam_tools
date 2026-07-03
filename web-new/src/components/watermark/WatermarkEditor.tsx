@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SettingComment } from '@/components/settings';
 import { useWatermark } from '@/hooks/useWatermark';
+import { runCmd } from '@/lib/runCmd';
 
 export function WatermarkEditor() {
   const { t } = useTranslation('translation');
@@ -27,20 +28,22 @@ export function WatermarkEditor() {
     ctx.putImageData(img, 0, 0);
   }, [blob, dims]);
 
+  async function drawAndSave(dataUrl: string) {
+    const img = new Image();
+    img.src = dataUrl;
+    await img.decode();
+    if (img.width > 500 || img.height > 200) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d')?.drawImage(img, 0, 0);
+    await saveCanvas(canvas);
+  }
+
   function onDrop(file: File) {
     const reader = new FileReader();
-    reader.onload = async () => {
-      const img = new Image();
-      img.src = reader.result as string;
-      await img.decode();
-      if (img.width > 500 || img.height > 200) return;
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      canvas.width = img.width;
-      canvas.height = img.height;
-      canvas.getContext('2d')?.drawImage(img, 0, 0);
-      await saveCanvas(canvas);
-    };
+    reader.onload = () => runCmd(drawAndSave(reader.result as string));
     reader.readAsDataURL(file);
   }
 
