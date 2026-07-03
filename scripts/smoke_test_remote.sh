@@ -41,6 +41,17 @@ if ! remote 'echo ok' >/dev/null 2>&1; then
   exit 1
 fi
 
+# 起動直後は lighttpd / /tmp/hack.ini の生成が ssh より遅れる。
+# WebUI 系ケースが誤って fail しないよう、最大 120 秒まで起動完了を待つ。
+BOOT_WAIT=0
+while [ "$BOOT_WAIT" -lt 120 ]; do
+  HTTP_UP="$(curl -sf -m 5 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null || true)"
+  INI_UP="$(remote 'test -s /tmp/hack.ini && echo yes || echo no' 2>/dev/null | tr -d '\r')"
+  [ "$HTTP_UP" = "200" ] && [ "$INI_UP" = "yes" ] && break
+  sleep 10
+  BOOT_WAIT=$((BOOT_WAIT + 10))
+done
+
 # --- case: version ---------------------------------------------------------
 VER="$(remote 'cat /etc/atomhack.ver 2>/dev/null' | tr -d '\r' | head -1)"
 if [ -z "$VER" ]; then
