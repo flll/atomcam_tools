@@ -52,4 +52,4 @@ make sim-swing-92m
 
 ## 詳細データ
 
-生の JSON ログとプロファイル別の詳細は [`sim-results/comparison.md`](../../sim-results/comparison.md) を参照。
+生の JSON ログとプロファイル別の詳細は `sim-results/comparison.md`(ローカル生成物・git 追跡外)を参照。
