@@ -51,5 +51,13 @@
   "placeholder": {
     "comingSoon": "Page not found.",
     "backToLive": "Back to Live"
+  },
+  "schedule": {
+    "add": "Add",
+    "delete": "Delete",
+    "errNoDays": "Select at least one day",
+    "errTimeRange": "End time must be after start time",
+    "errInterval": "Interval must be at least 1",
+    "errCount": "Count must be at least 1"
   }
 }

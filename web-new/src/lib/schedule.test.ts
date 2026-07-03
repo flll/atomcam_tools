@@ -7,6 +7,8 @@ import {
   serializePeriodicAlarmSchedule,
   serializeRebootSchedule,
   serializeTimelapseSchedule,
+  validateScheduleEntry,
+  validateTimelapseEntry,
 } from './schedule';
 
 describe('parsePeriodicAlarmSchedule', () => {
@@ -103,11 +105,11 @@ describe('serializeTimelapseSchedule', () => {
     expect(roundTripped.count).toBe(100);
   });
 
-  it('interval/count 未指定だと壊れた cron 行を出力する(A-3 現状バグ・Phase 4 で修正予定)', () => {
+  it('interval/count 欠損時は既定値(60/960)で直列化する(A-3 修正)', () => {
     const broken = [
       { dayOfWeekSelect: [0], startTime: '04:00', endTime: '23:59' } as TimelapseScheduleEntry,
     ];
-    expect(serializeTimelapseSchedule(broken)).toContain('start undefined undefined');
+    expect(serializeTimelapseSchedule(broken)).toBe('0 4 * * 1 /scripts/timelapse.sh start 60 960;');
   });
 });
 
@@ -126,5 +128,27 @@ describe('reboot schedule', () => {
 
   it('cron 曜日 0(日曜) は UI 曜日 6 に対応する', () => {
     expect(parseRebootSchedule('0 2 * * 0')).toEqual({ dayOfWeekSelect: [6], startTime: '02:00' });
+  });
+});
+
+describe('validateScheduleEntry', () => {
+  it('正常なエントリはエラーなし', () => {
+    expect(validateScheduleEntry({ dayOfWeekSelect: [0], startTime: '08:00', endTime: '09:00' })).toEqual([]);
+  });
+
+  it('曜日ゼロ選択・時刻逆転を検出する', () => {
+    expect(validateScheduleEntry({ dayOfWeekSelect: [], startTime: '08:00', endTime: '09:00' })).toEqual(['errNoDays']);
+    expect(validateScheduleEntry({ dayOfWeekSelect: [0], startTime: '10:00', endTime: '09:00' })).toEqual(['errTimeRange']);
+    expect(validateScheduleEntry({ dayOfWeekSelect: [0], startTime: '10:00', endTime: '10:00' })).toEqual(['errTimeRange']);
+  });
+});
+
+describe('validateTimelapseEntry', () => {
+  it('interval/count の下限と曜日を検証する', () => {
+    const base = { dayOfWeekSelect: [0], startTime: '04:00', endTime: '23:59' };
+    expect(validateTimelapseEntry({ ...base, interval: 60, count: 960 })).toEqual([]);
+    expect(validateTimelapseEntry({ ...base, interval: 0, count: 960 })).toEqual(['errInterval']);
+    expect(validateTimelapseEntry({ ...base, interval: 60, count: NaN })).toEqual(['errCount']);
+    expect(validateTimelapseEntry({ ...base, dayOfWeekSelect: [], interval: 60, count: 960 })).toEqual(['errNoDays']);
   });
 });
