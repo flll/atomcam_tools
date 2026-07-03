@@ -7,9 +7,7 @@ import {
   parseProperty,
   parseWatermarkDimensions,
   rgbaToBgra,
-  serializeHackIni,
 } from './parse';
-import type { HackIni } from './types';
 
 describe('parseKeyValue', () => {
   it('スペース区切り・=区切り・タブ区切りを受け付ける', () => {
@@ -64,13 +62,6 @@ describe('parseIspSettings', () => {
 
   it('不正な expmode は auto のまま', () => {
     expect(parseIspSettings('expmode weird').expmode).toBe('auto');
-  });
-});
-
-describe('serializeHackIni', () => {
-  it('undefined 値のキーを除外して KEY value 形式にする', () => {
-    const ini = { A: '1', B: undefined, C: 'x y' } as unknown as HackIni;
-    expect(serializeHackIni(ini)).toBe('A 1\nC x y');
   });
 });
 

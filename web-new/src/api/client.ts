@@ -4,7 +4,6 @@ import {
   parseProperty,
   parseStatus,
   rgbaToBgra,
-  serializeHackIni,
   serializeIspSettings,
 } from './parse';
 import type { CameraProperty, CameraStatus, CmdPort, HackIni, IspSettings } from './types';
@@ -29,10 +28,13 @@ export const api = {
   },
 
   async saveHackIni(config: HackIni): Promise<void> {
+    // hack_ini.cgi の POST は awk で {"KEY":"value",...} 形式を前提にしている
+    // (KEY value のテキスト行を送ると本文全体が1レコード扱いになり、先頭キーが
+    //  除外対象だと hack.ini が空になる)。必ず JSON で送る。
     const res = await fetch(`${CGI_BASE}/hack_ini.cgi`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json;charset=utf-8' },
-      body: serializeHackIni(config),
+      body: JSON.stringify(config),
     });
     if (!res.ok) throw new Error(`POST hack_ini.cgi -> ${res.status}`);
   },

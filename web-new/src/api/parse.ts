@@ -69,13 +69,6 @@ export function serializeIspSettings(settings: IspSettings): string {
     .join('\n');
 }
 
-export function serializeHackIni(config: HackIni): string {
-  return Object.entries(config)
-    .filter(([, v]) => v !== undefined)
-    .map(([k, v]) => `${k} ${v}`)
-    .join('\n');
-}
-
 // cmd.cgi property 応答: `key=value` 行
 export function parseProperty(text: string): CameraProperty {
   const out: CameraProperty = { valid: false };
