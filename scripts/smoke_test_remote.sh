@@ -71,6 +71,23 @@ else
   report "icamera" "fail" "{\"pid\":\"\",\"recent_log_errors\":${LOG_ERRORS:-0}}"
 fi
 
+# --- case: preload (libcallback が iCamera_app に注入されているか: F-3 検知) ---
+ICAM_PID_P="$(printf '%s' "$ICAM_PID" | awk '{print $1}')"
+ATOM_DEBUG="$(remote 'test -f /media/mmc/atom-debug && echo yes || echo no' | tr -d '\r')"
+if [ -z "$ICAM_PID_P" ]; then
+  report "preload" "fail" "{\"error\":\"iCamera_app not running\"}"
+elif [ "$ATOM_DEBUG" = "yes" ]; then
+  report "preload" "skip" "{\"reason\":\"atom-debug marker present\"}"
+else
+  CB_MAPS="$(remote "grep -c libcallback /proc/${ICAM_PID_P}/maps 2>/dev/null" | tr -d '\r')"
+  case "$CB_MAPS" in ''|*[!0-9]*) CB_MAPS=0 ;; esac
+  if [ "$CB_MAPS" -gt 0 ]; then
+    report "preload" "pass" "{\"maps_entries\":${CB_MAPS}}"
+  else
+    report "preload" "fail" "{\"maps_entries\":0,\"hint\":\"debug bind 残骸の疑い: scripts/hil/cleanup-debug-boot.sh で確認\"}"
+  fi
+fi
+
 # --- case: webui-spa (web-new index + gzip assets) ---------------------------
 SPA_INDEX_RC=0
 SPA_INDEX_CT="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null)" || SPA_INDEX_RC=$?
@@ -187,6 +204,19 @@ if [ "$FREE_KB" -ge 2048 ]; then
 else
   report "resources" "fail" "{\"free_kb\":${FREE_KB},\"uptime\":\"$(json_escape "$UPTIME")\"}"
 fi
+
+# --- case: perf (情報記録のみ・常に pass。しきい値はベースライン確定後に導入) ----
+TL_BOOT="$(remote 'grep -o "\"boot_total\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
+TL_ICAM="$(remote 'grep -o "\"icamera_ready\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
+LOAD1="$(remote 'awk "{print \$1}" /proc/loadavg' | tr -d '\r')"
+SD_A="$(remote 'awk "\$3==\"mmcblk0\" {print \$10}" /proc/diskstats' | tr -d '\r')"
+sleep 5
+SD_B="$(remote 'awk "\$3==\"mmcblk0\" {print \$10}" /proc/diskstats' | tr -d '\r')"
+case "$SD_A" in ''|*[!0-9]*) SD_A="" ;; esac
+case "$SD_B" in ''|*[!0-9]*) SD_B="" ;; esac
+SD_W5=""
+[ -n "$SD_A" ] && [ -n "$SD_B" ] && SD_W5=$((SD_B - SD_A))
+report "perf" "pass" "{\"boot_total_sec\":${TL_BOOT:-null},\"icamera_ready_sec\":${TL_ICAM:-null},\"load_1min\":${LOAD1:-null},\"sd_write_sectors_5s\":${SD_W5:-null}}"
 
 # --- failure: collect debug material ----------------------------------------------
 if [ "$FAILED" -ne 0 ]; then
