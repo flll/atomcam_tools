@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# /dev/random(blocking)を urandom(c 1,9)に差し替える。
+# 根拠(2026-07-04 実測): ブート時に ssh-keygen -A が /dev/random 読みで
+# 16〜60秒ブロックしていた(fd プローブで確定。CPU 97% idle・iowait 増なし)。
+# S01seedrng が SD の creditable seed を注入済みのためこの時点の urandom は seeded。
+# 組込機の定番対策。S10mdev の coldplug が /dev/random を c1,8 で作り直すため、
+# それより後(S12)に置くこと。
+#
+case "$1" in
+  start)
+    rm -f /dev/random
+    mknod -m 666 /dev/random c 1 9
+    echo "/dev/random -> urandom (c 1,9)"
+  ;;
+  stop)
+  ;;
+  restart|reload)
+  ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+exit $?
