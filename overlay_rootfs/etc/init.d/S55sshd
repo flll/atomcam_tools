@@ -15,6 +15,15 @@ _bt_step() {
 [ -f /media/mmc/authorized_keys ] || exit 0
 
 # Create any missing keys
+# 一時診断: ブート時に keygen が何で眠るか wchan を記録(特定後に撤去)
+( sleep 8
+  P=$(pidof ssh-keygen | awk '{print $1}')
+  if [ -n "$P" ]; then
+    W=$(cat /proc/$P/wchan 2>/dev/null)
+    FD=$(ls -l /proc/$P/fd 2>/dev/null | awk 'END{print $NF}')
+    read _t _ < /proc/uptime
+    echo "{\"case\":\"probe\",\"t\":$_t,\"wchan\":\"$W\",\"lastfd\":\"$FD\"}" >> /tmp/boot_timeline.ndjson
+  fi ) &
 _bt_step keygen_start
 /usr/bin/ssh-keygen -A
 _bt_step keygen_end
