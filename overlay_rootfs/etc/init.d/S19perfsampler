@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# perf sampler (hack.ini PERF_SAMPLER=on のときのみ起動。既定 off = 本番負荷ゼロ)
+# S17hackini の後(= /tmp/hack.ini 生成後)に置くことで、S20 以降のブート後半も観測できる。
+#
+
+case "$1" in
+  start)
+    grep -q '^PERF_SAMPLER *= *on' /tmp/hack.ini 2>/dev/null || exit 0
+    setsid /scripts/perf_sampler.sh </dev/null >/dev/null 2>&1 &
+    echo "perf_sampler started"
+  ;;
+  stop)
+    killall perf_sampler.sh 2>/dev/null
+  ;;
+  restart|reload)
+    "$0" stop
+    "$0" start
+  ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit $?
