@@ -1,0 +1,4 @@
+# 起動時エントロピーの永続化: seed を SD に保存し、次ブートで credit する。
+# これが無いと毎ブートでエントロピープールが空になり、S55sshd の ssh-keygen -A が
+# /dev/random ブロックで約60秒停止する(2026-07-04 計測: S55sshd 59.4s/ブート108s)。
+SEEDRNG_ARGS="--seed-dir=/media/mmc/seedrng"
