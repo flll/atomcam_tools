@@ -4,7 +4,7 @@ test('録画スケジュールの追加・保存・SPA 内往復で復元 (A-1/A
   await page.goto('/#/settings/recording');
 
   // 録画スケジュールを有効化 → エディタ表示
-  await page.getByText('録画スケジュール').locator('..').getByRole('switch').click();
+  await page.getByRole('switch', { name: '録画スケジュール' }).click();
   await page.getByRole('button', { name: '追加' }).click();
 
   const start = page.locator('input[type="time"]').first();
@@ -24,7 +24,7 @@ test('録画スケジュールの追加・保存・SPA 内往復で復元 (A-1/A
 
 test('不正なスケジュールでは保存できずエラー表示 (A-5)', async ({ page }) => {
   await page.goto('/#/settings/recording');
-  await page.getByText('録画スケジュール').locator('..').getByRole('switch').click();
+  await page.getByRole('switch', { name: '録画スケジュール' }).click();
   await page.getByRole('button', { name: '追加' }).click();
 
   // 終了 < 開始

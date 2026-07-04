@@ -15,11 +15,15 @@ export function SettingSelect({
 }) {
   const { t } = useTranslation('translation');
   const labels = (t(`${i18nKey}.text`, { returnObjects: true }) as string[] | string) ?? options;
+  const desc = t(`${i18nKey}.tooltip`, { defaultValue: '' });
   return (
-    <label className="flex flex-col gap-1 rounded-lg border border-border px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-sm">{t(`${i18nKey}.title`)}</span>
+    <label className="flex flex-col gap-1 rounded-lg border border-border px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <span className="min-w-0">
+        <span className="block text-sm">{t(`${i18nKey}.title`)}</span>
+        {desc && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{desc}</span>}
+      </span>
       <select
-        className="rounded-md border border-input bg-background px-2 py-1 text-sm"
+        className="shrink-0 rounded-md border border-input bg-background px-2 py-1 text-sm"
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}

@@ -16,15 +16,19 @@ export function SettingSwitch({
 }) {
   const { t } = useTranslation('translation');
   const on = value === 'on';
+  const desc = t(`${i18nKey}.tooltip`, { defaultValue: '' });
   return (
     <label className={cn('flex items-center justify-between gap-4 rounded-lg border border-border px-3 py-2', disabled && 'opacity-50')}>
-      <span className="text-sm">{t(`${i18nKey}.title`)}</span>
+      <span className="min-w-0">
+        <span className="block text-sm">{t(`${i18nKey}.title`)}</span>
+        {desc && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{desc}</span>}
+      </span>
       <button
         type="button"
         role="switch"
         aria-checked={on}
         disabled={disabled}
-        className={cn('relative h-6 w-11 rounded-full transition-colors', on ? 'bg-primary' : 'bg-muted')}
+        className={cn('relative h-6 w-11 shrink-0 rounded-full transition-colors', on ? 'bg-primary' : 'bg-muted')}
         onClick={() => onChange(on ? 'off' : 'on')}
       >
         <span className={cn('absolute top-0.5 size-5 rounded-full bg-background shadow transition-transform', on ? 'left-5' : 'left-0.5')} />
