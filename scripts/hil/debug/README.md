@@ -36,6 +36,22 @@ pwsh ~/.cursor/skills/atomcam-hil-loop/scripts/hil-windows.ps1 install -DebugBoo
 - `crontab` に `network_init.sh restart` を入れない（毎分 `wpa_supplicant` が kill される）
 - WPA 設定は `group=CCMP` のみ（古い wpa_supplicant は `CCMP TKIP WEP104 WEP40` をパースできない）
 
+## 撤去(必須・使用後は必ず実行)
+
+**debug 資産を SD に残したままにしない。** 残置すると S20mountfs の bind mount で
+no-preload 版 atom_init が正規版を上書きし続け(見かけの F-3 再発)、crontab マージで
+wifi_audit が毎分走り SD を食い潰す(2026-07-04 に実害: wifi_audit.log 84MB・SD 96%)。
+
+```bash
+# lll-legacy の repo ルートで(まず DRY_RUN で対象確認)
+scripts/hil/cleanup-debug-boot.sh 10.0.0.228
+DRY_RUN=0 scripts/hil/cleanup-debug-boot.sh 10.0.0.228
+make deploy-test ATOMCAM_HOST=10.0.0.228   # 再起動で LD_PRELOAD 復活
+```
+
+撤去は削除ではなく `/media/mmc/debug-archive-<ts>/` への mv(戻すのも mv)。
+実行中の wdkeep(HW ウォッチドッグ給餌)は殺さない設計。
+
 ## F-3 解決後 (2026-06-30)
 
 - `atom_init.nopreload.fixed` — 旧安定化（LD_PRELOAD なし）。退避用。
