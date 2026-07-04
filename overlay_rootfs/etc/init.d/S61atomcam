@@ -82,6 +82,11 @@ EOF
         break
       fi
     done
+    # ブートタイムライン: libcallback コマンド応答到達点(映像系 KPI)
+    _icam_ok=false
+    [ "$res" = "on" -o "$res" = "off" ] && _icam_ok=true
+    read _up _ < /proc/uptime
+    echo "{\"case\":\"icamera_ready\",\"uptime\":$_up,\"cmd_ok\":$_icam_ok}" >> /tmp/boot_timeline.ndjson
     /scripts/set_icamera_config.sh
     /scripts/cmd timelapse restart
     [ -x /media/mmc/post_icamera.sh ] && /media/mmc/post_icamera.sh start

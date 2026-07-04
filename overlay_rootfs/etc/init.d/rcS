@@ -5,10 +5,15 @@
 # Start all init scripts in /etc/init.d
 # executing them in numerical order.
 #
+# ブートタイムライン: 各 S* の前後で /proc/uptime を tmpfs に NDJSON 記録する。
+# 回収は scripts/collect_perf_remote.sh、比較は scripts/perf_report.sh(リポジトリ側)。
+_BOOT_TL=/tmp/boot_timeline.ndjson
 for i in /etc/init.d/S??* ;do
 
   # Ignore dangling symlinks (if any).
   [ ! -f "$i" ] && continue
+
+  read _BT_S _BT_X < /proc/uptime
 
   case "$i" in
   *.sh)
@@ -29,4 +34,7 @@ for i in /etc/init.d/S??* ;do
     $i start
     ;;
   esac
+
+  read _BT_E _BT_X < /proc/uptime
+  echo "{\"case\":\"boot_script\",\"script\":\"${i##*/}\",\"start\":$_BT_S,\"end\":$_BT_E}" >> $_BOOT_TL
 done
