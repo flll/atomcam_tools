@@ -66,5 +66,16 @@
     "errTimeRange": "終了時間は開始時間より後にしてください",
     "errInterval": "周期は1以上を指定してください",
     "errCount": "回数は1以上を指定してください"
+  },
+  "storage": {
+    "usageTitle": "SDカード使用状況",
+    "usedPct": "{{pct}}% 使用中",
+    "free": "空き {{free}}",
+    "sdSectionDesc": "SDカードのLAN共有と録画の書き込み方式を設定します。",
+    "nasSectionDesc": "録画・タイムラプスの保存先にする NAS (SMB/CIFS共有) の接続情報です。各録画設定で「NASに保存」を有効にすると使われます。",
+    "eraseConfirmTitle": "SD-Cardを消去しますか？",
+    "eraseConfirmBody": "SDカードの録画フォルダ(常時録画・アラーム録画)を削除します。この操作は取り消せません。",
+    "eraseConfirmAction": "消去する",
+    "eraseStarted": "消去を開始しました"
   }
 }
