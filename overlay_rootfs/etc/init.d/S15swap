@@ -1,19 +1,38 @@
 #!/bin/bash
 #
-# Swaps on the sdcard if available
+# swap 構成: zram(圧縮RAM)を主、SD 上の swap ファイルを低優先 fallback にする。
+# 旧構成(SD 128MB のみ)は swap レイテンシが大きく SD 磨耗も進むため zram を優先。
+# busybox swapon に -p は無いので swapon の順序で優先度を決める(先=-1 が優先)。
 #
 
 SWAPFILE=/media/mmc/swap
+ZRAM_DEV=/dev/zram0
+ZRAM_SIZE_MB=48
+
 case "$1" in
   start)
-    echo "Starting swap on sdcard using $SWAPFILE"
-    [ ! -f $SWAPFILE ] && dd if=/dev/zero of=$SWAPFILE bs=1M count=128
-    mkswap $SWAPFILE
-    swapon $SWAPFILE
+    if [ -e /sys/block/zram0/disksize ]; then
+      # comp_algorithm は disksize 設定前にのみ変更可
+      grep -q lz4 /sys/block/zram0/comp_algorithm 2>/dev/null && echo lz4 > /sys/block/zram0/comp_algorithm
+      echo $((ZRAM_SIZE_MB * 1024 * 1024)) > /sys/block/zram0/disksize
+      if mkswap $ZRAM_DEV >/dev/null 2>&1 && swapon $ZRAM_DEV; then
+        echo "zram swap ${ZRAM_SIZE_MB}MB (lz4) enabled"
+      else
+        echo "WARN: zram swap setup failed, falling back to sdcard only"
+      fi
+    fi
+    # fallback: SD swap。mkswap は署名が無いときだけ(毎ブート mkswap は SD 上で 20 秒超かかっていた)
+    echo "Starting fallback swap on sdcard using $SWAPFILE"
+    if [ ! -f $SWAPFILE ]; then
+      dd if=/dev/zero of=$SWAPFILE bs=1M count=128
+      mkswap $SWAPFILE
+    fi
+    swapon $SWAPFILE || { mkswap $SWAPFILE && swapon $SWAPFILE; }
     echo 2048 > /proc/sys/vm/min_free_kbytes
   ;;
   stop)
     swapoff $SWAPFILE
+    swapoff $ZRAM_DEV 2>/dev/null
   ;;
   restart|reload)
     "$0" stop
@@ -25,5 +44,3 @@ case "$1" in
 esac
 
 exit $?
-
-
