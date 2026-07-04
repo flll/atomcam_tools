@@ -1,5 +1,10 @@
 #!/bin/sh
-# MDNS=off (hack.ini) なら mDNS スタック(dbus+avahi)を起動しない。既定(未設定)は従来どおり起動。if grep -q '^MDNS *= *off' /tmp/hack.ini 2>/dev/null; then  echo "S50avahi-daemon: skipped (MDNS=off)"  exit 0fi
+
+# MDNS=off (hack.ini) なら mDNS スタック(dbus+avahi)を起動しない。既定(未設定)は従来どおり起動。
+if grep -q '^MDNS *= *off' /tmp/hack.ini 2>/dev/null; then
+  echo "S50avahi-daemon: skipped (MDNS=off)"
+  exit 0
+fi
 #
 # avahi-daemon init script
 
