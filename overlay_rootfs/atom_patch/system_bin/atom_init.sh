@@ -31,6 +31,7 @@ insmod /system/driver/speaker_ctl.ko
 /system/bin/ver-comp
 /system/bin/assis >> $ASSIS_LOG 2>&1 &
 /system/bin/hl_client >> /dev/null 2>&1 &
-# F-3 resolved (2026-06-30): LD_PRELOAD restored; stdout to /dev/null avoids FIFO awk storm.
-LD_PRELOAD=/tmp/system/lib/modules/libcallback.so /system/bin/iCamera_app >/dev/null 2>&1 &
+# webhook 復活 (2026-07-05): awk storm の真因(-v 引数後置)根治済みのため FIFO 経路を復元。
+# 読み手死亡時の write ブロックは webhook.sh の respawn ループが防ぐ。
+LD_PRELOAD=/tmp/system/lib/modules/libcallback.so /system/bin/iCamera_app >> /var/run/atomapp 2>> $TOOLS_LOG &
 [ "AC1" = "$PRODUCT_MODEL" -o "ATOM_CamV3C" = "$PRODUCT_MODEL" ] && /system/bin/dongle_app >> /dev/null &

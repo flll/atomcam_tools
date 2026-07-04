@@ -4,6 +4,7 @@ HACK_INI=/tmp/hack.ini
 mkdir -p /tmp/log
 [ -f /media/mmc/atom-log ] && ATOM_LOG="on"
 [ -f /media/mmc/timelapse_hook.sh ] && TIMELAPSE_HOOK="on"
+while : ; do
 awk -v HACK_INI="$HACK_INI" -v ATOM_LOG="$ATOM_LOG" -v TIMELAPSE_HOOK="$TIMELAPSE_HOOK" '
 BEGIN {
   FS = "=";
@@ -98,3 +99,5 @@ function Post(event, data) {
   }
 }
 ' /var/run/atomapp
+sleep 2
+done
