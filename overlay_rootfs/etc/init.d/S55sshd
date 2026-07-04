@@ -3,19 +3,29 @@
 # sshd        Starts sshd.
 #
 
+# ブートで 54.6s を消費していたため(2026-07-04 計測)、内訳特定のステップ計時を入れている
+_bt_step() {
+	read _t _ < /proc/uptime
+	echo "{\"case\":\"boot_step\",\"script\":\"S55sshd\",\"step\":\"$1\",\"t\":$_t}" >> /tmp/boot_timeline.ndjson
+}
+
 # Make sure the ssh-keygen progam exists
 [ -f /usr/bin/ssh-keygen ] || exit 0
 
 [ -f /media/mmc/authorized_keys ] || exit 0
 
 # Create any missing keys
+_bt_step keygen_start
 /usr/bin/ssh-keygen -A
+_bt_step keygen_end
 
 umask 077
 
 start() {
 	printf "Starting sshd: "
+	_bt_step sshd_start
 	/usr/sbin/sshd
+	_bt_step sshd_forked
 	touch /var/lock/sshd
 	echo "OK"
 }
@@ -46,4 +56,3 @@ case "$1" in
 esac
 
 exit $?
-

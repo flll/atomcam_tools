@@ -9,8 +9,14 @@ SWAPFILE=/media/mmc/swap
 ZRAM_DEV=/dev/zram0
 ZRAM_SIZE_MB=48
 
+_bt_step() {
+  read _t _ < /proc/uptime
+  echo "{\"case\":\"boot_step\",\"script\":\"S15swap\",\"step\":\"$1\",\"t\":$_t}" >> /tmp/boot_timeline.ndjson
+}
+
 case "$1" in
   start)
+    _bt_step begin
     if [ -e /sys/block/zram0/disksize ]; then
       # comp_algorithm は disksize 設定前にのみ変更可
       grep -q lz4 /sys/block/zram0/comp_algorithm 2>/dev/null && echo lz4 > /sys/block/zram0/comp_algorithm
@@ -21,6 +27,7 @@ case "$1" in
         echo "WARN: zram swap setup failed, falling back to sdcard only"
       fi
     fi
+    _bt_step zram_done
     # fallback: SD swap。mkswap は署名が無いときだけ(毎ブート mkswap は SD 上で 20 秒超かかっていた)
     echo "Starting fallback swap on sdcard using $SWAPFILE"
     if [ ! -f $SWAPFILE ]; then
@@ -28,6 +35,7 @@ case "$1" in
       mkswap $SWAPFILE
     fi
     swapon $SWAPFILE || { mkswap $SWAPFILE && swapon $SWAPFILE; }
+    _bt_step sd_swapon_done
     echo 2048 > /proc/sys/vm/min_free_kbytes
   ;;
   stop)
