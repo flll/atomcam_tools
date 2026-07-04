@@ -66,5 +66,16 @@
     "errTimeRange": "End time must be after start time",
     "errInterval": "Interval must be at least 1",
     "errCount": "Count must be at least 1"
+  },
+  "storage": {
+    "usageTitle": "SD card usage",
+    "usedPct": "{{pct}}% used",
+    "free": "{{free}} free",
+    "sdSectionDesc": "Configure LAN sharing and the recording write mode for the SD card.",
+    "nasSectionDesc": "Connection info for a NAS (SMB/CIFS share) used as a recording/timelapse destination. Used when \"Save to NAS\" is enabled in each recording setting.",
+    "eraseConfirmTitle": "Erase SD card?",
+    "eraseConfirmBody": "Deletes the recording folders (continuous and alarm) on the SD card. This cannot be undone.",
+    "eraseConfirmAction": "Erase",
+    "eraseStarted": "Erase started"
   }
 }
