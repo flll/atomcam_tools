@@ -27,7 +27,7 @@ OUT="$ROOT/sim-results/perf/cleanup-debug-boot-$TS"
 ARCHIVE="/media/mmc/debug-archive-$TS"
 
 # -DebugBoot が /media/mmc に置く資産(存在するものだけ処理)
-DEBRIS="atom_init.fixed S61atomcam.fixed atom_init.f3test.fixed atom_init.fixed.bak-f3test crontab crontab.n wifi_audit.sh tailscale_wrapper.sh wdkeep.sh wdkeep_ensure.sh killwebhook.sh hil_boot_capture.sh hil_boot_capture.ndjson debug-6ef2a6.ndjson tailscaled.state"
+DEBRIS="atom-debug atom-log atom_init.fixed S61atomcam.fixed atom_init.f3test.fixed atom_init.fixed.bak-f3test crontab crontab.n wifi_audit.sh tailscale_wrapper.sh wdkeep.sh wdkeep_ensure.sh killwebhook.sh hil_boot_capture.sh hil_boot_capture.ndjson debug-6ef2a6.ndjson tailscaled.state"
 BIGLOGS="wifi_audit.log tools.log"
 BIND_TARGETS="/atom_patch/system_bin/atom_init.sh /etc/init.d/S61atomcam /atom/tmp/system/bin/atom_init.sh"
 
