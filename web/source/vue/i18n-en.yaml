@@ -200,9 +200,11 @@ NASSettings:
   networkPath:
     title: Network PATH
     tooltip: enter the path of NAS Server (use //server/folder/ format)
+    placeholder: //192.168.1.10/atomcam/
   account:
     title: Account
     tooltip: Set NAS username
+    placeholder: user1
   password:
     title: Password
     tooltip: set NAS password

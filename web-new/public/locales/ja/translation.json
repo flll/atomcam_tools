@@ -261,11 +261,13 @@
     "title": "NAS設定",
     "networkPath": {
       "title": "ネットワークPATH",
-      "tooltip": "NASのパスを設定。(//server/folder/の形式で指定)"
+      "tooltip": "NASのパスを設定。(//server/folder/の形式で指定)",
+      "placeholder": "//192.168.1.10/atomcam/"
     },
     "account": {
       "title": "アカウント",
-      "tooltip": "NASのユーザー名を設定します"
+      "tooltip": "NASのユーザー名を設定します",
+      "placeholder": "user1"
     },
     "password": {
       "title": "パスワード",
