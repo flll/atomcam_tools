@@ -22,12 +22,7 @@ import { useJpegStream } from '@/hooks/useJpegStream';
 import { useWebRtcStream } from '@/hooks/useWebRtcStream';
 import { cn } from '@/lib/utils';
 import { runCmd } from '@/lib/runCmd';
-
-function formatBytes(n: number): string {
-  if (n >= 1 << 30) return `${(n / (1 << 30)).toFixed(1)} GB`;
-  if (n >= 1 << 20) return `${(n / (1 << 20)).toFixed(0)} MB`;
-  return `${(n / 1024).toFixed(0)} KB`;
-}
+import { formatBytes } from '@/lib/format';
 
 export default function Live() {
   const { t } = useTranslation();
@@ -66,18 +61,20 @@ export default function Live() {
         </span>
       </div>
 
+      {/* YouTube 方式: プレイヤー枠は 16:9 固定、中身は object-contain で
+          どのアスペクト比でも黒帯レターボックスに収める(切り取らない) */}
       <div className="overflow-hidden rounded-xl border border-border bg-black shadow-lg">
-        <div className="relative aspect-[4/3] w-full">
+        <div className="relative aspect-video w-full">
           <video
             ref={videoRef}
             autoPlay
             muted
             playsInline
-            className={cn('h-full w-full object-cover', !rtcActive && 'hidden')}
+            className={cn('h-full w-full object-contain', !rtcActive && 'hidden')}
           />
           {!rtcActive &&
             (src ? (
-              <img src={src} alt={t('live.title')} className="h-full w-full object-cover" />
+              <img src={src} alt={t('live.title')} className="h-full w-full object-contain" />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-muted-foreground">
                 {rtcState === 'connecting' ? t('live.connecting') : t('live.noSignal')}
