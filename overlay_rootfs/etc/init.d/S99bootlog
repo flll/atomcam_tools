@@ -4,6 +4,8 @@ case "$1" in
   start)
     echo $(date +"%Y/%m/%d %H:%M:%S") ": Reboot & Start watchdog" >> /media/mmc/atomhack.log
     ip route | awk '/default/ { print $3 }' > /tmp/router_address
+    read _up _ < /proc/uptime
+    echo "{\"case\":\"boot_total\",\"uptime\":$_up}" >> /tmp/boot_timeline.ndjson
   ;;
   stop)
 	;;
