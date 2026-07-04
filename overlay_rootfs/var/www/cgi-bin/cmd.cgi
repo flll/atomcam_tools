@@ -5,7 +5,17 @@ echo "Content-Type: text/plain"
 echo ""
 
 if [ "$REQUEST_METHOD" = "GET" ]; then
-  NAME=${QUERY_STRING##name=}
+  # name= 以外のパラメータ(キャッシュバスター t= 等)が付いても name だけを取り出す。
+  # 旧実装 ${QUERY_STRING##name=} は "name=status&t=123" で NAME="status&t=123" になり
+  # 全ケース不一致 → 空応答になっていた。
+  NAME=""
+  _OLDIFS=$IFS; IFS='&'
+  for _kv in $QUERY_STRING; do
+    case "$_kv" in
+      name=*) NAME=${_kv#name=} ;;
+    esac
+  done
+  IFS=$_OLDIFS
   if [ "$NAME" = "" -o "$NAME" = "latest-ver" ] ; then
     latest=`curl -w "%{redirect_url}" -s -o /dev/null https://github.com/flll/atomcam_tools/releases/latest`
     echo LATESTVER=${latest##*Ver.}
