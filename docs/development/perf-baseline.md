@@ -80,6 +80,20 @@
 
 計測: `sim-results/perf/`(baseline-phase1 → after-p2-zram → after-seedrng-plain → after-urandom-plain)
 
+## 定常負荷の根因 — awk storm の正体(2026-07-04 午後・根治)
+
+perf_sampler の定常データで **CPU 飽和(idle 0.3%・load 3.4)** を検出 → top で
+webhook の awk が **CPU 50%** と特定 → /proc の fd と ctxt switch で確定:
+
+- awk に FIFO の fd が無く、nonvoluntary ctxt 97万回 / voluntary 0 = **BEGIN 内の純スピン**
+- 根因: `webhook.sh` の `-v HACK_INI=...` が**プログラムの後ろ**にあり POSIX では operand。
+  BEGIN 時点で HACK_INI が空 → `getline < ""` が -1 → `while(-1)` 無限ループ。
+  busybox 1.37 更新で顕在化した可能性(旧 killwebhook.sh debug ハックはこの対症療法だった)
+- 修正(d26ee24): -v をプログラム前へ移動+getline ループを `== 1` 判定に防御。
+  runtime 検証: 修正版 awk は ctxt 2/8 で FIFO 待ち・CPU 0%
+- 効果: idle 0.3%→27%+(5分定常)、load 15分平均 3.0→0.76 へ。
+  **iCamera stdout→FIFO の復元(webhook/timelapse_hook 機能復活)が再挑戦可能になった**
+
 ## Phase 2 採否記録
 
 | # | 項目 | 判定 | 根拠 |
@@ -87,7 +101,9 @@
 | 1 | SD swap → zram 主 + fallback 化 | **採用**(563de42) | zram 有効化 0.03s。通常ブートの S15swap 34.4s→0.49s(mkswap スキップ+OTA 説確定) |
 | 追加 | seedrng SD 永続化 | **採用**(41beeca) | エントロピー seed の credit 供給。S55sshd 59→35s の部分改善 |
 | 追加 | /dev/random→urandom 差し替え | **採用**(fcc2940) | S55sshd 0.29s へ根治。boot_total 30.65s 達成 |
+| 追加 | webhook awk storm 根治 | **採用**(d26ee24) | 定常 CPU 50% を解放。idle 0.3%→27%+ |
 | 6 | sshd 起動前倒し(順序変更) | 不要 | 根治により S55sshd は 0.3s。順序変更の意味が消滅 |
+| 5 | vendor rtsp x16 抑止 | 不要に近い | 再起動後は rtsp x1+live555 x1 のみ。x16 増殖は debug 期の症状だった可能性。再発監視のみ |
 | 2 | ログ tmpfs 集約+バッチ flush | 保留 | health_check.sh は正常時 SD 書込なしと判明。アイドル SD 書込も 0/5s |
-| 3 | cron 統合 guardian.sh | 保留 | 定常 load への寄与を perf_sampler の定常データで評価してから |
-| 5 | vendor rtsp x16 抑止 / 7 avahi・dbus / 8 go2rtc オンデマンド / 9 tailscale 既定 off / 10 assis・hl_client / 11 webhook 復活 | 未着手 | 次回。判定は本書の KPI で行う |
+| 3 | cron 統合 guardian.sh | 保留 | awk 根治後の定常 load(〜1前後見込み)で再評価。優先度低下 |
+| 7 avahi・dbus / 8 go2rtc オンデマンド / 9 tailscale 既定 off / 10 assis・hl_client / 11 webhook 機能復活(stdout→FIFO 復元) | | 未着手 | 次回。#11 は awk 根治で前提が整った |
