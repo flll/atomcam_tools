@@ -238,3 +238,18 @@
 - **overlay**: `atom_init.sh` に LD_PRELOAD 行を戻した（次回 `make build` で焼き込み）。
 - **mmc 暫定**: `atom_init.preload.fixed` で `/media/mmc/libcallback.so` 経由の本番同等試験可能。
   恒久化後は wdkeep/killwebhook/no-preload ハックを段階撤去。
+
+## F-3 見かけ再発の根因とクローズ (2026-07-04)
+
+- **症状**: 正規ビルド(squashfs は repo `target/rootfs_hack.squashfs` と md5 一致 `604f3bc5…`)を
+  deploy 済みなのに、実機 iCamera_app に LD_PRELOAD が入らず映像 API 全滅。加えて
+  `wifi_audit.log` 84MB 超で SD 96% 逼迫、tailscale_wrapper 毎分空振りで tools.log 増殖、load ~3。
+- **根因**: `-DebugBoot`(SD ブートストラップ)が `/media/mmc` に残した debug 資産の**残置**。
+  - `S20mountfs` が `/media/mmc/atom_init.fixed`(no-preload 版)を `/atom_patch/system_bin/atom_init.sh` へ、
+    `/media/mmc/S61atomcam.fixed` を `/etc/init.d/S61atomcam` へ bind mount → squashfs が正規でも実効は debug 版
+  - `set_crontab.sh` が `/media/mmc/crontab`(wifi_audit/tailscale_wrapper/wdkeep/killwebhook 毎分)を無条件マージ
+- **処置**: `scripts/hil/cleanup-debug-boot.sh`(冪等・mv アーカイブ方式・DRY_RUN 既定)で撤去 → 再起動で
+  LD_PRELOAD 復活。`set_crontab.sh` はマージ発生時に WARN を atomhack.log へ出すよう変更(再発の可視化)。
+- **規約**: `-DebugBoot` 使用後は検証完了時に**必ず** `cleanup-debug-boot.sh` を実行する
+  (手順: `scripts/hil/debug/README.md`)。libcallback SIGSEGV 自体(F-3 本体)は 2026-06-30 修正のまま
+  再発なし(撤去後の再起動で tier 資産による再切り分け可)。
