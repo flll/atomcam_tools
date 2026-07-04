@@ -4,10 +4,10 @@ HACK_INI=/tmp/hack.ini
 mkdir -p /tmp/log
 [ -f /media/mmc/atom-log ] && ATOM_LOG="on"
 [ -f /media/mmc/timelapse_hook.sh ] && TIMELAPSE_HOOK="on"
-awk '
+awk -v HACK_INI="$HACK_INI" -v ATOM_LOG="$ATOM_LOG" -v TIMELAPSE_HOOK="$TIMELAPSE_HOOK" '
 BEGIN {
   FS = "=";
-  while(getline < HACK_INI) {
+  while((getline < HACK_INI) == 1) {
     ENV[$1]=$2;
   }
   FS = " ";
@@ -97,4 +97,4 @@ function Post(event, data) {
     system("curl -X POST -m 3 -H \x27Content-Type: application/json\x27 -d \x27{\"type\":\"" event "\", \"device\":\"" HOSTNAME "\", \"data\":" data "}\x27 " INSECURE_FLAG ENV["WEBHOOK_URL"] " > /dev/null 2>&1");
   }
 }
-' -v HACK_INI=$HACK_INI -v ATOM_LOG=$ATOM_LOG -v TIMELAPSE_HOOK=$TIMELAPSE_HOOK /var/run/atomapp
+' /var/run/atomapp
