@@ -1,0 +1,20 @@
+---
+description: atomcam_tools 必読ゲート(コード変更前のガードレール・常時適用)
+alwaysApply: true
+---
+# 必読ゲート(コードを書く前に)
+
+このセッションでまだ読んでいなければ、**Edit/Write・実機操作の前に必ず読む**:
+
+1. `AGENTS.md` — ビルド/デプロイ操作の正本
+2. `docs/development/guardrails.md` — 実バグ由来の再発防止チェックリスト(10項目)
+3. `SECURITY.md` — 秘密の扱い
+
+## 常時厳守(要約)
+
+- hack.ini を素手で全文書き換えない。値(PSK/パスワード)を出力しない(キー名のみ可)
+- `initramfs_skeleton/` `patches/kernel/` u-boot / SPI に触れない。deploy は `/media/mmc/update/` 経由のみ
+- overlay のシェルは busybox sh(bashism 禁止・LF・コミット前 `sh -n`)
+- wdkeep(watchdog 給餌)を殺さない。debug 資産は使用後 `cleanup-debug-boot.sh` で撤去
+- 完了報告は検証の実出力付き(`make build` / `make deploy-test` の NDJSON)
+- コミット日本語・1コミット1目的。**push はユーザー明示時のみ**

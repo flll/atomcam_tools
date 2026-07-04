@@ -9,7 +9,8 @@ atomcam_tools.zip
 *.log
 bin/
 sim-results/
-.cursor/
+.cursor/*
+!.cursor/rules
 
 target/sd_initial.zip
 target/tools_configs
