@@ -3,6 +3,16 @@
 このリポジトリは **AI エージェントが会話だけでビルド・デプロイできる**ように設計されている。
 特殊な専用コマンドや Node 間連携は不要。`make` と短い自然言語で完結する。
 
+## ⚠️ 必読ゲート — コードを書く前に(全エージェント必須)
+
+**Edit/Write・実機操作の前に必ず読む**(安価/軽量モデルも例外なし):
+
+1. [docs/development/guardrails.md](docs/development/guardrails.md) — 実バグ由来の再発防止チェックリスト(10項目)
+2. [SECURITY.md](SECURITY.md) — 秘密の扱い(hack.ini の値を出さない 等)
+
+読了後、変更がチェックリストに違反しないことを確認してからコードに触る。
+Cursor では `.cursor/rules/guardrails.mdc`(alwaysApply)が毎プロンプト同旨を注入する。
+
 ## いちばん大事な3点
 
 1. **zip は1本**。`atomcam-{commit}[-{profile}].zip`(例 `atomcam-3ad28e8-harness.zip`、simple は `atomcam-3ad28e8.zip`)
