@@ -9,6 +9,11 @@ TAILSCALE_SCRIPT="/scripts/tailscale.sh"
 umask 077
 
 start() {
+	# TAILSCALE_ENABLE=on 以外は bash(tailscale.sh)を起動せず即終了(約1.8s 短縮)
+	if ! grep -q "^TAILSCALE_ENABLE *= *on" /tmp/hack.ini 2>/dev/null; then
+		echo "tailscale: disabled (TAILSCALE_ENABLE!=on)"
+		return 0
+	fi
 	printf 'Starting %s: ' "$DAEMON"
 	if [ -x "$TAILSCALE_SCRIPT" ]; then
 		"$TAILSCALE_SCRIPT" start
