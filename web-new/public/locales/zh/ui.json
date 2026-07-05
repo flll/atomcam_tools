@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "要清除 SD 卡吗？",
     "eraseConfirmBody": "将删除 SD 卡上的录像文件夹(连续录像·警报录像)。此操作无法撤销。",
     "eraseConfirmAction": "清除",
-    "eraseStarted": "已开始清除"
+    "eraseStarted": "已开始清除",
+    "mountRw": "已挂载 (可读写)",
+    "mountRo": "以只读挂载 (需检查)",
+    "notMounted": "未挂载",
+    "swap": "交换空间",
+    "memory": "内存余量",
+    "duTitle": "录像文件夹占用",
+    "duLoad": "测量",
+    "duLoading": "测量中…"
   },
   "settings": {
     "defaultValue": "默认值: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "对比",
     "before": "更改前",
-    "holdToCompare": "按住可与更改前的画面对比"
+    "after": "更改后",
+    "holdToCompare": "点按可在更改前后的画面之间切换比较(生效约需1–2秒)"
   }
 }

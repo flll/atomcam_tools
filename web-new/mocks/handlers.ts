@@ -36,6 +36,27 @@ export const handlers = [
     const name = url.searchParams.get('name');
     if (name === 'latest-ver') return HttpResponse.text('LATESTVER=6.3');
     if (name === 'media-size') return HttpResponse.text('MEDIASIZE=23068672 31154176');
+    // 実機 cmd.cgi の storage-info/storage-du を模擬。MEMAVAILABLE は
+    // kernel 3.10 に存在しないため出さない(MemFree+Cached フォールバックを踏む)
+    if (name === 'storage-info')
+      return HttpResponse.text(
+        [
+          'MOUNTED=1',
+          'MOUNTDEV=/dev/mmcblk0p1',
+          'MOUNTFS=vfat',
+          'MOUNTOPT=rw,relatime,fmask=0000',
+          'DF=30735872 29360128 1375744',
+          'SWAP1=/dev/zram0 65532 21024',
+          'SWAP2=/media/mmc/.swapfile 131068 4096',
+          'MEMTOTAL=59404',
+          'MEMFREE=6120',
+          'CACHED=18200',
+        ].join('\n'),
+      );
+    if (name === 'storage-du')
+      return HttpResponse.text(
+        ['DU_record=25165824', 'DU_alarm_record=2097152', 'DU_time_lapse=1048576'].join('\n'),
+      );
     return HttpResponse.text(statusText());
   }),
 
@@ -65,11 +86,28 @@ export const handlers = [
     return HttpResponse.text('ok');
   }),
 
-  http.get(cgi('video_isp.cgi'), () =>
-    HttpResponse.text(
-      ['cont 128', 'bri 128', 'sat 128', 'sharp 128', 'again 205', 'expmode auto'].join('\n'),
-    ),
-  ),
+  // AUTO(expmode=auto)の間は明るさ等が緩やかに揺らぎ、AUTO 可視化の
+  // 「バーが動く」挙動をモックでも確認できるようにする
+  http.get(cgi('video_isp.cgi'), () => {
+    const base: Record<string, string> = {
+      cont: '128',
+      bri: '128',
+      sat: '128',
+      sharp: '128',
+      again: '205',
+      expmode: 'auto',
+      ...mock.isp,
+    };
+    if (base.expmode === 'auto') {
+      base.bri = String(128 + Math.round(24 * Math.sin(Date.now() / 3000)));
+      base.cont = String(128 + Math.round(10 * Math.sin(Date.now() / 5000 + 1)));
+    }
+    return HttpResponse.text(
+      Object.entries(base)
+        .map(([k, v]) => `${k} ${v}`)
+        .join('\n'),
+    );
+  }),
 
 
   http.post(cgi('video_isp.cgi'), async ({ request }) => {

@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "¿Borrar la tarjeta SD?",
     "eraseConfirmBody": "Se eliminarán las carpetas de grabación de la tarjeta SD (continua y por alarma). Esta operación no se puede deshacer.",
     "eraseConfirmAction": "Borrar",
-    "eraseStarted": "Borrado iniciado"
+    "eraseStarted": "Borrado iniciado",
+    "mountRw": "Montada (lectura/escritura)",
+    "mountRo": "Montada solo lectura (revisar)",
+    "notMounted": "No montada",
+    "swap": "Swap",
+    "memory": "Memoria",
+    "duTitle": "Desglose de carpetas de grabación",
+    "duLoad": "Medir",
+    "duLoading": "Midiendo…"
   },
   "settings": {
     "defaultValue": "Predeterminado: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "Comparar",
     "before": "Antes",
-    "holdToCompare": "Mantenga pulsado para comparar con el aspecto anterior"
+    "after": "Después",
+    "holdToCompare": "Pulse para alternar entre el aspecto anterior y el actual (tarda 1–2 s)"
   }
 }

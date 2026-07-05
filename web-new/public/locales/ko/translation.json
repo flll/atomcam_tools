@@ -127,11 +127,11 @@
       "tooltip": "Set the Max value of sensor Digital gain."
     },
     "expmode": {
-      "title": "Exposure mode",
-      "tooltip": "Setting the exposure mode.",
+      "title": "자동 조정",
+      "tooltip": "AUTO에서는 카메라가 노출을 자동 조정하며 현재 값이 슬라이더에 표시됩니다. 수동에서는 값을 고정하고 직접 조정할 수 있습니다.",
       "text": [
-        "auto",
-        "manual"
+        "AUTO",
+        "수동"
       ]
     },
     "aecomp": {

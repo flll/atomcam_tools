@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "SD-Karte löschen?",
     "eraseConfirmBody": "Löscht die Aufnahmeordner der SD-Karte (Dauer- und Alarmaufnahmen). Dies kann nicht rückgängig gemacht werden.",
     "eraseConfirmAction": "Löschen",
-    "eraseStarted": "Löschen gestartet"
+    "eraseStarted": "Löschen gestartet",
+    "mountRw": "Eingebunden (Lesen/Schreiben)",
+    "mountRo": "Nur lesend eingebunden (prüfen)",
+    "notMounted": "Nicht eingebunden",
+    "swap": "Swap",
+    "memory": "Speicher",
+    "duTitle": "Aufnahmeordner-Aufschlüsselung",
+    "duLoad": "Messen",
+    "duLoading": "Wird gemessen…"
   },
   "settings": {
     "defaultValue": "Standard: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "Vergleichen",
     "before": "Vorher",
-    "holdToCompare": "Gedrückt halten, um mit dem vorherigen Bild zu vergleichen"
+    "after": "Nachher",
+    "holdToCompare": "Klicken, um zwischen vorherigem und aktuellem Bild zu wechseln (dauert 1–2 s)"
   }
 }

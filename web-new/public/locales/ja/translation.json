@@ -127,11 +127,11 @@
       "tooltip": "Set the Max value of sensor Digital gain."
     },
     "expmode": {
-      "title": "Exposure mode",
-      "tooltip": "Setting the exposure mode.",
+      "title": "自動調整",
+      "tooltip": "AUTOはカメラが露出を自動調整し、現在値がスライダーに表示されます。マニュアルは値を固定して手動で調整できます。",
       "text": [
-        "auto",
-        "manual"
+        "AUTO",
+        "マニュアル"
       ]
     },
     "aecomp": {

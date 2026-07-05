@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Route } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Section, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -55,7 +56,7 @@ export default function CruisePage() {
       <h1 className="text-xl font-semibold">{t('cruise.title')}</h1>
       <Section title={t('cruise.title')}>
         <Button variant="outline" onClick={() => runCmd(api.exec('moveinit'))}>{t('cruise.initialPosition.title')}</Button>
-        <SettingSwitch i18nKey="cruise.cameraMotion" value={draft.CRUISE ?? 'off'} onChange={(v) => patch({ CRUISE: v })} />
+        <SettingSwitch icon={Route} i18nKey="cruise.cameraMotion" value={draft.CRUISE ?? 'off'} onChange={(v) => patch({ CRUISE: v })} />
         <ul className="space-y-1 text-sm font-mono">
           {points.map((p, i) => (
             <li key={i}>#{i + 1} pan {p.pan} tilt {p.tilt} wait {p.wait}s</li>

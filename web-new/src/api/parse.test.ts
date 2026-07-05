@@ -5,9 +5,60 @@ import {
   parseMediaSize,
   parseMotorPos,
   parseProperty,
+  parseStorageDu,
+  parseStorageInfo,
   parseWatermarkDimensions,
   rgbaToBgra,
 } from './parse';
+
+describe('parseStorageInfo', () => {
+  it('マウント/df/swap/メモリを読み取る(MemAvailable なしは MemFree+Cached)', () => {
+    const info = parseStorageInfo(
+      [
+        'MOUNTED=1',
+        'MOUNTDEV=/dev/mmcblk0p1',
+        'MOUNTFS=vfat',
+        'MOUNTOPT=rw,relatime,fmask=0000',
+        'DF=100 60 40',
+        'SWAP1=/dev/zram0 65532 1024',
+        'SWAP2=/media/mmc/.swapfile 131068 0',
+        'MEMTOTAL=59404',
+        'MEMFREE=6000',
+        'CACHED=18000',
+      ].join('\n'),
+    );
+    expect(info.mounted).toBe(true);
+    expect(info.rw).toBe(true);
+    expect(info.fs).toBe('vfat');
+    expect(info.df).toEqual({ totalKb: 100, usedKb: 60, availKb: 40 });
+    expect(info.swaps).toEqual([
+      { name: '/dev/zram0', sizeKb: 65532, usedKb: 1024 },
+      { name: '/media/mmc/.swapfile', sizeKb: 131068, usedKb: 0 },
+    ]);
+    expect(info.memTotalKb).toBe(59404);
+    expect(info.memAvailKb).toBe(24000);
+  });
+
+  it('MemAvailable があればそれを優先する', () => {
+    const info = parseStorageInfo('MOUNTED=0\nMEMTOTAL=1000\nMEMAVAILABLE=321\nMEMFREE=1');
+    expect(info.mounted).toBe(false);
+    expect(info.memAvailKb).toBe(321);
+  });
+
+  it('ro マウントを検知する', () => {
+    const info = parseStorageInfo('MOUNTED=1\nMOUNTDEV=/dev/x\nMOUNTFS=vfat\nMOUNTOPT=ro,relatime\nDF=1 1 0');
+    expect(info.rw).toBe(false);
+  });
+});
+
+describe('parseStorageDu', () => {
+  it('DU_ キーだけを読み取る', () => {
+    expect(parseStorageDu('DU_record=100\nDU_time_lapse=5\nJUNK=1')).toEqual({
+      record: 100,
+      time_lapse: 5,
+    });
+  });
+});
 
 describe('parseKeyValue', () => {
   it('スペース区切り・=区切り・タブ区切りを受け付ける', () => {

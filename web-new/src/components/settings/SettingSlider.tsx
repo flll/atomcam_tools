@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -10,6 +11,8 @@ export function SettingSlider({
   max,
   step = 1,
   defaultValue,
+  disabled,
+  icon: Icon,
   onChange,
 }: {
   i18nKey: string;
@@ -18,6 +21,8 @@ export function SettingSlider({
   max: number;
   step?: number;
   defaultValue?: number;
+  disabled?: boolean;
+  icon?: LucideIcon;
   onChange: (v: number) => void;
 }) {
   const { t } = useTranslation('translation');
@@ -31,9 +36,12 @@ export function SettingSlider({
   return (
     <div className="block rounded-lg border border-border px-3 py-2">
       <div className="mb-1 flex items-center justify-between gap-4 text-sm">
-        <label htmlFor={id}>{t(`${i18nKey}.title`)}</label>
+        <label htmlFor={id} className="flex items-center gap-2">
+          {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}
+          {t(`${i18nKey}.title`)}
+        </label>
         <span className="flex items-center gap-1.5">
-          {modified && (
+          {modified && !disabled && (
             // 初期値からズレているときだけ出すワンタップリセット
             <button
               type="button"
@@ -45,7 +53,7 @@ export function SettingSlider({
               <RotateCcw className="size-3.5" />
             </button>
           )}
-          <span className={cn('font-mono', modified ? 'font-medium text-primary' : 'text-muted-foreground')}>
+          <span className={cn('font-mono tabular-nums', modified ? 'font-medium text-primary' : 'text-muted-foreground')}>
             {value}
           </span>
         </span>
@@ -75,9 +83,10 @@ export function SettingSlider({
           max={max}
           step={step}
           value={value}
+          disabled={disabled}
           aria-describedby={desc ? `${id}-desc` : undefined}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full accent-[hsl(var(--primary))]"
+          className={cn('w-full accent-[hsl(var(--primary))]', disabled && 'opacity-60')}
         />
       </div>
     </div>

@@ -92,11 +92,11 @@ AdvancedSettings:
     title: Max Digital Gain
     tooltip: Set the Max value of sensor Digital gain.
   expmode:
-    title: Exposure mode
-    tooltip: Setting the exposure mode.
+    title: 自动调整
+    tooltip: AUTO 时相机自动调整曝光，滑块显示当前值；手动时数值固定，可自行调整。
     text:
-      - auto
-      - manual
+      - AUTO
+      - 手动
   aecomp:
     title: AE compensation
     tooltip: Setting AE compensation.

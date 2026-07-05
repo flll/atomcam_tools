@@ -9,6 +9,8 @@ export {
   parseMotorPos,
   parseMediaSize,
   parseIspSettings,
+  parseStorageInfo,
+  parseStorageDu,
   serializeIspSettings,
   parseProperty,
   parseWatermarkDimensions,

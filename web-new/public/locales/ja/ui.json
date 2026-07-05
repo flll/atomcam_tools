@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "SD-Cardを消去しますか？",
     "eraseConfirmBody": "SDカードの録画フォルダ(常時録画・アラーム録画)を削除します。この操作は取り消せません。",
     "eraseConfirmAction": "消去する",
-    "eraseStarted": "消去を開始しました"
+    "eraseStarted": "消去を開始しました",
+    "mountRw": "マウント中 (読み書き可)",
+    "mountRo": "読み取り専用でマウント中 (要確認)",
+    "notMounted": "未マウント",
+    "swap": "スワップ",
+    "memory": "メモリ残量",
+    "duTitle": "録画フォルダ内訳",
+    "duLoad": "内訳を計測",
+    "duLoading": "計測中…"
   },
   "settings": {
     "defaultValue": "初期値: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "比較",
     "before": "変更前",
-    "holdToCompare": "押している間、変更前の見え方と比較します"
+    "after": "変更後",
+    "holdToCompare": "押すと変更前の見え方と切り替えて比較できます(反映まで1〜2秒)"
   }
 }

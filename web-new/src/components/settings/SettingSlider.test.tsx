@@ -47,6 +47,14 @@ describe('SettingSlider 初期値マーカー', () => {
     expect(label().textContent).toBe('200');
   });
 
+  it('disabled のとき input が無効になり、リセットも出ない', () => {
+    const { container } = render(
+      <SettingSlider i18nKey="AdvancedSettings.contrast" value={200} min={0} max={255} defaultValue={128} disabled onChange={() => {}} />,
+    );
+    expect(container.querySelector('input')!.disabled).toBe(true);
+    expect(container.querySelector('[aria-label="初期値に戻す"]')).toBeNull();
+  });
+
   it('初期値からズレているときだけリセットボタンが出て、押すと初期値が渡る', () => {
     const onChange = vi.fn();
     const { container, rerender } = render(

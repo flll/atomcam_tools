@@ -76,8 +76,10 @@ export function AppLayout() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-background md:flex-row">
-      {/* デスクトップ: M3 ナビゲーションレール(schedule.spec が aside 内のリンク名に依存) */}
-      <aside className="sticky top-0 hidden h-dvh w-[88px] shrink-0 flex-col items-center bg-surface-container-low/60 md:flex">
+      {/* デスクトップ: M3 ナビゲーションレール(schedule.spec が aside 内のリンク名に依存)。
+          z-20: sticky はスタッキングコンテキストを作るため、無指定だと言語メニュー(z-50)が
+          main 側の sticky プレビュー(z-10)の下に潜る */}
+      <aside className="sticky top-0 z-20 hidden h-dvh w-[88px] shrink-0 flex-col items-center bg-surface-container-low/60 md:flex">
         <div className="flex h-14 items-center" title={t('app.title')}>
           <Brand />
         </div>
@@ -103,7 +105,8 @@ export function AppLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* ヘッダーはモバイルのみ(デスクトップは言語/テーマをレール下部に集約) */}
-        <header className="sticky top-0 z-10 flex h-12 items-center justify-between border-b border-border/50 bg-background/80 px-4 backdrop-blur md:hidden">
+        {/* z-20: 言語メニューが main 側の sticky 要素(z-10)より前面に出るように */}
+        <header className="sticky top-0 z-20 flex h-12 items-center justify-between border-b border-border/50 bg-background/80 px-4 backdrop-blur md:hidden">
           <span className="flex items-center gap-2.5">
             <Brand withName />
             {current && (

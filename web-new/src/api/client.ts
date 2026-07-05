@@ -3,10 +3,20 @@ import {
   parseIspSettings,
   parseProperty,
   parseStatus,
+  parseStorageDu,
+  parseStorageInfo,
   rgbaToBgra,
   serializeIspSettings,
 } from './parse';
-import type { CameraProperty, CameraStatus, CmdPort, HackIni, IspSettings } from './types';
+import type {
+  CameraProperty,
+  CameraStatus,
+  CmdPort,
+  HackIni,
+  IspSettings,
+  StorageDu,
+  StorageInfo,
+} from './types';
 
 const CGI_BASE = './cgi-bin';
 
@@ -66,6 +76,15 @@ export const api = {
 
   async setProperty(key: string, value: string): Promise<void> {
     await this.exec(`property ${key} ${value}`, 'socket');
+  },
+
+  async getStorageInfo(): Promise<StorageInfo> {
+    return parseStorageInfo(await getText(`${CGI_BASE}/cmd.cgi?name=storage-info`));
+  },
+
+  // du はフォルダサイズ次第で数秒かかるため、ボタン押下時のみ呼ぶ
+  async getStorageDu(): Promise<StorageDu> {
+    return parseStorageDu(await getText(`${CGI_BASE}/cmd.cgi?name=storage-du`));
   },
 
   async getIspSettings(): Promise<IspSettings> {

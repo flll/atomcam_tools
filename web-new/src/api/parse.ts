@@ -1,4 +1,12 @@
-import type { CameraProperty, CameraStatus, HackIni, IspSettings, MotorPos } from './types';
+import type {
+  CameraProperty,
+  CameraStatus,
+  HackIni,
+  IspSettings,
+  MotorPos,
+  StorageDu,
+  StorageInfo,
+} from './types';
 
 const ISP_NUMERIC_KEYS = [
   'cont', 'bri', 'sat', 'sharp', 'sinter', 'temper', 'dpc', 'drc', 'hilight',
@@ -50,6 +58,50 @@ export function parseMediaSize(value: string | undefined): { available: number; 
   const [avail, total] = value.trim().split(/\s+/).map(Number);
   if (Number.isNaN(avail) || Number.isNaN(total)) return null;
   return { available: avail * 1024, total: total * 1024 };
+}
+
+// cmd.cgi name=storage-info の出力をパースする。
+// SWAP1= SWAP2= の連番キーと MEMAVAILABLE 非対応カーネル(3.10)の
+// MemFree+Cached フォールバックを吸収する。
+export function parseStorageInfo(text: string): StorageInfo {
+  const kv = parseKeyValue(text);
+  const info: StorageInfo = { mounted: kv.MOUNTED === '1', swaps: [] };
+  if (info.mounted) {
+    info.dev = kv.MOUNTDEV;
+    info.fs = kv.MOUNTFS;
+    info.rw = (kv.MOUNTOPT ?? '').split(',')[0] === 'rw';
+    const df = (kv.DF ?? '').trim().split(/\s+/).map(Number);
+    if (df.length >= 3 && df.every((n) => !Number.isNaN(n))) {
+      info.df = { totalKb: df[0], usedKb: df[1], availKb: df[2] };
+    }
+  }
+  for (let i = 1; kv[`SWAP${i}`]; i += 1) {
+    const [name, size, used] = kv[`SWAP${i}`].trim().split(/\s+/);
+    const sizeKb = Number(size);
+    const usedKb = Number(used);
+    if (name && !Number.isNaN(sizeKb)) info.swaps.push({ name, sizeKb, usedKb: usedKb || 0 });
+  }
+  const memTotal = Number(kv.MEMTOTAL);
+  if (!Number.isNaN(memTotal) && memTotal > 0) info.memTotalKb = memTotal;
+  const avail = Number(kv.MEMAVAILABLE);
+  if (!Number.isNaN(avail) && avail > 0) {
+    info.memAvailKb = avail;
+  } else {
+    const free = Number(kv.MEMFREE);
+    const cached = Number(kv.CACHED);
+    if (!Number.isNaN(free)) info.memAvailKb = free + (Number.isNaN(cached) ? 0 : cached);
+  }
+  return info;
+}
+
+export function parseStorageDu(text: string): StorageDu {
+  const kv = parseKeyValue(text);
+  const out: StorageDu = {};
+  for (const key of ['record', 'alarm_record', 'time_lapse'] as const) {
+    const v = Number(kv[`DU_${key}`]);
+    if (!Number.isNaN(v)) out[key] = v;
+  }
+  return out;
 }
 
 export function parseIspSettings(text: string): IspSettings {
