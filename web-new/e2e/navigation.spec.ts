@@ -16,9 +16,8 @@ test('デスクトップ: サイドバーから全ページに到達できる', 
   await page.goto('/');
   const sidebar = page.locator('aside');
   await expect(sidebar.getByRole('link', { name: 'ライブ' })).toBeVisible();
-  // グループ見出し
-  await expect(sidebar.getByText('設定', { exact: true })).toBeVisible();
-  await expect(sidebar.getByText('ツール', { exact: true })).toBeVisible();
+  // M3 ナビゲーションレール化でグループ見出しテキストは仕切り線に置換された。
+  // 検証の本質はリンク到達性(下のループ)なので見出しの assert は持たない。
 
   for (const { label, hash } of PAGES) {
     await sidebar.getByRole('link', { name: label }).click();
