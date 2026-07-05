@@ -81,6 +81,7 @@ export default function Live() {
           シアター/疑似フルスクリーン時はレールごと覆う */}
       <div
         ref={stageRef}
+        data-testid="live-stage"
         {...handlers}
         onFocusCapture={() => setFocusPin(true)}
         onBlurCapture={(e) => {
