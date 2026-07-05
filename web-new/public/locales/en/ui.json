@@ -88,6 +88,12 @@
     "eraseStarted": "Erase started"
   },
   "settings": {
-    "defaultValue": "Default: {{value}}"
+    "defaultValue": "Default: {{value}}",
+    "resetToDefault": "Reset to default"
+  },
+  "camera": {
+    "compare": "Compare",
+    "before": "Before",
+    "holdToCompare": "Hold to compare with the previous look"
   }
 }
