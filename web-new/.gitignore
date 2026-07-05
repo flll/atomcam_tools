@@ -7,3 +7,4 @@ dist-demo
 *.tsbuildinfo
 playwright-report/
 test-results/
+shots/
