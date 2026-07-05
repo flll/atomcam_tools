@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>atomcam_tools — カメラの能力を、あなたの手に</title>
+<meta name="description" content="ATOMCam / ATOMCam2 / AtomSwing / WyzeCam V3 の機能を拡張するツールキット。録画・配信・NAS 保存・リモートアクセスを、刷新した WebUI からまるごと。" />
+<meta name="color-scheme" content="dark light" />
+<meta property="og:title" content="atomcam_tools — Your camera, unlocked" />
+<meta property="og:description" content="Extend recording, streaming, NAS backup and remote access — all from a completely redesigned WebUI." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12.5' fill='none' stroke='%234285f4' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='%234285f4'/%3E%3Ccircle cx='25.5' cy='6.5' r='3' fill='%23ea4335'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --blue: #4285f4;
+    --blue-strong: #1a73e8;
+    --red: #ea4335;
+    --radius: 18px;
+    --maxw: 1120px;
+    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN",
+      "Noto Sans JP", Meiryo, system-ui, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0d1013;
+    --bg-grad: radial-gradient(1200px 600px at 78% -8%, rgba(66, 133, 244, 0.22), transparent 60%),
+      radial-gradient(900px 500px at 5% 10%, rgba(138, 180, 248, 0.10), transparent 55%);
+    --surface: #171a1d;
+    --surface-2: #1e2226;
+    --surface-3: #262b30;
+    --on: #e6e8ea;
+    --muted: #9aa2ab;
+    --border: #2a2f34;
+    --primary: #8ab4f8;
+    --on-primary: #0a1a33;
+    --chip: rgba(138, 180, 248, 0.14);
+    --shadow: 0 18px 50px -18px rgba(0, 0, 0, 0.7);
+    --glass: rgba(20, 24, 28, 0.72);
+  }
+  html[data-theme="light"] {
+    --bg: #f6f9fe;
+    --bg-grad: radial-gradient(1200px 600px at 80% -10%, rgba(66, 133, 244, 0.16), transparent 60%),
+      radial-gradient(800px 460px at 0% 6%, rgba(26, 115, 232, 0.08), transparent 55%);
+    --surface: #ffffff;
+    --surface-2: #f1f4f9;
+    --surface-3: #e7ecf4;
+    --on: #1b1c1e;
+    --muted: #5b6169;
+    --border: #dfe3ea;
+    --primary: #1a73e8;
+    --on-primary: #ffffff;
+    --chip: rgba(26, 115, 232, 0.10);
+    --shadow: 0 18px 44px -20px rgba(20, 40, 80, 0.28);
+    --glass: rgba(255, 255, 255, 0.72);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--on);
+    background: var(--bg);
+    background-image: var(--bg-grad);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; }
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 22px; }
+  .muted { color: var(--muted); }
+  .mono { font-family: var(--mono); }
+
+  /* ---- header ---- */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: saturate(1.4) blur(12px);
+    background: var(--glass);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; gap: 14px; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand svg { width: 30px; height: 30px; }
+  .nav .links { display: flex; gap: 4px; margin-left: 10px; }
+  .nav .links a {
+    text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500;
+    padding: 8px 12px; border-radius: 999px; transition: background .18s, color .18s;
+  }
+  .nav .links a:hover { color: var(--on); background: var(--surface-2); }
+  .nav .spacer { flex: 1; }
+  .iconbtn {
+    display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--on);
+    cursor: pointer; transition: background .18s, transform .18s; padding: 0;
+  }
+  .iconbtn:hover { background: var(--surface-2); }
+  .iconbtn:active { transform: scale(.94); }
+  .iconbtn svg { width: 18px; height: 18px; }
+  .langbtn {
+    display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px;
+    border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--on);
+    cursor: pointer; font: inherit; font-size: 13px; font-weight: 600;
+  }
+  .langbtn:hover { background: var(--surface-2); }
+  .langbtn svg { width: 16px; height: 16px; }
+  .ghbtn {
+    display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px;
+    border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 14px;
+    background: var(--on); color: var(--bg); transition: opacity .18s;
+  }
+  .ghbtn:hover { opacity: .88; }
+  .ghbtn svg { width: 16px; height: 16px; }
+  @media (max-width: 860px) { .nav .links { display: none; } .ghbtn span { display: none; } }
+
+  /* ---- buttons ---- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px; padding: 13px 22px; border-radius: 999px;
+    text-decoration: none; font-weight: 650; font-size: 15px; cursor: pointer; border: 1px solid transparent;
+    transition: transform .16s, box-shadow .22s, background .18s, border-color .18s;
+  }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-primary { background: var(--primary); color: var(--on-primary); box-shadow: 0 10px 28px -12px var(--primary); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -12px var(--primary); }
+  .btn-ghost { background: var(--surface); color: var(--on); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--surface-2); transform: translateY(-2px); }
+
+  /* ---- hero ---- */
+  .hero { padding: clamp(52px, 8vw, 104px) 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 46px; align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; gap: 34px; } }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 650;
+    letter-spacing: .04em; text-transform: uppercase; color: var(--primary);
+    background: var(--chip); padding: 6px 13px; border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: clamp(34px, 5.4vw, 58px); font-weight: 800; }
+  .hero .lead { font-size: clamp(16px, 1.9vw, 19px); color: var(--muted); margin: 20px 0 30px; max-width: 33ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+  .chip {
+    font-size: 12.5px; font-weight: 600; color: var(--muted);
+    border: 1px solid var(--border); background: var(--surface); padding: 6px 12px; border-radius: 999px;
+  }
+
+  /* ---- device mockup ---- */
+  .device {
+    border-radius: 22px; overflow: hidden; border: 1px solid var(--border);
+    background: var(--surface); box-shadow: var(--shadow);
+  }
+  .device .bar {
+    display: flex; align-items: center; gap: 7px; padding: 11px 14px;
+    background: var(--surface-2); border-bottom: 1px solid var(--border);
+  }
+  .device .bar i { width: 11px; height: 11px; border-radius: 999px; background: var(--surface-3); display: block; }
+  .device .bar .url {
+    margin-left: 10px; font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+    background: var(--bg); padding: 4px 12px; border-radius: 999px; flex: 1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .device .screen { display: block; width: 100%; height: auto; background: #000; }
+  .floaty { animation: floaty 7s ease-in-out infinite; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @media (prefers-reduced-motion: reduce) { .floaty { animation: none; } }
+
+  /* ---- sections ---- */
+  section { padding: clamp(48px, 7vw, 86px) 0; }
+  .sec-head { max-width: 640px; margin-bottom: 42px; }
+  .sec-head .kicker { color: var(--primary); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .sec-head h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 800; margin: 12px 0 10px; }
+  .sec-head p { color: var(--muted); font-size: 16px; margin: 0; }
+
+  .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 940px) { .features { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .features { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px; transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); box-shadow: var(--shadow); }
+  .card .ic {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: var(--chip); color: var(--primary); margin-bottom: 16px;
+  }
+  .card .ic svg { width: 22px; height: 22px; }
+  .card h3 { font-size: 16.5px; font-weight: 700; margin-bottom: 7px; }
+  .card p { color: var(--muted); font-size: 14px; margin: 0; }
+
+  /* ---- showcase ---- */
+  .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+  @media (max-width: 860px) { .showcase { grid-template-columns: 1fr; } }
+  .shot { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); box-shadow: var(--shadow); }
+  .shot svg { display: block; width: 100%; height: auto; }
+  .shot .cap { padding: 14px 18px; border-top: 1px solid var(--border); }
+  .shot .cap b { font-weight: 700; font-size: 15px; }
+  .shot .cap span { color: var(--muted); font-size: 13.5px; }
+
+  /* ---- steps ---- */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; counter-reset: s; }
+  @media (max-width: 960px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    position: relative; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 20px 20px;
+  }
+  .step .n {
+    width: 34px; height: 34px; border-radius: 999px; background: var(--primary); color: var(--on-primary);
+    display: grid; place-items: center; font-weight: 800; font-size: 15px; margin-bottom: 14px;
+  }
+  .step .si { color: var(--primary); margin-bottom: 10px; display: block; }
+  .step .si svg { width: 22px; height: 22px; }
+  .step h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 6px; }
+  .step p { color: var(--muted); font-size: 13.5px; margin: 0; }
+  .step code { font-family: var(--mono); font-size: 12.5px; background: var(--surface-2); padding: 2px 6px; border-radius: 6px; }
+
+  .note {
+    margin-top: 24px; display: flex; gap: 13px; align-items: flex-start;
+    background: color-mix(in srgb, var(--red) 9%, var(--surface)); border: 1px solid color-mix(in srgb, var(--red) 32%, var(--border));
+    border-radius: 14px; padding: 16px 18px;
+  }
+  .note svg { width: 20px; height: 20px; color: var(--red); flex: none; margin-top: 2px; }
+  .note p { margin: 0; font-size: 14px; }
+  .note b { color: var(--on); }
+
+  /* ---- tables ---- */
+  .tablecard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 13px 18px; border-bottom: 1px solid var(--border); }
+  thead th { color: var(--muted); font-weight: 650; font-size: 12.5px; letter-spacing: .03em; text-transform: uppercase; background: var(--surface-2); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td .mono { font-size: 13px; color: var(--muted); }
+  .split { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+
+  .portgrid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .port { font-size: 13px; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; padding: 8px 12px; }
+  .port b { font-weight: 700; }
+  .port span { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+
+  /* ---- footer ---- */
+  footer { border-top: 1px solid var(--border); background: var(--surface); padding: 52px 0 40px; }
+  .fcols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; }
+  @media (max-width: 760px) { .fcols { grid-template-columns: 1fr 1fr; } }
+  .fcols h4 { font-size: 12.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+  .fcols a { display: block; text-decoration: none; color: var(--on); font-size: 14px; padding: 5px 0; opacity: .82; transition: opacity .16s; }
+  .fcols a:hover { opacity: 1; }
+  .fcols p { color: var(--muted); font-size: 13.5px; margin: 12px 0 0; max-width: 32ch; }
+  .fbottom { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: var(--muted); font-size: 13px; }
+
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<!-- ===== header ===== -->
+<header>
+  <div class="wrap nav">
+    <span class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="12.5" fill="none" stroke="var(--primary)" stroke-width="3" />
+        <circle cx="16" cy="16" r="5.5" fill="var(--primary)" />
+        <circle cx="25.5" cy="6.5" r="3" fill="var(--red)" />
+      </svg>
+      atomcam_tools
+    </span>
+    <nav class="links">
+      <a href="#features" data-i18n="nav.features">機能</a>
+      <a href="#showcase" data-i18n="nav.webui">WebUI</a>
+      <a href="#install" data-i18n="nav.install">導入</a>
+      <a href="#cameras" data-i18n="nav.cameras">対応機種</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="langbtn" id="langBtn" aria-label="Language">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+      <span id="langLabel">EN</span>
+    </button>
+    <button class="iconbtn" id="themeBtn" aria-label="Toggle theme">
+      <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
+    <a class="ghbtn" href="https://github.com/flll/atomcam_tools" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.05.78 2.12v3.14c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+      <span>GitHub</span>
+    </a>
+  </div>
+</header>
+
+<!-- ===== hero ===== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">ATOMCam · ATOMCam2 · AtomSwing · WyzeCam V3</span>
+      <h1 data-i18n="hero.title">カメラの能力を、<br>あなたの手に。</h1>
+      <p class="lead" data-i18n="hero.lead">標準機能では物足りないあなたへ。録画・配信・NAS 保存・リモートアクセスを、刷新した WebUI からまるごと。</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/flll/atomcam_tools/releases/latest" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+          <span data-i18n="hero.download">最新版をダウンロード</span>
+        </a>
+        <a class="btn btn-ghost" href="./demo/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 14 9-14 9V3Z"/></svg>
+          <span data-i18n="hero.demo">ライブデモを見る</span>
+        </a>
+      </div>
+      <div class="chips">
+        <span class="chip" data-i18n="hero.chip1">Material 3 デザイン</span>
+        <span class="chip" data-i18n="hero.chip2">8 言語対応</span>
+        <span class="chip" data-i18n="hero.chip3">ダークモード</span>
+        <span class="chip" data-i18n="hero.chip4">RTSP / WebRTC</span>
+      </div>
+    </div>
+
+    <div class="floaty">
+      <div class="device">
+        <div class="bar">
+          <i></i><i></i><i></i>
+          <span class="url">http://atomcam.local</span>
+        </div>
+        <!-- WebUI ライブビューの疑似モック(テーマ連動) -->
+        <svg class="screen" viewBox="0 0 520 340" role="img" aria-label="ATOMCam WebUI live view">
+          <defs>
+            <linearGradient id="feed" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#12324f"/><stop offset="1" stop-color="#0a1a2b"/>
+            </linearGradient>
+          </defs>
+          <rect width="520" height="340" fill="var(--surface)"/>
+          <!-- nav rail -->
+          <rect x="0" y="0" width="60" height="340" fill="var(--surface-2)"/>
+          <circle cx="30" cy="26" r="9" fill="none" stroke="var(--primary)" stroke-width="2.4"/><circle cx="30" cy="26" r="4" fill="var(--primary)"/>
+          <rect x="12" y="58" width="36" height="30" rx="10" fill="var(--chip)"/>
+          <g fill="var(--muted)">
+            <rect x="20" y="70" width="20" height="4" rx="2"/>
+            <rect x="20" y="108" width="20" height="4" rx="2"/><rect x="20" y="150" width="20" height="4" rx="2"/>
+            <rect x="20" y="192" width="20" height="4" rx="2"/><rect x="20" y="234" width="20" height="4" rx="2"/>
+          </g>
+          <!-- stage -->
+          <rect x="60" y="0" width="460" height="340" fill="url(#feed)"/>
+          <g opacity="0.5" stroke="#7fb0ff" stroke-width="0.6">
+            <line x1="60" y1="85" x2="520" y2="85"/><line x1="60" y1="170" x2="520" y2="170"/><line x1="60" y1="255" x2="520" y2="255"/>
+            <line x1="175" y1="0" x2="175" y2="340"/><line x1="290" y1="0" x2="290" y2="340"/><line x1="405" y1="0" x2="405" y2="340"/>
+          </g>
+          <circle cx="330" cy="175" r="34" fill="#8ab4f8" opacity="0.9"/>
+          <circle cx="330" cy="175" r="34" fill="none" stroke="#cfe0ff" stroke-width="2"/>
+          <!-- LIVE chip -->
+          <g><rect x="76" y="16" width="86" height="26" rx="13" fill="rgba(0,0,0,.5)"/>
+            <circle cx="92" cy="29" r="5" fill="var(--red)"/>
+            <text x="104" y="33" fill="#fff" font-family="var(--font)" font-size="13" font-weight="700">LIVE</text></g>
+          <text x="504" y="33" text-anchor="end" fill="rgba(255,255,255,.85)" font-family="var(--mono)" font-size="12">24 fps</text>
+          <!-- controls -->
+          <rect x="60" y="292" width="460" height="48" fill="rgba(0,0,0,.34)"/>
+          <g fill="rgba(255,255,255,.85)">
+            <circle cx="88" cy="316" r="13" fill="rgba(255,255,255,.14)"/>
+            <rect x="120" y="308" width="96" height="16" rx="8" fill="rgba(255,255,255,.14)"/>
+            <circle cx="452" cy="316" r="13" fill="rgba(255,255,255,.14)"/>
+            <circle cx="486" cy="316" r="13" fill="rgba(255,255,255,.14)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== features ===== -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker" data-i18n="feat.kicker">Everything, on your terms</span>
+      <h2 data-i18n="feat.title">やりたいことは、だいたい入っています</h2>
+      <p data-i18n="feat.sub">クラウド任せをやめて、録画・配信・保存・通知を自分の手元で。刷新した WebUI から全部設定できます。</p>
+    </div>
+    <div class="features" id="featGrid"></div>
+  </div>
+</section>
+
+<!-- ===== showcase ===== -->
+<section id="showcase" style="background:var(--surface-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker" data-i18n="show.kicker">Redesigned WebUI</span>
+      <h2 data-i18n="show.title">触って気持ちいい、新しい WebUI</h2>
+      <p data-i18n="show.sub">Material 3 をベースに、ライブは没入型、設定は分かりやすく。ダーク/ライト・8 言語対応。実機がなくてもライブデモで体験できます。</p>
+    </div>
+    <div class="showcase">
+      <div class="shot">
+        <svg viewBox="0 0 640 360" role="img" aria-label="Live view">
+          <rect width="640" height="360" fill="#0a1a2b"/>
+          <rect width="640" height="360" fill="url(#feed2)"/>
+          <defs><linearGradient id="feed2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12324f"/><stop offset="1" stop-color="#081521"/></linearGradient></defs>
+          <g opacity="0.45" stroke="#7fb0ff" stroke-width="0.7">
+            <line x1="0" y1="120" x2="640" y2="120"/><line x1="0" y1="240" x2="640" y2="240"/>
+            <line x1="213" y1="0" x2="213" y2="360"/><line x1="426" y1="0" x2="426" y2="360"/>
+          </g>
+          <circle cx="410" cy="185" r="46" fill="#8ab4f8" opacity="0.92"/><circle cx="410" cy="185" r="46" fill="none" stroke="#dbe8ff" stroke-width="2.5"/>
+          <g><rect x="22" y="20" width="104" height="32" rx="16" fill="rgba(0,0,0,.5)"/><circle cx="42" cy="36" r="6" fill="#ea4335"/><text x="56" y="41" fill="#fff" font-family="var(--font)" font-size="16" font-weight="700">LIVE</text></g>
+          <text x="620" y="42" text-anchor="end" fill="rgba(255,255,255,.85)" font-family="var(--mono)" font-size="15">24 fps · WebRTC</text>
+          <rect x="0" y="300" width="640" height="60" fill="rgba(0,0,0,.34)"/>
+          <circle cx="34" cy="330" r="16" fill="rgba(255,255,255,.14)"/>
+          <rect x="70" y="322" width="150" height="18" rx="9" fill="rgba(255,255,255,.16)"/>
+          <circle cx="560" cy="330" r="16" fill="rgba(255,255,255,.14)"/><circle cx="602" cy="330" r="16" fill="rgba(255,255,255,.14)"/>
+        </svg>
+        <div class="cap"><b data-i18n="show.live.t">ライブ — 没入型プレイヤー</b><br><span data-i18n="show.live.d">全画面ステージ・シアターモード・PiP・PTZ 操作</span></div>
+      </div>
+      <div class="shot">
+        <svg viewBox="0 0 640 360" role="img" aria-label="Camera settings">
+          <rect width="640" height="360" fill="var(--surface)"/>
+          <!-- preview -->
+          <rect x="24" y="24" width="290" height="164" rx="12" fill="#0e2438"/>
+          <circle cx="210" cy="120" r="30" fill="#8ab4f8" opacity="0.9"/>
+          <rect x="36" y="34" width="70" height="20" rx="10" fill="rgba(0,0,0,.5)"/><text x="48" y="48" fill="#fff" font-family="var(--font)" font-size="11" font-weight="700">コントラスト 142</text>
+          <!-- settings column -->
+          <g>
+            <rect x="336" y="24" width="280" height="46" rx="10" fill="var(--surface-2)"/>
+            <circle cx="360" cy="47" r="8" fill="none" stroke="var(--primary)" stroke-width="2"/>
+            <rect x="378" y="42" width="90" height="8" rx="4" fill="var(--on)" opacity=".55"/>
+            <rect x="556" y="40" width="44" height="16" rx="8" fill="var(--chip)"/>
+          </g>
+          <g fill="var(--surface-2)"><rect x="336" y="80" width="280" height="46" rx="10"/><rect x="336" y="136" width="280" height="46" rx="10"/></g>
+          <circle cx="360" cy="103" r="8" fill="none" stroke="var(--primary)" stroke-width="2"/><rect x="378" y="99" width="70" height="8" rx="4" fill="var(--on)" opacity=".45"/>
+          <circle cx="360" cy="159" r="8" fill="none" stroke="var(--primary)" stroke-width="2"/><rect x="378" y="155" width="80" height="8" rx="4" fill="var(--on)" opacity=".45"/>
+          <!-- sliders (AUTO/manual + bars) -->
+          <rect x="24" y="212" width="592" height="124" rx="12" fill="var(--surface-2)"/>
+          <rect x="44" y="230" width="120" height="10" rx="5" fill="var(--on)" opacity=".5"/>
+          <rect x="470" y="226" width="126" height="24" rx="12" fill="var(--surface-3)"/><rect x="470" y="226" width="63" height="24" rx="12" fill="var(--chip)"/>
+          <text x="486" y="242" fill="var(--primary)" font-family="var(--font)" font-size="12" font-weight="700">AUTO</text>
+          <g stroke="var(--border)" stroke-width="4" stroke-linecap="round">
+            <line x1="44" y1="270" x2="596" y2="270"/><line x1="44" y1="298" x2="596" y2="298"/><line x1="44" y1="326" x2="596" y2="326"/>
+          </g>
+          <g stroke="var(--primary)" stroke-width="4" stroke-linecap="round">
+            <line x1="44" y1="270" x2="360" y2="270"/><line x1="44" y1="298" x2="300" y2="298"/><line x1="44" y1="326" x2="470" y2="326"/>
+          </g>
+          <g fill="var(--primary)"><circle cx="360" cy="270" r="8"/><circle cx="300" cy="298" r="8"/><circle cx="470" cy="326" r="8"/></g>
+        </svg>
+        <div class="cap"><b data-i18n="show.cam.t">カメラ設定 — 見ながら調整</b><br><span data-i18n="show.cam.d">固定プレビュー・AUTO/マニュアル露出・変更前後の比較</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== install ===== -->
+<section id="install">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker" data-i18n="inst.kicker">Get started in minutes</span>
+      <h2 data-i18n="inst.title">導入は 5 ステップ</h2>
+      <p data-i18n="inst.sub">母艦 PC もアプリのインストールも不要。SD カードにコピーして挿すだけです。</p>
+    </div>
+    <div class="steps" id="stepGrid"></div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <p data-i18n="inst.note"><b>SD カードは FAT-FS でフォーマット</b>してください(exFAT は u-boot 非対応)。Class 10 以上を推奨。自己責任でご利用ください — メーカーへの問い合わせはお控えください。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== cameras + security ===== -->
+<section id="cameras" style="background:var(--surface-2)">
+  <div class="wrap split">
+    <div>
+      <div class="sec-head" style="margin-bottom:24px">
+        <span class="kicker" data-i18n="cam.kicker">Compatibility</span>
+        <h2 data-i18n="cam.title">対応カメラ・ファームウェア</h2>
+      </div>
+      <div class="tablecard">
+        <table>
+          <thead><tr><th data-i18n="cam.col1">カメラ</th><th data-i18n="cam.col2">対応バージョン</th></tr></thead>
+          <tbody>
+            <tr><td>ATOMCam</td><td class="mono">4.33.3.68 / 4.33.3.73</td></tr>
+            <tr><td>ATOMCam2</td><td class="mono">4.58.0.139 / .154 / .160</td></tr>
+            <tr><td>AtomSwing</td><td class="mono">4.37.1.152 / .162 / .166</td></tr>
+            <tr><td>WyzeCam V3</td><td class="mono" data-i18n="cam.wyze">4.36.9.139(実験的)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:13.5px;margin-top:14px" data-i18n="cam.wyzenote">WyzeCam V3 は 4.36.10.xx 以降では動作しません。H.265 非対応・未検証機能あり。</p>
+    </div>
+    <div>
+      <div class="sec-head" style="margin-bottom:24px">
+        <span class="kicker" data-i18n="sec.kicker">Security</span>
+        <h2 data-i18n="sec.title">開放されるポート</h2>
+      </div>
+      <div class="portgrid">
+        <span class="port"><b>WebUI</b> <span>80</span></span>
+        <span class="port"><b>SSH</b> <span>22</span></span>
+        <span class="port"><b>mDNS</b> <span>5353</span></span>
+        <span class="port"><b>Samba</b> <span>137-139,445</span></span>
+        <span class="port"><b>RTSP</b> <span>8554,8080</span></span>
+        <span class="port"><b>WebRTC</b> <span>8555</span></span>
+      </div>
+      <p class="muted" style="font-size:13.5px;margin-top:16px" data-i18n="sec.note">映像・JPEG・WebUI は LAN 内からアクセス可能です。LAN のセキュリティは各自で確保してください。SSH は SD カードに公開鍵を書き込む方式です。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== footer ===== -->
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <span class="brand" style="font-size:17px">
+          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="12.5" fill="none" stroke="var(--primary)" stroke-width="3"/><circle cx="16" cy="16" r="5.5" fill="var(--primary)"/><circle cx="25.5" cy="6.5" r="3" fill="var(--red)"/></svg>
+          atomcam_tools
+        </span>
+        <p data-i18n="foot.tag">ATOMCam / AtomSwing / WyzeCam V3 のためのオープンソース拡張ツールキット。</p>
+      </div>
+      <div>
+        <h4 data-i18n="foot.start">はじめる</h4>
+        <a href="https://github.com/flll/atomcam_tools/releases/latest" target="_blank" rel="noopener" data-i18n="foot.download">ダウンロード</a>
+        <a href="./demo/" target="_blank" rel="noopener" data-i18n="foot.demo">ライブデモ</a>
+        <a href="https://github.com/flll/atomcam_tools/blob/main/docs/webui-guide.md" target="_blank" rel="noopener" data-i18n="foot.guide">WebUI ガイド</a>
+        <a href="https://github.com/flll/atomcam_tools/blob/main/build.md" target="_blank" rel="noopener" data-i18n="foot.build">ビルド手順</a>
+      </div>
+      <div>
+        <h4 data-i18n="foot.project">プロジェクト</h4>
+        <a href="https://github.com/flll/atomcam_tools" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/flll/atomcam_tools/issues" target="_blank" rel="noopener" data-i18n="foot.issues">Issues</a>
+        <a href="https://github.com/flll/atomcam_tools/releases" target="_blank" rel="noopener" data-i18n="foot.releases">リリース</a>
+        <a href="https://github.com/mnakada/atomcam_tools" target="_blank" rel="noopener" data-i18n="foot.upstream">フォーク元 (mnakada)</a>
+      </div>
+      <div>
+        <h4 data-i18n="foot.articles">解説記事</h4>
+        <a href="https://qiita.com/mnakada/items/7d0fbcb6e629e1ddbd0c" target="_blank" rel="noopener">ATOMCam2 導入</a>
+        <a href="https://qiita.com/mnakada/items/5da19a302b0f7521f225" target="_blank" rel="noopener">AtomSwing 改造</a>
+        <a href="https://qiita.com/mnakada/items/00747fdf048f18a787ff" target="_blank" rel="noopener">HomeKit / RTMP</a>
+      </div>
+    </div>
+    <div class="fbottom">
+      <span data-i18n="foot.rights">オープンソース · <a href="https://github.com/flll/atomcam_tools/blob/main/LICENSE" target="_blank" rel="noopener" style="color:inherit">LICENSE</a> 参照</span>
+      <span data-i18n="foot.credit">フォーク元 <a href="https://github.com/mnakada/atomcam_tools" target="_blank" rel="noopener" style="color:inherit">mnakada/atomcam_tools</a> に感謝</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ---------- feature & step data (icons: lucide-style stroke paths) ----------
+  var ICON = {
+    layout: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M9 9h12"/>',
+    video: '<path d="m16 13 5.2 3V8L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+    hdd: '<line x1="22" y1="12" x2="2" y2="12"/><path d="M5.4 5.5 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.4-6.5A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.8 1.1z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>',
+    share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>',
+    route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
+    sliders: '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+    download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+    box: '<path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+    sd: '<path d="M4 6a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M9 4v3M12 4v3M15 4v3"/>',
+    power: '<path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/>',
+    globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/>'
+  };
+  var FEATURES = [
+    { i: 'layout', t: ['刷新した WebUI', 'Redesigned WebUI'], d: ['Material 3・ダークモード・8 言語。スマホでも快適。', 'Material 3, dark mode, 8 languages — great on mobile.'] },
+    { i: 'video', t: ['録画・配信', 'Record & stream'], d: ['連続/動体/タイムラプス、RTSP・RTMP・WebRTC、HomeKit。', 'Continuous/motion/timelapse, RTSP·RTMP·WebRTC, HomeKit.'] },
+    { i: 'hdd', t: ['NAS 保存', 'NAS backup'], d: ['CIFS (SMB2+) 共有へ録画を自動保存。', 'Auto-save recordings to a CIFS (SMB2+) share.'] },
+    { i: 'shield', t: ['Tailscale VPN', 'Tailscale VPN'], d: ['WebUI から設定できるリモートアクセス(flll 追加)。', 'Remote access configurable from the WebUI (flll addition).'] },
+    { i: 'share', t: ['ファイル共有', 'File sharing'], d: ['Samba 共有と、Web から SD カード映像を閲覧。', 'Samba share plus SD-card playback over the web.'] },
+    { i: 'route', t: ['AtomSwing 操作', 'Pan · Tilt · Cruise'], d: ['パン/チルトとクルーズシーケンスに対応。', 'Pan/tilt control and cruise sequences.'] },
+    { i: 'bell', t: ['イベント通知', 'Event webhooks'], d: ['WebHook 通知、動体検知の周期を 5 分→30 秒に短縮。', 'WebHook alerts; motion window shortened 5 min → 30 s.'] },
+    { i: 'sliders', t: ['カスタマイズ', 'Fine-tune'], d: ['ビットレート/FPS、Watermark、起動スクリプト。', 'Bitrate/FPS, watermark, custom boot script.'] }
+  ];
+  var STEPS = [
+    { i: 'download', t: ['ダウンロード', 'Download'], d: ['Releases から <code>atomcam_tools.zip</code> を取得。', 'Grab <code>atomcam_tools.zip</code> from Releases.'] },
+    { i: 'box', t: ['解凍', 'Extract'], d: ['ZIP をそのまま展開。', 'Unzip the archive as-is.'] },
+    { i: 'sd', t: ['SD へコピー', 'Copy to SD'], d: ['全ファイルを microSD のルートへ(FAT-FS)。', 'Copy all files to the microSD root (FAT-FS).'] },
+    { i: 'power', t: ['挿して起動', 'Insert & boot'], d: ['カメラに挿して電源 ON。', 'Insert into the camera and power on.'] },
+    { i: 'globe', t: ['WebUI を開く', 'Open WebUI'], d: ['<code>http://atomcam.local</code> にアクセス。', 'Visit <code>http://atomcam.local</code>.'] }
+  ];
+
+  function svg(paths, cls) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + paths + '</svg>';
+  }
+  var L = 0; // 0 = ja, 1 = en
+  function renderCards() {
+    document.getElementById('featGrid').innerHTML = FEATURES.map(function (f) {
+      return '<div class="card"><div class="ic">' + svg(ICON[f.i]) + '</div><h3>' + f.t[L] + '</h3><p>' + f.d[L] + '</p></div>';
+    }).join('');
+    document.getElementById('stepGrid').innerHTML = STEPS.map(function (s, n) {
+      return '<div class="step"><div class="n">' + (n + 1) + '</div><span class="si">' + svg(ICON[s.i]) + '</span><h3>' + s.t[L] + '</h3><p>' + s.d[L] + '</p></div>';
+    }).join('');
+  }
+
+  // ---------- i18n dictionary for static markup ----------
+  var T = {
+    'nav.features': ['機能', 'Features'], 'nav.webui': ['WebUI', 'WebUI'], 'nav.install': ['導入', 'Install'], 'nav.cameras': ['対応機種', 'Cameras'],
+    'hero.title': ['カメラの能力を、<br>あなたの手に。', 'Your camera.<br>Unlocked.'],
+    'hero.lead': ['標準機能では物足りないあなたへ。録画・配信・NAS 保存・リモートアクセスを、刷新した WebUI からまるごと。', 'For everyone the stock features left wanting. Recording, streaming, NAS backup and remote access — all from a redesigned WebUI.'],
+    'hero.download': ['最新版をダウンロード', 'Download latest'], 'hero.demo': ['ライブデモを見る', 'Try live demo'],
+    'hero.chip1': ['Material 3 デザイン', 'Material 3 design'], 'hero.chip2': ['8 言語対応', '8 languages'], 'hero.chip3': ['ダークモード', 'Dark mode'], 'hero.chip4': ['RTSP / WebRTC', 'RTSP / WebRTC'],
+    'feat.kicker': ['Everything, on your terms', 'Everything, on your terms'],
+    'feat.title': ['やりたいことは、だいたい入っています', 'Just about everything you wanted'],
+    'feat.sub': ['クラウド任せをやめて、録画・配信・保存・通知を自分の手元で。刷新した WebUI から全部設定できます。', 'Stop depending on the cloud — recording, streaming, storage and alerts, all under your control from the new WebUI.'],
+    'show.kicker': ['Redesigned WebUI', 'Redesigned WebUI'],
+    'show.title': ['触って気持ちいい、新しい WebUI', 'A WebUI that feels good to use'],
+    'show.sub': ['Material 3 をベースに、ライブは没入型、設定は分かりやすく。ダーク/ライト・8 言語対応。実機がなくてもライブデモで体験できます。', 'Built on Material 3: immersive live view, clear settings, dark/light and 8 languages. Try the live demo without any hardware.'],
+    'show.live.t': ['ライブ — 没入型プレイヤー', 'Live — immersive player'], 'show.live.d': ['全画面ステージ・シアターモード・PiP・PTZ 操作', 'Full-bleed stage, theater mode, PiP, PTZ controls'],
+    'show.cam.t': ['カメラ設定 — 見ながら調整', 'Camera — tune while you watch'], 'show.cam.d': ['固定プレビュー・AUTO/マニュアル露出・変更前後の比較', 'Sticky preview, AUTO/manual exposure, before/after compare'],
+    'inst.kicker': ['Get started in minutes', 'Get started in minutes'],
+    'inst.title': ['導入は 5 ステップ', 'Up and running in 5 steps'],
+    'inst.sub': ['母艦 PC もアプリのインストールも不要。SD カードにコピーして挿すだけです。', 'No host PC, no app install — just copy to the SD card and insert.'],
+    'inst.note': ['<b>SD カードは FAT-FS でフォーマット</b>してください(exFAT は u-boot 非対応)。Class 10 以上を推奨。自己責任でご利用ください — メーカーへの問い合わせはお控えください。', '<b>Format the SD card as FAT-FS</b> (exFAT is not supported by u-boot). Class 10 or faster recommended. Use at your own risk — please do not contact the manufacturer.'],
+    'cam.kicker': ['Compatibility', 'Compatibility'], 'cam.title': ['対応カメラ・ファームウェア', 'Supported cameras & firmware'],
+    'cam.col1': ['カメラ', 'Camera'], 'cam.col2': ['対応バージョン', 'Supported versions'], 'cam.wyze': ['4.36.9.139(実験的)', '4.36.9.139 (experimental)'],
+    'cam.wyzenote': ['WyzeCam V3 は 4.36.10.xx 以降では動作しません。H.265 非対応・未検証機能あり。', 'WyzeCam V3 does not work on 4.36.10.xx or later. No H.265; some features untested.'],
+    'sec.kicker': ['Security', 'Security'], 'sec.title': ['開放されるポート', 'Ports it opens'],
+    'sec.note': ['映像・JPEG・WebUI は LAN 内からアクセス可能です。LAN のセキュリティは各自で確保してください。SSH は SD カードに公開鍵を書き込む方式です。', 'Video, JPEG and the WebUI are reachable on your LAN. Secure your LAN yourself. SSH uses a public key written to the SD card.'],
+    'foot.tag': ['ATOMCam / AtomSwing / WyzeCam V3 のためのオープンソース拡張ツールキット。', 'An open-source toolkit that extends ATOMCam / AtomSwing / WyzeCam V3.'],
+    'foot.start': ['はじめる', 'Get started'], 'foot.download': ['ダウンロード', 'Download'], 'foot.demo': ['ライブデモ', 'Live demo'], 'foot.guide': ['WebUI ガイド', 'WebUI guide'], 'foot.build': ['ビルド手順', 'Build guide'],
+    'foot.project': ['プロジェクト', 'Project'], 'foot.issues': ['Issues', 'Issues'], 'foot.releases': ['リリース', 'Releases'], 'foot.upstream': ['フォーク元 (mnakada)', 'Upstream (mnakada)'],
+    'foot.articles': ['解説記事', 'Articles'],
+    'foot.rights': ['オープンソース · <a href="https://github.com/flll/atomcam_tools/blob/main/LICENSE" target="_blank" rel="noopener" style="color:inherit">LICENSE</a> 参照', 'Open source · see <a href="https://github.com/flll/atomcam_tools/blob/main/LICENSE" target="_blank" rel="noopener" style="color:inherit">LICENSE</a>'],
+    'foot.credit': ['フォーク元 <a href="https://github.com/mnakada/atomcam_tools" target="_blank" rel="noopener" style="color:inherit">mnakada/atomcam_tools</a> に感謝', 'Thanks to <a href="https://github.com/mnakada/atomcam_tools" target="_blank" rel="noopener" style="color:inherit">mnakada/atomcam_tools</a>']
+  };
+
+  function applyLang() {
+    document.documentElement.lang = L ? 'en' : 'ja';
+    document.getElementById('langLabel').textContent = L ? '日本語' : 'EN';
+    Object.keys(T).forEach(function (k) {
+      var el = document.querySelector('[data-i18n="' + k + '"]');
+      if (el) el.innerHTML = T[k][L];
+    });
+    renderCards();
+  }
+
+  // ---------- theme ----------
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('iconSun').hidden = theme !== 'dark';
+    document.getElementById('iconMoon').hidden = theme === 'dark';
+    try { localStorage.setItem('atk-theme', theme); } catch (e) {}
+  }
+
+  // ---------- init ----------
+  var savedTheme;
+  try { savedTheme = localStorage.getItem('atk-theme'); } catch (e) {}
+  if (!savedTheme) savedTheme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  applyTheme(savedTheme);
+
+  var savedLang;
+  try { savedLang = localStorage.getItem('atk-lang'); } catch (e) {}
+  if (savedLang) { L = savedLang === 'en' ? 1 : 0; }
+  else { L = (navigator.language || 'ja').toLowerCase().indexOf('ja') === 0 ? 0 : 1; }
+  applyLang();
+
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  document.getElementById('langBtn').addEventListener('click', function () {
+    L = L ? 0 : 1;
+    try { localStorage.setItem('atk-lang', L ? 'en' : 'ja'); } catch (e) {}
+    applyLang();
+  });
+})();
+</script>
+</body>
+</html>
