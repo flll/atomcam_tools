@@ -1,75 +1,75 @@
 /* 自動生成: scripts/generate-theme.mjs — 直接編集禁止
- * source = #0ea5e9
+ * source = #4285f4
  * 再生成: npm run theme:generate (source 変更は theme.config.json)
  */
 :root {
-  --md-primary: 198 100% 28.4%; /* #006591 */
+  --md-primary: 212 100% 37.8%; /* #005ac1 */
   --md-on-primary: 0 0% 100%; /* #ffffff */
-  --md-primary-container: 208 100% 89.4%; /* #c9e6ff */
-  --md-on-primary-container: 202 100% 9.2%; /* #001e2f */
-  --md-secondary: 207 16.4% 37.1%; /* #4f606e */
+  --md-primary-container: 225 100% 92.4%; /* #d8e2ff */
+  --md-on-primary-container: 216 100% 12.7%; /* #001a41 */
+  --md-secondary: 224 13% 39.2%; /* #575e71 */
   --md-on-secondary: 0 0% 100%; /* #ffffff */
-  --md-secondary-container: 208 63% 89.4%; /* #d3e5f5 */
-  --md-on-secondary-container: 204 57.7% 10.2%; /* #0b1d29 */
-  --md-tertiary: 259 16.4% 41.8%; /* #64597c */
+  --md-secondary-container: 226 71.4% 91.8%; /* #dbe2f9 */
+  --md-on-secondary-container: 223 37.5% 12.5%; /* #141b2c */
+  --md-tertiary: 296 15% 39.2%; /* #715573 */
   --md-on-tertiary: 0 0% 100%; /* #ffffff */
-  --md-tertiary-container: 263 100% 93.3%; /* #eaddff */
-  --md-on-tertiary-container: 257 41.3% 14.7%; /* #1f1635 */
+  --md-tertiary-container: 298 86% 91.6%; /* #fbd7fc */
+  --md-on-tertiary-container: 291 40.6% 12.5%; /* #29132d */
   --md-error: 0 75.5% 41.6%; /* #ba1a1a */
   --md-on-error: 0 0% 100%; /* #ffffff */
   --md-error-container: 6 100% 92%; /* #ffdad6 */
   --md-on-error-container: 358 100% 12.7%; /* #410002 */
-  --md-surface: 240 33.3% 98.2%; /* #f9f9fc */
-  --md-surface-dim: 225 5.6% 85.9%; /* #d9dadd */
-  --md-surface-bright: 240 33.3% 98.2%; /* #f9f9fc */
+  --md-surface: 255 50% 98.4%; /* #faf9fd */
+  --md-surface-dim: 270 5.6% 85.9%; /* #dbd9dd */
+  --md-surface-bright: 255 50% 98.4%; /* #faf9fd */
   --md-surface-container-lowest: 0 0% 100%; /* #ffffff */
-  --md-surface-container-low: 240 14.3% 95.9%; /* #f3f3f6 */
-  --md-surface-container: 220 9.1% 93.5%; /* #edeef0 */
-  --md-surface-container-high: 225 9.1% 91.4%; /* #e7e8eb */
-  --md-surface-container-highest: 240 5.5% 89.2%; /* #e2e2e5 */
-  --md-on-surface: 204 9.1% 10.8%; /* #191c1e */
-  --md-on-surface-variant: 210 8.5% 27.8%; /* #41474d */
-  --md-outline: 208 5.4% 46.9%; /* #71787e */
-  --md-outline-variant: 212 11.7% 78.2%; /* #c1c7ce */
-  --md-inverse-surface: 204 5.2% 19%; /* #2e3133 */
-  --md-inverse-on-surface: 240 11.1% 94.7%; /* #f0f0f3 */
-  --md-inverse-primary: 205 100% 76.9%; /* #89ceff */
+  --md-surface-container-low: 270 20% 96.1%; /* #f5f3f7 */
+  --md-surface-container: 270 12.5% 93.7%; /* #efedf1 */
+  --md-surface-container-high: 264 11.6% 91.6%; /* #e9e7ec */
+  --md-surface-container-highest: 255 7.4% 89.4%; /* #e3e2e6 */
+  --md-on-surface: 240 6.9% 11.4%; /* #1b1b1f */
+  --md-on-surface-variant: 224 7.5% 28.8%; /* #44474f */
+  --md-outline: 224 4.5% 47.6%; /* #74777f */
+  --md-outline-variant: 230 11.3% 79.2%; /* #c4c6d0 */
+  --md-inverse-surface: 240 3% 19.4%; /* #303033 */
+  --md-inverse-on-surface: 270 15.4% 94.9%; /* #f2f0f4 */
+  --md-inverse-primary: 222 100% 83.9%; /* #adc6ff */
   --md-scrim: 0 0% 0%; /* #000000 */
   --md-shadow: 0 0% 0%; /* #000000 */
 }
 
 .dark {
-  --md-primary: 205 100% 76.9%; /* #89ceff */
-  --md-on-primary: 199 100% 15.1%; /* #00344d */
-  --md-primary-container: 199 100% 21.6%; /* #004c6e */
-  --md-on-primary-container: 208 100% 89.4%; /* #c9e6ff */
-  --md-secondary: 208 30.9% 78.4%; /* #b7c9d9 */
-  --md-on-secondary: 206 31.3% 18.8%; /* #21323f */
-  --md-secondary-container: 206 21.1% 27.8%; /* #384956 */
-  --md-on-secondary-container: 208 63% 89.4%; /* #d3e5f5 */
-  --md-tertiary: 261 46.5% 83.1%; /* #cec0e8 */
-  --md-on-tertiary: 259 27.1% 23.1%; /* #352b4b */
-  --md-tertiary-container: 259 20.7% 32.2%; /* #4c4163 */
-  --md-on-tertiary-container: 263 100% 93.3%; /* #eaddff */
+  --md-primary: 222 100% 83.9%; /* #adc6ff */
+  --md-on-primary: 214 100% 20.6%; /* #002e69 */
+  --md-primary-container: 212 100% 29%; /* #004494 */
+  --md-on-primary-container: 225 100% 92.4%; /* #d8e2ff */
+  --md-secondary: 226 29.3% 80.6%; /* #bfc6dc */
+  --md-on-secondary: 223 22.6% 20.8%; /* #293041 */
+  --md-secondary-container: 222 17.1% 29.8%; /* #3f4759 */
+  --md-on-secondary-container: 226 71.4% 91.8%; /* #dbe2f9 */
+  --md-tertiary: 298 35.4% 80.6%; /* #debcdf */
+  --md-on-tertiary: 293 25.2% 21%; /* #402843 */
+  --md-tertiary-container: 294 19% 30%; /* #583e5b */
+  --md-on-tertiary-container: 298 86% 91.6%; /* #fbd7fc */
   --md-error: 6 100% 83.5%; /* #ffb4ab */
   --md-on-error: 357 100% 20.6%; /* #690005 */
   --md-error-container: 356 100% 28.8%; /* #93000a */
   --md-on-error-container: 6 100% 92%; /* #ffdad6 */
-  --md-surface: 204 12.8% 7.6%; /* #111416 */
-  --md-surface-dim: 204 12.8% 7.6%; /* #111416 */
-  --md-surface-bright: 216 4.3% 22.5%; /* #37393c */
-  --md-surface-container-lowest: 216 17.2% 5.7%; /* #0c0e11 */
-  --md-surface-container-low: 204 9.1% 10.8%; /* #191c1e */
-  --md-surface-container: 210 6.3% 12.5%; /* #1e2022 */
-  --md-surface-container-high: 210 4.8% 16.5%; /* #282a2c */
-  --md-surface-container-highest: 210 3.8% 20.8%; /* #333537 */
-  --md-on-surface: 240 5.5% 89.2%; /* #e2e2e5 */
-  --md-on-surface-variant: 212 11.7% 78.2%; /* #c1c7ce */
-  --md-outline: 212 5.9% 57.1%; /* #8b9198 */
-  --md-outline-variant: 210 8.5% 27.8%; /* #41474d */
-  --md-inverse-surface: 240 5.5% 89.2%; /* #e2e2e5 */
-  --md-inverse-on-surface: 204 5.2% 19%; /* #2e3133 */
-  --md-inverse-primary: 198 100% 28.4%; /* #006591 */
+  --md-surface: 225 10% 7.8%; /* #121316 */
+  --md-surface-dim: 225 10% 7.8%; /* #121316 */
+  --md-surface-bright: 225 3.4% 22.7%; /* #38393c */
+  --md-surface-container-lowest: 225 13.3% 5.9%; /* #0d0e11 */
+  --md-surface-container-low: 240 6.9% 11.4%; /* #1b1b1f */
+  --md-surface-container: 240 6.1% 12.9%; /* #1f1f23 */
+  --md-surface-container-high: 225 4.7% 16.9%; /* #292a2d */
+  --md-surface-container-highest: 225 3.7% 21.2%; /* #343538 */
+  --md-on-surface: 255 7.4% 89.4%; /* #e3e2e6 */
+  --md-on-surface-variant: 230 11.3% 79.2%; /* #c4c6d0 */
+  --md-outline: 229 5.1% 57.8%; /* #8e9099 */
+  --md-outline-variant: 224 7.5% 28.8%; /* #44474f */
+  --md-inverse-surface: 255 7.4% 89.4%; /* #e3e2e6 */
+  --md-inverse-on-surface: 240 3% 19.4%; /* #303033 */
+  --md-inverse-primary: 212 100% 37.8%; /* #005ac1 */
   --md-scrim: 0 0% 0%; /* #000000 */
   --md-shadow: 0 0% 0%; /* #000000 */
 }
