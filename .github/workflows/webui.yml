@@ -5,10 +5,12 @@ on:
     branches: [main, experiment/webui-modern]
     paths:
       - 'web-new/**'
+      - 'docs/index.html'
       - '.github/workflows/webui.yml'
   pull_request:
     paths:
       - 'web-new/**'
+      - 'docs/index.html'
       - '.github/workflows/webui.yml'
 
 # デモデプロイ（Pages）に必要な権限
@@ -104,9 +106,15 @@ jobs:
       # MSW モックを焼き込んだデモビルド（__DEMO__=true）
       - run: npm run demo:build
         working-directory: web-new
+      # ランディング(docs/index.html)をルート、WebUI デモを /demo/ に同居させる
+      - name: Assemble Pages site (landing + /demo/)
+        run: |
+          mkdir -p _site/demo
+          cp docs/index.html _site/index.html
+          cp -r web-new/dist/* _site/demo/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: web-new/dist
+          path: _site
       - id: deploy
         uses: actions/deploy-pages@v4

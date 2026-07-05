@@ -2,6 +2,10 @@
 
 ATOMCam / ATOMCam2 / AtomSwing / WyzeCam V3 の機能を拡張するツールキットです。標準機能に満足できないユーザーが、各自の責任においてカメラの能力を拡張するためのスクリプトとカスタムルートファイルシステムを提供します。
 
+🌐 **[プロジェクトサイト](https://flll.github.io/atomcam_tools/)** ・ 🎬 **[WebUI ライブデモ](https://flll.github.io/atomcam_tools/demo/)** ・ 📦 **[最新リリース](https://github.com/flll/atomcam_tools/releases/latest)**
+
+> プロジェクトサイト / ライブデモは GitHub Pages で公開されます(有効化後にリンクが有効になります)。
+
 ## フォークについて
 
 本リポジトリは [mnakada/atomcam_tools](https://github.com/mnakada/atomcam_tools) のフォークであり、[flll/atomcam_tools](https://github.com/flll/atomcam_tools) で独自に開発を継続しています。upstream への PR は当面予定していません。
