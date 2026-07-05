@@ -87,6 +87,28 @@ export interface IspSettings {
   expline: number;
 }
 
+// cmd.cgi name=storage-info の結果(SDマウント状態・swap・メモリ)。
+export interface SwapInfo {
+  name: string;
+  sizeKb: number;
+  usedKb: number;
+}
+
+export interface StorageInfo {
+  mounted: boolean;
+  dev?: string;
+  fs?: string;
+  /** マウントオプション先頭が rw かどうか(ro 落ちの検知用) */
+  rw?: boolean;
+  df?: { totalKb: number; usedKb: number; availKb: number };
+  swaps: SwapInfo[];
+  memTotalKb?: number;
+  memAvailKb?: number;
+}
+
+// cmd.cgi name=storage-du の結果(録画フォルダ別使用量 kB)。
+export type StorageDu = Partial<Record<'record' | 'alarm_record' | 'time_lapse', number>>;
+
 // cmd.cgi POST の宛先。socket は go2rtc 制御ポート(localhost:4000)直、
 // 既定は /var/run/webcmd 経由。
 

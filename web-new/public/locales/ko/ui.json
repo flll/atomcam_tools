@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "SD 카드를 지울까요?",
     "eraseConfirmBody": "SD 카드의 녹화 폴더(연속 녹화·알람 녹화)를 삭제합니다. 이 작업은 되돌릴 수 없습니다.",
     "eraseConfirmAction": "지우기",
-    "eraseStarted": "지우기를 시작했습니다"
+    "eraseStarted": "지우기를 시작했습니다",
+    "mountRw": "마운트됨 (읽기/쓰기)",
+    "mountRo": "읽기 전용으로 마운트됨 (확인 필요)",
+    "notMounted": "마운트되지 않음",
+    "swap": "스왑",
+    "memory": "메모리 여유",
+    "duTitle": "녹화 폴더 내역",
+    "duLoad": "측정",
+    "duLoading": "측정 중…"
   },
   "settings": {
     "defaultValue": "기본값: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "비교",
     "before": "변경 전",
-    "holdToCompare": "누르고 있는 동안 변경 전 화면과 비교합니다"
+    "after": "변경 후",
+    "holdToCompare": "누르면 변경 전후 화면을 전환해 비교합니다 (반영까지 1~2초)"
   }
 }

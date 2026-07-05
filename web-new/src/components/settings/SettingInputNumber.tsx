@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function SettingInputNumber({
@@ -6,19 +7,24 @@ export function SettingInputNumber({
   onChange,
   min,
   max,
+  icon: Icon,
 }: {
   i18nKey: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
   max?: number;
+  icon?: LucideIcon;
 }) {
   const { t } = useTranslation('translation');
   const desc = t(`${i18nKey}.tooltip`, { defaultValue: '' });
   return (
     <label className="flex items-center justify-between gap-4 rounded-lg border border-border px-3 py-2">
       <span className="min-w-0">
-        <span className="block text-sm">{t(`${i18nKey}.title`)}</span>
+        <span className="flex items-center gap-2 text-sm">
+          {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}
+          {t(`${i18nKey}.title`)}
+        </span>
         {desc && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{desc}</span>}
       </span>
       <input

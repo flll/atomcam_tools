@@ -54,12 +54,13 @@ test.describe('モバイル(375px)', () => {
 const CAMERA_URL = '/?mockModel=ATOMCAM2#/settings/camera';
 
 for (const theme of THEMES) {
-  test(`Camera ${theme}(2カラム+OSD+sticky)`, async ({ page }) => {
+  test(`Camera ${theme}(2カラム+AUTO/マニュアル+OSD+sticky)`, async ({ page }) => {
     await page.addInitScript((t) => localStorage.setItem('theme', t), theme);
     await page.goto(CAMERA_URL);
     await page.waitForTimeout(1200);
     await page.screenshot({ path: `shots/camera-${theme}-top.png` });
-    // スライダー操作 → OSD チップ+CSS 近似フィルタ+比較ピル
+    // マニュアルへ切替 → スライダー操作 → OSD チップ+比較トグル
+    await page.getByRole('radio', { name: 'マニュアル' }).click();
     await page.getByRole('slider', { name: 'コントラスト' }).fill('190');
     await page.screenshot({ path: `shots/camera-${theme}-osd.png` });
     // 最下部までスクロールしてもプレビューが残る
@@ -70,17 +71,26 @@ for (const theme of THEMES) {
   });
 }
 
-test('Camera 比較長押し(dark)', async ({ page }) => {
+test('Camera 比較トグル(dark)', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('theme', 'dark'));
   await page.goto(CAMERA_URL);
   await page.waitForTimeout(1200);
+  await page.getByRole('radio', { name: 'マニュアル' }).click();
   await page.getByRole('slider', { name: 'コントラスト' }).fill('210');
   const compare = page.getByTestId('compare-hold');
-  await compare.hover();
-  await page.mouse.down();
-  await page.waitForTimeout(300);
+  await compare.click();
+  await page.waitForTimeout(400);
   await page.screenshot({ path: 'shots/camera-dark-compare.png' });
-  await page.mouse.up();
+  await compare.click();
+});
+
+test('Storage 使用状況カード(dark)', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('theme', 'dark'));
+  await page.goto('/#/settings/storage');
+  await page.waitForTimeout(900);
+  await page.getByRole('button', { name: '内訳を計測' }).click();
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: 'shots/storage-dark-info.png', fullPage: true });
 });
 
 test.describe('カメラ設定モバイル(375px)', () => {
@@ -89,6 +99,7 @@ test.describe('カメラ設定モバイル(375px)', () => {
     await page.addInitScript(() => localStorage.setItem('theme', 'dark'));
     await page.goto(CAMERA_URL);
     await page.waitForTimeout(1200);
+    await page.getByRole('radio', { name: 'マニュアル' }).click();
     const sharp = page.getByRole('slider', { name: 'シャープネス' });
     await sharp.scrollIntoViewIfNeeded();
     await sharp.fill('170');

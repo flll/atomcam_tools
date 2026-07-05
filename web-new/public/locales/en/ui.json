@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "Erase SD card?",
     "eraseConfirmBody": "Deletes the recording folders (continuous and alarm) on the SD card. This cannot be undone.",
     "eraseConfirmAction": "Erase",
-    "eraseStarted": "Erase started"
+    "eraseStarted": "Erase started",
+    "mountRw": "Mounted (read/write)",
+    "mountRo": "Mounted read-only (check the card)",
+    "notMounted": "Not mounted",
+    "swap": "Swap",
+    "memory": "Memory",
+    "duTitle": "Recording folder breakdown",
+    "duLoad": "Measure",
+    "duLoading": "Measuring…"
   },
   "settings": {
     "defaultValue": "Default: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "Compare",
     "before": "Before",
-    "holdToCompare": "Hold to compare with the previous look"
+    "after": "After",
+    "holdToCompare": "Click to toggle between the previous and current look (takes 1–2 s)"
   }
 }

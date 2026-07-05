@@ -92,11 +92,11 @@ AdvancedSettings:
     title: Max Digital Gain
     tooltip: Set the Max value of sensor Digital gain.
   expmode:
-    title: Exposure mode
-    tooltip: Setting the exposure mode.
+    title: Ajuste automático
+    tooltip: Em AUTO a câmera ajusta a exposição automaticamente e os controles mostram os valores atuais. Em manual, os valores ficam fixos e podem ser ajustados.
     text:
-      - auto
-      - manual
+      - AUTO
+      - Manual
   aecomp:
     title: AE compensation
     tooltip: Setting AE compensation.

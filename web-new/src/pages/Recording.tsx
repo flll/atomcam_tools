@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CalendarClock, CalendarDays, Film, FolderOpen, HardDrive, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   ScheduleListEditor,
@@ -68,15 +69,15 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
 
       {showPeriodic && (
         <Section title={t('record.periodicRec.title')}>
-          <SettingSwitch i18nKey="record.SDCard" value={draft.PERIODICREC_SDCARD ?? 'on'} onChange={(v) => patch({ PERIODICREC_SDCARD: v })} />
+          <SettingSwitch icon={HardDrive} i18nKey="record.SDCard" value={draft.PERIODICREC_SDCARD ?? 'on'} onChange={(v) => patch({ PERIODICREC_SDCARD: v })} />
           {draft.PERIODICREC_SDCARD === 'on' && (
             <>
-              <SettingSwitch i18nKey="record.SDCard.automaticDeletion" value={draft.PERIODICREC_SDCARD_REMOVE ?? 'off'} onChange={(v) => patch({ PERIODICREC_SDCARD_REMOVE: v })} />
+              <SettingSwitch icon={Trash2} i18nKey="record.SDCard.automaticDeletion" value={draft.PERIODICREC_SDCARD_REMOVE ?? 'off'} onChange={(v) => patch({ PERIODICREC_SDCARD_REMOVE: v })} />
               {draft.PERIODICREC_SDCARD_REMOVE === 'on' && (
-                <SettingInputNumber i18nKey="record.SDCard.daysToKeep" value={Number(draft.PERIODICREC_SDCARD_REMOVE_DAYS ?? 30)} min={1} onChange={(v) => patch({ PERIODICREC_SDCARD_REMOVE_DAYS: String(v) })} />
+                <SettingInputNumber icon={CalendarDays} i18nKey="record.SDCard.daysToKeep" value={Number(draft.PERIODICREC_SDCARD_REMOVE_DAYS ?? 30)} min={1} onChange={(v) => patch({ PERIODICREC_SDCARD_REMOVE_DAYS: String(v) })} />
               )}
               {property?.recordType === 'off' && <SettingComment i18nKey="record.recordTypeWarn" tone="danger" />}
-              <SettingSwitch i18nKey="record.recordingSchedule" value={draft.PERIODICREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ PERIODICREC_SCHEDULE: v })} />
+              <SettingSwitch icon={CalendarClock} i18nKey="record.recordingSchedule" value={draft.PERIODICREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ PERIODICREC_SCHEDULE: v })} />
               {draft.PERIODICREC_SCHEDULE === 'on' && <ScheduleListEditor entries={periodic} onChange={setPeriodicEdit} />}
             </>
           )}
@@ -85,11 +86,11 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
 
       {showAlarm && (
         <Section title={t('record.alarmRec.title')}>
-          <SettingSwitch i18nKey="record.SDCard" value={draft.ALARMREC_SDCARD ?? 'on'} onChange={(v) => patch({ ALARMREC_SDCARD: v })} />
+          <SettingSwitch icon={HardDrive} i18nKey="record.SDCard" value={draft.ALARMREC_SDCARD ?? 'on'} onChange={(v) => patch({ ALARMREC_SDCARD: v })} />
           {draft.ALARMREC_SDCARD === 'on' && (
             <>
-              <SettingInput i18nKey="record.SDCard.savePath" value={draft.ALARMREC_SDCARD_PATH ?? ''} onChange={(v) => patch({ ALARMREC_SDCARD_PATH: v })} />
-              <SettingSwitch i18nKey="record.recordingSchedule" value={draft.ALARMREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ ALARMREC_SCHEDULE: v })} />
+              <SettingInput icon={FolderOpen} i18nKey="record.SDCard.savePath" value={draft.ALARMREC_SDCARD_PATH ?? ''} onChange={(v) => patch({ ALARMREC_SDCARD_PATH: v })} />
+              <SettingSwitch icon={CalendarClock} i18nKey="record.recordingSchedule" value={draft.ALARMREC_SCHEDULE ?? 'off'} onChange={(v) => patch({ ALARMREC_SCHEDULE: v })} />
               {draft.ALARMREC_SCHEDULE === 'on' && <ScheduleListEditor entries={alarm} onChange={setAlarmEdit} />}
             </>
           )}
@@ -98,11 +99,11 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
 
       {showTimelapse && (
         <Section title={t('timelapse.title')}>
-          <SettingSwitch i18nKey="record.SDCard" value={draft.TIMELAPSE_SDCARD ?? 'off'} onChange={(v) => patch({ TIMELAPSE_SDCARD: v })} />
+          <SettingSwitch icon={HardDrive} i18nKey="record.SDCard" value={draft.TIMELAPSE_SDCARD ?? 'off'} onChange={(v) => patch({ TIMELAPSE_SDCARD: v })} />
           {draft.TIMELAPSE_SDCARD === 'on' && (
             <>
-              <SettingInput i18nKey="record.SDCard.savePath" value={draft.TIMELAPSE_SDCARD_PATH ?? ''} onChange={(v) => patch({ TIMELAPSE_SDCARD_PATH: v })} />
-              <SettingInputNumber i18nKey="timelapse.fps" value={Number(draft.TIMELAPSE_FPS ?? 20)} min={1} max={60} onChange={(v) => patch({ TIMELAPSE_FPS: String(v) })} />
+              <SettingInput icon={FolderOpen} i18nKey="record.SDCard.savePath" value={draft.TIMELAPSE_SDCARD_PATH ?? ''} onChange={(v) => patch({ TIMELAPSE_SDCARD_PATH: v })} />
+              <SettingInputNumber icon={Film} i18nKey="timelapse.fps" value={Number(draft.TIMELAPSE_FPS ?? 20)} min={1} max={60} onChange={(v) => patch({ TIMELAPSE_FPS: String(v) })} />
               <TimelapseScheduleEditor entries={timelapse} onChange={setTimelapseEdit} />
             </>
           )}

@@ -68,6 +68,26 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
       ' /atom/configs/.user_config
     fi
   fi
+  if [ "$NAME" = "storage-info" ] ; then
+    MNT=`grep ' /media/mmc ' /proc/mounts | head -n 1`
+    if [ -n "$MNT" ] ; then
+      echo "MOUNTED=1"
+      echo "MOUNTDEV=`echo $MNT | cut -d' ' -f1`"
+      echo "MOUNTFS=`echo $MNT | cut -d' ' -f3`"
+      echo "MOUNTOPT=`echo $MNT | cut -d' ' -f4`"
+      df -k /media/mmc | awk '/\/media\/mmc/ { printf("DF=%d %d %d\n", $2, $3, $4); }'
+    else
+      echo "MOUNTED=0"
+    fi
+    tail -n +2 /proc/swaps | awk '{ i++; printf("SWAP%d=%s %s %s\n", i, $1, $3, $4); }'
+    awk '/^MemTotal:|^MemFree:|^MemAvailable:|^Cached:/ { k=toupper($1); gsub(":", "", k); printf("%s=%s\n", k, $2); }' /proc/meminfo
+  fi
+  if [ "$NAME" = "storage-du" ] ; then
+    for d in record alarm_record time_lapse ; do
+      [ -d "/media/mmc/$d" ] && echo "DU_$d=`du -sk /media/mmc/$d | cut -f1`"
+    done
+    true
+  fi
 fi
 
 if [ "$REQUEST_METHOD" = "POST" ]; then

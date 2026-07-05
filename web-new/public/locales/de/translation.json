@@ -127,11 +127,11 @@
       "tooltip": "Set the Max value of sensor Digital gain."
     },
     "expmode": {
-      "title": "Exposure mode",
-      "tooltip": "Setting the exposure mode.",
+      "title": "Automatische Anpassung",
+      "tooltip": "Bei AUTO passt die Kamera die Belichtung automatisch an und die Regler zeigen die aktuellen Werte. Bei Manuell werden die Werte eingefroren und sind von Hand einstellbar.",
       "text": [
-        "auto",
-        "manual"
+        "AUTO",
+        "Manuell"
       ]
     },
     "aecomp": {

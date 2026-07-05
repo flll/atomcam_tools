@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Film, Globe, Link2, Lock, Radio, Smartphone, TimerReset, Video, Volume2, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Section, SettingInput, SettingInputNumber, SettingSelect, SettingSwitch, SettingComment, SubSettings, UnsavedBar } from '@/components/settings';
@@ -37,46 +38,47 @@ export default function StreamingPage({ section }: { section?: 'rtsp' | 'rtmp' |
 
       {showRtsp && (
         <Section title={t('RTSP.title')}>
-          <SettingSwitch i18nKey="RTSP.main" value={draft.RTSP_VIDEO0 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO0: v })} />
+          <SettingSwitch icon={Video} i18nKey="RTSP.main" value={draft.RTSP_VIDEO0 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO0: v })} />
           {draft.RTSP_VIDEO0 === 'on' && (
             <SubSettings>
-              <SettingSelect i18nKey="RTSP.main.audio" value={draft.RTSP_AUDIO0 ?? 'OPUS'} options={['off', 'S16_BE', 'AAC', 'OPUS']} onChange={(v) => patch({ RTSP_AUDIO0: v })} />
-              <SettingInput i18nKey="RTSP.main.URL" value={urls.main} readOnly />
+              <SettingSelect icon={Volume2} i18nKey="RTSP.main.audio" value={draft.RTSP_AUDIO0 ?? 'OPUS'} options={['off', 'S16_BE', 'AAC', 'OPUS']} onChange={(v) => patch({ RTSP_AUDIO0: v })} />
+              <SettingInput icon={Link2} i18nKey="RTSP.main.URL" value={urls.main} readOnly />
             </SubSettings>
           )}
           {isAtom && (
             <>
-              <SettingSwitch i18nKey="RTSP.mainHEVC" value={draft.RTSP_VIDEO2 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO2: v })} />
+              <SettingSwitch icon={Film} i18nKey="RTSP.mainHEVC" value={draft.RTSP_VIDEO2 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO2: v })} />
               {draft.RTSP_VIDEO2 === 'on' && (
                 <SubSettings>
-                  <SettingInput i18nKey="RTSP.mainHEVC.URL" value={urls.hevc} readOnly />
+                  <SettingInput icon={Link2} i18nKey="RTSP.mainHEVC.URL" value={urls.hevc} readOnly />
                 </SubSettings>
               )}
             </>
           )}
-          <SettingSwitch i18nKey="RTSP.sub" value={draft.RTSP_VIDEO1 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO1: v })} />
+          <SettingSwitch icon={Smartphone} i18nKey="RTSP.sub" value={draft.RTSP_VIDEO1 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO1: v })} />
           {draft.RTSP_VIDEO1 === 'on' && (
             <SubSettings>
-              <SettingInput i18nKey="RTSP.sub.URL" value={urls.sub} readOnly />
+              <SettingInput icon={Link2} i18nKey="RTSP.sub.URL" value={urls.sub} readOnly />
             </SubSettings>
           )}
-          <SettingSwitch i18nKey="RTSP.http" value={draft.RTSP_OVER_HTTP ?? 'off'} onChange={(v) => patch({ RTSP_OVER_HTTP: v })} />
-          <SettingSwitch i18nKey="RTSP.auth" value={draft.RTSP_AUTH ?? 'off'} onChange={(v) => patch({ RTSP_AUTH: v })} />
+          <SettingSwitch icon={Globe} i18nKey="RTSP.http" value={draft.RTSP_OVER_HTTP ?? 'off'} onChange={(v) => patch({ RTSP_OVER_HTTP: v })} />
+          <SettingSwitch icon={Lock} i18nKey="RTSP.auth" value={draft.RTSP_AUTH ?? 'off'} onChange={(v) => patch({ RTSP_AUTH: v })} />
         </Section>
       )}
 
       {showRtmp && (
         <Section title={t('RTMP.title')}>
           <SettingSwitch
+            icon={Radio}
             i18nKey="RTMP"
             value={draft.RTSP_VIDEO0 === 'on' && (draft.RTSP_AUDIO0 === 'AAC' || draft.RTSP_AUDIO0 === 'off') ? (draft.RTMP_ENABLE ?? 'off') : 'off'}
             onChange={(v) => patch({ RTMP_ENABLE: v })}
           />
           {draft.RTMP_ENABLE === 'on' && (
             <SubSettings>
-              <SettingInput i18nKey="RTMP.URL" value={draft.RTMP_URL ?? ''} onChange={(v) => patch({ RTMP_URL: v })} />
+              <SettingInput icon={Link2} i18nKey="RTMP.URL" value={draft.RTMP_URL ?? ''} onChange={(v) => patch({ RTMP_URL: v })} />
               <Button variant="secondary" onClick={() => runCmd(api.exec('rtmp_restart'))}>{t('RTMP.Restart')}</Button>
-              <SettingInputNumber i18nKey="RTMP.IntervalRestart" value={Math.abs(Number(draft.RTMP_RESTART ?? 240))} min={20} max={2880} onChange={(v) => patch({ RTMP_RESTART: String(-v) })} />
+              <SettingInputNumber icon={TimerReset} i18nKey="RTMP.IntervalRestart" value={Math.abs(Number(draft.RTMP_RESTART ?? 240))} min={20} max={2880} onChange={(v) => patch({ RTMP_RESTART: String(-v) })} />
             </SubSettings>
           )}
         </Section>
@@ -84,11 +86,11 @@ export default function StreamingPage({ section }: { section?: 'rtsp' | 'rtmp' |
 
       {showWebrtc && (
         <Section title={t('WebRTC.title')}>
-          <SettingSwitch i18nKey="WebRTC" value={draft.RTSP_VIDEO0 === 'on' ? (draft.WEBRTC_ENABLE ?? 'on') : 'off'} onChange={(v) => patch({ WEBRTC_ENABLE: v })} />
+          <SettingSwitch icon={Zap} i18nKey="WebRTC" value={draft.RTSP_VIDEO0 === 'on' ? (draft.WEBRTC_ENABLE ?? 'on') : 'off'} onChange={(v) => patch({ WEBRTC_ENABLE: v })} />
           {draft.WEBRTC_ENABLE === 'on' && draft.RTSP_VIDEO0 === 'on' && (
             <SubSettings>
               {draft.RTSP_AUDIO0 !== 'OPUS' && draft.RTSP_AUDIO0 !== 'off' && <SettingComment i18nKey="WebRTC.note" tone="danger" />}
-              <SettingInput i18nKey="WebRTC.URL" value={urls.webrtc} readOnly />
+              <SettingInput icon={Link2} i18nKey="WebRTC.URL" value={urls.webrtc} readOnly />
               <Link to="/" className="inline-block text-sm text-primary underline-offset-2 hover:underline">
                 {t('ui:live.watchOnLive')}
               </Link>

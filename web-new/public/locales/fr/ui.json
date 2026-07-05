@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "Effacer la carte SD ?",
     "eraseConfirmBody": "Supprime les dossiers d'enregistrement de la carte SD (continu et alarme). Cette opération est irréversible.",
     "eraseConfirmAction": "Effacer",
-    "eraseStarted": "Effacement démarré"
+    "eraseStarted": "Effacement démarré",
+    "mountRw": "Montée (lecture/écriture)",
+    "mountRo": "Montée en lecture seule (à vérifier)",
+    "notMounted": "Non montée",
+    "swap": "Swap",
+    "memory": "Mémoire",
+    "duTitle": "Détail des dossiers d'enregistrement",
+    "duLoad": "Mesurer",
+    "duLoading": "Mesure…"
   },
   "settings": {
     "defaultValue": "Par défaut : {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "Comparer",
     "before": "Avant",
-    "holdToCompare": "Maintenez pour comparer avec l'aspect précédent"
+    "after": "Après",
+    "holdToCompare": "Appuyez pour basculer entre l'aspect précédent et l'actuel (1–2 s)"
   }
 }

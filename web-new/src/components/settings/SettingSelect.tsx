@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function SettingSelect({
@@ -6,12 +7,14 @@ export function SettingSelect({
   options,
   onChange,
   disabled,
+  icon: Icon,
 }: {
   i18nKey: string;
   value: string;
   options: string[];
   onChange: (v: string) => void;
   disabled?: boolean;
+  icon?: LucideIcon;
 }) {
   const { t } = useTranslation('translation');
   const labels = (t(`${i18nKey}.text`, { returnObjects: true }) as string[] | string) ?? options;
@@ -19,7 +22,10 @@ export function SettingSelect({
   return (
     <label className="flex flex-col gap-1 rounded-lg border border-border px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <span className="min-w-0">
-        <span className="block text-sm">{t(`${i18nKey}.title`)}</span>
+        <span className="flex items-center gap-2 text-sm">
+          {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}
+          {t(`${i18nKey}.title`)}
+        </span>
         {desc && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{desc}</span>}
       </span>
       <select

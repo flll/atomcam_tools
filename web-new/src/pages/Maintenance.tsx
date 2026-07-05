@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CalendarClock, FileArchive, HeartPulse, Link2, Wifi } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { RebootScheduleEditor, Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -26,9 +27,9 @@ export default function MaintenancePage() {
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-xl font-semibold">{t('maintenance.tab')}</h1>
       <Section title={t('monitoring.title')}>
-        <SettingSwitch i18nKey="monitoring.network" value={draft.MONITORING_NETWORK ?? 'on'} onChange={(v) => patch({ MONITORING_NETWORK: v })} />
-        <SettingSwitch i18nKey="monitoring.ping" value={draft.HEALTHCHECK ?? 'off'} onChange={(v) => patch({ HEALTHCHECK: v })} />
-        {draft.HEALTHCHECK === 'on' && <SettingInput i18nKey="monitoring.URL" value={draft.HEALTHCHECK_PING_URL ?? ''} onChange={(v) => patch({ HEALTHCHECK_PING_URL: v })} />}
+        <SettingSwitch icon={Wifi} i18nKey="monitoring.network" value={draft.MONITORING_NETWORK ?? 'on'} onChange={(v) => patch({ MONITORING_NETWORK: v })} />
+        <SettingSwitch icon={HeartPulse} i18nKey="monitoring.ping" value={draft.HEALTHCHECK ?? 'off'} onChange={(v) => patch({ HEALTHCHECK: v })} />
+        {draft.HEALTHCHECK === 'on' && <SettingInput icon={Link2} i18nKey="monitoring.URL" value={draft.HEALTHCHECK_PING_URL ?? ''} onChange={(v) => patch({ HEALTHCHECK_PING_URL: v })} />}
       </Section>
       <Section title={t('update.title')}>
         <Button
@@ -41,11 +42,11 @@ export default function MaintenancePage() {
         >
           {t('update.toolsUpdate.title')}
         </Button>
-        <SettingSwitch i18nKey="update.customZip" value={draft.CUSTOM_ZIP ?? 'off'} onChange={(v) => patch({ CUSTOM_ZIP: v })} />
-        {draft.CUSTOM_ZIP === 'on' && <SettingInput i18nKey="update.customZip.URL" value={draft.CUSTOM_ZIP_URL ?? ''} onChange={(v) => patch({ CUSTOM_ZIP_URL: v })} />}
+        <SettingSwitch icon={FileArchive} i18nKey="update.customZip" value={draft.CUSTOM_ZIP ?? 'off'} onChange={(v) => patch({ CUSTOM_ZIP: v })} />
+        {draft.CUSTOM_ZIP === 'on' && <SettingInput icon={Link2} i18nKey="update.customZip.URL" value={draft.CUSTOM_ZIP_URL ?? ''} onChange={(v) => patch({ CUSTOM_ZIP_URL: v })} />}
       </Section>
       <Section title={t('reboot.title')}>
-        <SettingSwitch i18nKey="reboot.periodicRestart" value={draft.REBOOT ?? 'off'} onChange={(v) => patch({ REBOOT: v })} />
+        <SettingSwitch icon={CalendarClock} i18nKey="reboot.periodicRestart" value={draft.REBOOT ?? 'off'} onChange={(v) => patch({ REBOOT: v })} />
         {draft.REBOOT === 'on' && <RebootScheduleEditor value={reboot} onChange={setRebootEdit} />}
         <Button variant="destructive" onClick={() => runCmd(api.exec('reboot'))}>{t('reboot.reboot.button')}</Button>
       </Section>

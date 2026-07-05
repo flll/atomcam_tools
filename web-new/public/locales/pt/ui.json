@@ -85,7 +85,15 @@
     "eraseConfirmTitle": "Apagar o cartão SD?",
     "eraseConfirmBody": "Exclui as pastas de gravação do cartão SD (contínua e por alarme). Esta operação não pode ser desfeita.",
     "eraseConfirmAction": "Apagar",
-    "eraseStarted": "Apagamento iniciado"
+    "eraseStarted": "Apagamento iniciado",
+    "mountRw": "Montado (leitura/escrita)",
+    "mountRo": "Montado somente leitura (verificar)",
+    "notMounted": "Não montado",
+    "swap": "Swap",
+    "memory": "Memória",
+    "duTitle": "Detalhamento das pastas de gravação",
+    "duLoad": "Medir",
+    "duLoading": "Medindo…"
   },
   "settings": {
     "defaultValue": "Padrão: {{value}}",
@@ -94,6 +102,7 @@
   "camera": {
     "compare": "Comparar",
     "before": "Antes",
-    "holdToCompare": "Mantenha pressionado para comparar com o aspecto anterior"
+    "after": "Depois",
+    "holdToCompare": "Clique para alternar entre o aspecto anterior e o atual (leva 1–2 s)"
   }
 }
