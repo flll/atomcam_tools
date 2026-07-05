@@ -5,7 +5,7 @@ const ISP_NUMERIC_KEYS = [
   'again', 'dgain', 'aecomp', 'aeitmin', 'aeitmax', 'expline',
 ] as const;
 
-const ISP_DEFAULTS: IspSettings = {
+export const ISP_DEFAULTS: IspSettings = {
   cont: 128, bri: 128, sat: 128, sharp: 128, sinter: 128, temper: 128,
   dpc: 128, drc: 128, hilight: 2, again: 205, dgain: 64, aecomp: 128,
   expmode: 'auto', aeitmin: 1, aeitmax: 1683, expline: 1200,

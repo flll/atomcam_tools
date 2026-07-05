@@ -5,6 +5,7 @@ import { useIspSettings } from '@/hooks/useIspSettings';
 import { useJpegStream } from '@/hooks/useJpegStream';
 import { usePropertyCmd } from '@/hooks/usePropertyCmd';
 import type { IspSettings } from '@/api';
+import { ISP_DEFAULTS } from '@/api';
 import {
   Section,
   SettingSelect,
@@ -95,6 +96,7 @@ export default function CameraPage() {
               value={isp[key]}
               min={0}
               max={255}
+              defaultValue={ISP_DEFAULTS[key]}
               onChange={(v) => patchIsp(key, v)}
             />
           ))}
