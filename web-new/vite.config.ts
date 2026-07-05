@@ -54,6 +54,8 @@ export default defineConfig(({ mode }) => {
           // konva 等の重量級は Phase 4 でページ単位の dynamic import にする。
           manualChunks(id) {
             if (!id.includes('node_modules')) return;
+            // motion は内部に framer-motion を含むため両方をマッチさせる
+            if (id.includes('node_modules/motion') || id.includes('framer-motion')) return 'motion';
             if (id.includes('react-router') || id.includes('/@remix-run/')) return 'router';
             if (id.includes('i18next') || id.includes('react-i18next')) return 'i18n';
             if (

@@ -1,6 +1,9 @@
-// バンドル予算の enforce。
-// - 初回ロード（index.html が読む entry + 初期 chunk）の gzip 合計 <= 250KB（目標）
-// - dist 全 .js/.css の gzip 合計 <= 500KB（上限）
+// バンドル予算の enforce(リッチ化後の回帰ガード)。
+// デザイン一新でモーション lib と Web フォント(Noto Sans JP は unicode-range
+// 分割 woff2)を同梱する方針になったため上限を緩和した。目的は「小ささ」ではなく
+// 「気づかない肥大化を検知する」こと。
+// - 初回ロード（entry + 同期 chunk）の gzip 合計 <= 400KB（目標・警告のみ）
+// - dist 全 .js/.css の gzip 合計 <= 1MB（上限・fail。フォント woff2 は対象外）
 // build 後に dist/.vite/manifest.json と実ファイルの .gz を見て判定する。
 import { gzipSync } from 'node:zlib';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
@@ -10,8 +13,8 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.resolve(__dirname, '../dist');
 
-const INITIAL_TARGET = 250 * 1024;
-const TOTAL_LIMIT = 500 * 1024;
+const INITIAL_TARGET = 400 * 1024;
+const TOTAL_LIMIT = 1024 * 1024;
 
 if (!existsSync(dist)) {
   console.error('dist/ がありません。先に `npm run build` を実行してください。');
