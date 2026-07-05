@@ -13,12 +13,13 @@ export function useControlsVisibility(idleMs = 3000, pinned = false) {
     timer.current = setTimeout(() => setIdle(true), idleMs);
   }, [idleMs]);
 
+  // 初期表示はそのまま(idle=false)、idleMs 後に自動で隠す
   useEffect(() => {
-    poke();
+    timer.current = setTimeout(() => setIdle(true), idleMs);
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [poke]);
+  }, [idleMs]);
 
   return {
     visible: pinned || !idle,
