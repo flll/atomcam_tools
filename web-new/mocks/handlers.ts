@@ -96,4 +96,21 @@ export const handlers = [
 
   // go2rtc HomeKit（最小）
   http.get(/:1984\/api\/homekit\/pairing$/, () => HttpResponse.json({ paired: false })),
+
+  // /sdcard: 実機は lighttpd の dir-listing が返る。モックで模擬しないと
+  // SPA フォールバックが index.html を返し、iframe 内にアプリ自身が
+  // 再帰表示される(合わせ鏡)ため必須。
+  http.get(/\/sdcard(\/.*)?$/, ({ request }) => {
+    const path = new URL(request.url).pathname.replace(/^.*\/sdcard/, '') || '/';
+    const rows =
+      path === '/'
+        ? ['record/', 'alarm_record/', 'time_lapse/']
+        : ['20260701/', '20260702/', '20260703/'];
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Index of /sdcard${path}</title>
+<style>body{font:14px/1.8 system-ui;margin:16px;color:#333}a{color:#0b57d0;text-decoration:none}a:hover{text-decoration:underline}</style>
+</head><body><h2>Index of /sdcard${path} (mock)</h2><hr>
+${rows.map((r) => `<a href="${r}">${r}</a><br>`).join('')}
+<hr></body></html>`;
+    return new HttpResponse(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+  }),
 ];
