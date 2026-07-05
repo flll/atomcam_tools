@@ -8,6 +8,7 @@ export interface MockState {
   verSwitch: number;
   hackIni: Record<string, string>;
   isp: Record<string, string>;
+  property: Record<string, string>;
 }
 
 const DEFAULT_HACK_INI: Record<string, string> = {
@@ -36,6 +37,7 @@ export const mock: MockState = {
   verSwitch: 0,
   hackIni: { ...DEFAULT_HACK_INI },
   isp: { cont: '128', bri: '128', expmode: 'auto' },
+  property: { nightVision: 'auto', motionDet: 'on', recordType: 'cont', watermark: 'off' },
 };
 
 // AtomSwing 風に move コマンドへ反応する（pan/tilt をクランプ）。
@@ -46,9 +48,20 @@ export function applyExec(cmd: string): string {
     if (args[2] != null) mock.tilt = clamp(Number(args[2]), 0, 180);
     return 'ok';
   }
-  if (args[0] === 'night') return 'ok';
+  // night x は property nightVision に反映する(実機挙動は deploy-test で照合)
+  if (args[0] === 'night') {
+    if (args[1]) mock.property.nightVision = args[1];
+    return 'ok';
+  }
   if (args[0] === 'property' && args.length === 1) {
-    return 'nightVision=auto\nmotionDet=on\nrecordType=cont\nwatermark=off\nok';
+    return `${Object.entries(mock.property)
+      .map(([k, v]) => `${k}=${v}`)
+      .join('\n')}\nok`;
+  }
+  // property <key> <value...> は書き込み(実機同様に読み返しへ反映)
+  if (args[0] === 'property' && args.length >= 3) {
+    mock.property[args[1]] = args.slice(2).join(' ');
+    return 'ok';
   }
   if (args[0] === 'property') return 'ok';
   return 'ok';

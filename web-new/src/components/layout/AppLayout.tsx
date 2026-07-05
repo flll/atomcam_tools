@@ -113,7 +113,13 @@ export function AppLayout() {
           </div>
         </header>
 
-        <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">
+        <main
+          className={cn(
+            'flex-1',
+            // Live(ルート)は没入型: ステージをエッジ to エッジにする
+            location.pathname === '/' ? 'p-0 pb-20 md:pb-0' : 'p-4 pb-24 md:p-8 md:pb-8',
+          )}
+        >
           <Suspense fallback={<div className="p-8 text-muted-foreground">{t('common.loading')}</div>}>
             <Outlet />
           </Suspense>
