@@ -47,8 +47,10 @@ export default function CameraPage() {
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-xl font-semibold">{t('CameraSettings.tab')}</h1>
 
+      {/* Live と同じ 16:9 レターボックス。16:9 ソースがコンテナを完全に埋めるので
+          MotionAreaOverlay のコンテナpx座標とフレーム座標が 1:1 に一致する */}
       <div className="relative overflow-hidden rounded-xl border border-border bg-black">
-        {src && <img src={src} alt="" className="aspect-[4/3] w-full object-cover" />}
+        {src && <img src={src} alt="" className="aspect-video w-full object-contain" />}
         <Suspense fallback={null}>
           {property?.motionArea === 'rect' && src && (
             <MotionAreaOverlay property={property} onRectChange={(cmd) => runCmd(setField('motionArea', cmd))} />
