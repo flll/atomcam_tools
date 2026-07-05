@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "ATOMCam"
+  },
+  "nav": {
+    "live": "直播",
+    "settings": "设置",
+    "camera": "摄像头设置",
+    "recording": "录像",
+    "storage": "存储",
+    "streaming": "推流",
+    "events": "事件通知",
+    "cruise": "巡航",
+    "system": "系统",
+    "files": "SD卡",
+    "maintenance": "维护",
+    "tools": "工具",
+    "more": "更多"
+  },
+  "common": {
+    "theme": "主题",
+    "language": "语言",
+    "dark": "深色",
+    "light": "浅色",
+    "online": "已连接",
+    "offline": "未连接",
+    "loading": "加载中…",
+    "save": "保存",
+    "cancel": "取消",
+    "unsavedChanges": "有未保存的更改",
+    "discard": "放弃",
+    "saved": "已保存",
+    "saveFailed": "保存失败",
+    "saving": "保存中…",
+    "execFailed": "操作失败",
+    "close": "关闭"
+  },
+  "live": {
+    "title": "实时画面",
+    "ptz": "云台控制",
+    "pan": "水平",
+    "tilt": "垂直",
+    "speed": "速度",
+    "center": "回到中央",
+    "nightVision": "夜视",
+    "snapshot": "快照",
+    "fps": "{{fps}} fps",
+    "noSignal": "无信号",
+    "connecting": "连接中…",
+    "freeSpace": "剩余容量",
+    "model": "型号",
+    "firmware": "固件",
+    "webrtcHint": "在推流设置中开启 RTSP 主码流 + WebRTC 可获得低延迟画面：",
+    "audioOn": "播放声音",
+    "audioOff": "静音",
+    "watchOnLive": "在直播页面观看",
+    "live": "LIVE",
+    "fullscreen": "全屏",
+    "exitFullscreen": "退出全屏",
+    "theater": "剧场模式",
+    "exitTheater": "退出剧场模式",
+    "pip": "画中画",
+    "reconnecting": "重新连接中…",
+    "openPtz": "云台操作",
+    "flip": "上下翻转"
+  },
+  "placeholder": {
+    "comingSoon": "找不到页面。",
+    "backToLive": "返回直播"
+  },
+  "schedule": {
+    "add": "添加",
+    "delete": "删除",
+    "errNoDays": "请至少选择一个星期",
+    "errTimeRange": "结束时间必须晚于开始时间",
+    "errInterval": "间隔必须至少为 1",
+    "errCount": "次数必须至少为 1"
+  },
+  "storage": {
+    "usageTitle": "SD卡使用情况",
+    "usedPct": "已使用 {{pct}}%",
+    "free": "剩余 {{free}}",
+    "sdSectionDesc": "配置 SD 卡的局域网共享和录像写入方式。",
+    "nasSectionDesc": "用作录像/延时摄影保存目标的 NAS(SMB/CIFS 共享)的连接信息。在各录像设置中启用「保存到 NAS」时使用。",
+    "eraseConfirmTitle": "要清除 SD 卡吗？",
+    "eraseConfirmBody": "将删除 SD 卡上的录像文件夹(连续录像·警报录像)。此操作无法撤销。",
+    "eraseConfirmAction": "清除",
+    "eraseStarted": "已开始清除"
+  },
+  "settings": {
+    "defaultValue": "默认值: {{value}}",
+    "resetToDefault": "恢复默认值"
+  },
+  "camera": {
+    "compare": "对比",
+    "before": "更改前",
+    "holdToCompare": "按住可与更改前的画面对比"
+  }
+}

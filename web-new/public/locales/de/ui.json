@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "ATOMCam"
+  },
+  "nav": {
+    "live": "Live",
+    "settings": "Einstellungen",
+    "camera": "Kamera",
+    "recording": "Aufnahme",
+    "storage": "Speicher",
+    "streaming": "Streaming",
+    "events": "Ereignisse",
+    "cruise": "Patrouille",
+    "system": "System",
+    "files": "SD-Karte",
+    "maintenance": "Wartung",
+    "tools": "Werkzeuge",
+    "more": "Mehr"
+  },
+  "common": {
+    "theme": "Design",
+    "language": "Sprache",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "online": "Verbunden",
+    "offline": "Getrennt",
+    "loading": "Wird geladen…",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "unsavedChanges": "Es gibt ungespeicherte Änderungen",
+    "discard": "Verwerfen",
+    "saved": "Gespeichert",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "saving": "Wird gespeichert…",
+    "execFailed": "Vorgang fehlgeschlagen",
+    "close": "Schließen"
+  },
+  "live": {
+    "title": "Live-Ansicht",
+    "ptz": "Schwenken / Neigen",
+    "pan": "Schwenken",
+    "tilt": "Neigen",
+    "speed": "Geschwindigkeit",
+    "center": "Zentrieren",
+    "nightVision": "Nachtsicht",
+    "snapshot": "Schnappschuss",
+    "fps": "{{fps}} fps",
+    "noSignal": "Kein Signal",
+    "connecting": "Verbindung wird hergestellt…",
+    "freeSpace": "Freier Speicher",
+    "model": "Modell",
+    "firmware": "Firmware",
+    "webrtcHint": "Aktivieren Sie RTSP-Hauptstream + WebRTC in den Streaming-Einstellungen für geringe Latenz:",
+    "audioOn": "Ton einschalten",
+    "audioOff": "Stummschalten",
+    "watchOnLive": "Auf der Live-Seite ansehen",
+    "live": "LIVE",
+    "fullscreen": "Vollbild",
+    "exitFullscreen": "Vollbild beenden",
+    "theater": "Kinomodus",
+    "exitTheater": "Kinomodus beenden",
+    "pip": "Bild im Bild",
+    "reconnecting": "Erneute Verbindung…",
+    "openPtz": "Schwenk-/Neige-Steuerung",
+    "flip": "Umdrehen"
+  },
+  "placeholder": {
+    "comingSoon": "Seite nicht gefunden.",
+    "backToLive": "Zurück zu Live"
+  },
+  "schedule": {
+    "add": "Hinzufügen",
+    "delete": "Löschen",
+    "errNoDays": "Wählen Sie mindestens einen Tag",
+    "errTimeRange": "Die Endzeit muss nach der Startzeit liegen",
+    "errInterval": "Das Intervall muss mindestens 1 sein",
+    "errCount": "Die Anzahl muss mindestens 1 sein"
+  },
+  "storage": {
+    "usageTitle": "SD-Karten-Belegung",
+    "usedPct": "{{pct}}% belegt",
+    "free": "{{free}} frei",
+    "sdSectionDesc": "Konfigurieren Sie die LAN-Freigabe und den Schreibmodus der SD-Karte.",
+    "nasSectionDesc": "Verbindungsdaten des NAS (SMB/CIFS-Freigabe) als Ziel für Aufnahmen und Zeitraffer. Wird verwendet, wenn „Auf NAS speichern“ in den jeweiligen Aufnahmeeinstellungen aktiviert ist.",
+    "eraseConfirmTitle": "SD-Karte löschen?",
+    "eraseConfirmBody": "Löscht die Aufnahmeordner der SD-Karte (Dauer- und Alarmaufnahmen). Dies kann nicht rückgängig gemacht werden.",
+    "eraseConfirmAction": "Löschen",
+    "eraseStarted": "Löschen gestartet"
+  },
+  "settings": {
+    "defaultValue": "Standard: {{value}}",
+    "resetToDefault": "Auf Standard zurücksetzen"
+  },
+  "camera": {
+    "compare": "Vergleichen",
+    "before": "Vorher",
+    "holdToCompare": "Gedrückt halten, um mit dem vorherigen Bild zu vergleichen"
+  }
+}

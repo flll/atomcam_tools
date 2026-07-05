@@ -6,13 +6,13 @@ CameraSettings:
 FeatureSettings:
   title: Feature settings
   nightVision:
-    title: Nighght Vision
+    title: Night vision
     tooltip: Black and white image for night vision when on, color image when off
   nightCutThr:
     title: Conditions
     text:
-      -  Duck
-      -  Dark
+      - Dusk
+      - Very dark
     tooltip: Level of night vision switching
   IrLED:
     title: IR light
@@ -21,7 +21,7 @@ AlarmSettings:
   motionDet:
     title: Motion alarm
   Level:
-    title: sensitivity
+    title: Sensitivity
     text:
       - High
       - Mid
@@ -53,7 +53,7 @@ OtherSettings:
   audioRec:
     title: Record sound
   timestamp:
-    title: show Timestamp
+    title: Show timestamp
   watermark:
     title: Show Logo
 AdvancedSettings:
@@ -155,7 +155,7 @@ record:
     tooltip: SD-Card/NAS Recording Time Window
     text:
       - Schedule
-      - Constant Recoring
+      - Constant Recording
   skipJpeg:
     title: Skip JPEG Recording
     tooltip: Stop recording JPEG files to record directory
@@ -217,7 +217,7 @@ RTSP:
     tooltip: Start Main RTSP(1080p)
     audio:
       title: Audio
-      tooltip: Activaet Audio on Main RTSP
+      tooltip: Activate audio on Main RTSP
       text:
         - off
         - PCM
@@ -234,7 +234,7 @@ RTSP:
     tooltip: Start Main HEVC RTSP(1080p)
     audio:
       title: Audio
-      tooltip: Activaet Audio on Main HEVC RTSP
+      tooltip: Activate audio on Main HEVC RTSP
       text:
         - off
         - PCM
@@ -248,7 +248,7 @@ RTSP:
     tooltip: Start Sub RTSP (360p/320p)
     audio:
       title: Audio
-      tooltip: Activate audio on Sub RTSP Sub
+      tooltip: Activate audio on Sub RTSP
       text:
         - off
         - PCM
@@ -472,7 +472,7 @@ monitoring:
     tooltip: Enable Confirmation of Status via URL
   URL:
     title: Notification URL
-    tooltip: Send an http get requiest at one minute intervals to this url
+    tooltip: Send an http get request at one minute intervals to this url
 
 update:
   title: Update
@@ -512,7 +512,7 @@ schedule:
       title: interval
       unit: sec
       count: times
-    tommorow: tommorow
+    tommorow: tomorrow
     daysLater: 'after {days} days'
   weekDays:
     - mon

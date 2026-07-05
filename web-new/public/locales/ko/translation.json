@@ -1,0 +1,662 @@
+{
+  "camera": {
+    "tab": "카메라 화면"
+  },
+  "CameraSettings": {
+    "tab": "카메라 설정"
+  },
+  "FeatureSettings": {
+    "title": "기능 설정",
+    "nightVision": {
+      "title": "나이트 비전",
+      "tooltip": "on이면 야간 흑백 영상, off면 컬러 영상, auto는 자동 전환"
+    },
+    "nightCutThr": {
+      "title": "전환 시점",
+      "text": [
+        "어두움",
+        "매우 어두움"
+      ],
+      "tooltip": "나이트 비전 전환 밝기 수준"
+    },
+    "IrLED": {
+      "title": "적외선 라이트"
+    }
+  },
+  "AlarmSettings": {
+    "title": "감지 설정",
+    "motionDet": {
+      "title": "모션 감지"
+    },
+    "Level": {
+      "title": "감도",
+      "text": [
+        "높음",
+        "중간",
+        "낮음"
+      ]
+    },
+    "motionArea": {
+      "title": "감지 영역",
+      "text": [
+        "전체 영역",
+        "선택 영역"
+      ]
+    },
+    "soundDet": {
+      "title": "소리 감지"
+    },
+    "cautionDet": {
+      "title": "화재/CO 경보음 감지"
+    },
+    "drawBoxSwitch": {
+      "title": "모션 태그",
+      "tooltip": "모션 감지 시 대상에 녹색 테두리를 표시합니다"
+    },
+    "recordType": {
+      "title": "녹화 모드",
+      "text": [
+        "연속",
+        "감지 시",
+        "끄기"
+      ]
+    }
+  },
+  "OtherSettings": {
+    "title": "기타",
+    "indicator": {
+      "title": "상태 표시등"
+    },
+    "rotate": {
+      "title": "이미지 180° 회전"
+    },
+    "audioRec": {
+      "title": "녹음"
+    },
+    "timestamp": {
+      "title": "타임스탬프"
+    },
+    "watermark": {
+      "title": "로고"
+    }
+  },
+  "AdvancedSettings": {
+    "title": "고급 설정",
+    "contrast": {
+      "title": "대비",
+      "tooltip": "명암 차이를 조정합니다. 높이면 선명하게, 낮추면 부드러운 영상이 됩니다."
+    },
+    "brightness": {
+      "title": "밝기",
+      "tooltip": "영상 전체의 밝기를 조정합니다."
+    },
+    "saturation": {
+      "title": "채도",
+      "tooltip": "색의 선명함을 조정합니다. 낮출수록 흑백에 가까워집니다."
+    },
+    "sharpness": {
+      "title": "선명도",
+      "tooltip": "윤곽 강조를 조정합니다. 너무 높이면 노이즈가 두드러질 수 있습니다."
+    },
+    "sinter": {
+      "title": "2D-NR intensity",
+      "tooltip": "Set 2D noise reduction intensity."
+    },
+    "temper": {
+      "title": "3D-NR intensity",
+      "tooltip": "Set 3D noise reduction intensity."
+    },
+    "dpc": {
+      "title": "DPC Strength",
+      "tooltip": "Set DPC Strength."
+    },
+    "drc": {
+      "title": "DRC Strength",
+      "tooltip": "Set DRC Strength."
+    },
+    "hilight": {
+      "title": "highlight intensity",
+      "tooltip": "Set highlight intensity controls."
+    },
+    "again": {
+      "title": "Max Analog Gain",
+      "tooltip": "Sets the Max value of sensor analog gain."
+    },
+    "dgain": {
+      "title": "Max Digital Gain",
+      "tooltip": "Set the Max value of sensor Digital gain."
+    },
+    "expmode": {
+      "title": "Exposure mode",
+      "tooltip": "Setting the exposure mode.",
+      "text": [
+        "auto",
+        "manual"
+      ]
+    },
+    "aecomp": {
+      "title": "AE compensation",
+      "tooltip": "Setting AE compensation."
+    },
+    "aeitmin": {
+      "title": "AE ITMin",
+      "tooltip": "The min value of integration time, the unit is line."
+    },
+    "aeitmax": {
+      "title": "AE ITMax",
+      "tooltip": "The max value of integration time, the unit is line."
+    },
+    "expline": {
+      "title": "Exposure line",
+      "tooltip": "Setting Exposure integration line."
+    }
+  },
+  "SDCard": {
+    "tab": "SD 카드",
+    "remainingCapacity": "남은 용량"
+  },
+  "record": {
+    "tab": "녹화 설정",
+    "periodicRec": {
+      "title": "연속 녹화"
+    },
+    "alarmRec": {
+      "title": "모션 감지 녹화"
+    },
+    "SDCard": {
+      "title": "SD 카드 녹화",
+      "tooltip": "SD 카드에 녹화합니다",
+      "savePath": {
+        "title": "저장 경로",
+        "tooltip": "녹화 경로를 strftime 형식으로 지정합니다. 마지막에 확장자가 추가됩니다"
+      },
+      "automaticDeletion": {
+        "title": "파일 자동 삭제",
+        "tooltip": "SD 카드에 녹화된 파일을 자동으로 삭제합니다"
+      },
+      "daysToKeep": {
+        "title": "보관 일수",
+        "tooltip": "지정한 일수가 지나면 삭제합니다"
+      }
+    },
+    "NAS": {
+      "title": "NAS 녹화",
+      "tooltip": "NAS(CIFS 서버)에 녹화합니다",
+      "savePath": {
+        "title": "저장 경로",
+        "tooltip": "네트워크 경로 이후의 녹화 경로를 strftime 형식으로 지정합니다. 마지막에 확장자가 추가됩니다"
+      },
+      "automaticDeletion": {
+        "title": "파일 자동 삭제",
+        "tooltip": "NAS(CIFS 서버)에 녹화된 파일을 자동으로 삭제합니다"
+      },
+      "daysToKeep": {
+        "title": "보관 일수",
+        "tooltip": "지정한 일수가 지나면 삭제합니다"
+      }
+    },
+    "recordTypeWarn": {
+      "comment": "카메라 설정의 녹화 모드를 연속 또는 감지 시로 설정하세요. 끄기로 되어 있으면 녹화되지 않습니다.\n"
+    },
+    "alarmRecWarn": {
+      "comment": "카메라 설정의 모션 감지, 소리 감지, 화재/CO 경보음 감지 중 하나 이상을 켜세요. 모두 꺼져 있으면 녹화되지 않습니다.\n"
+    },
+    "recordingSchedule": {
+      "title": "녹화 스케줄",
+      "tooltip": "SD 카드/NAS에 녹화되는 시간대를 설정합니다",
+      "text": [
+        "상시 녹화",
+        "스케줄"
+      ]
+    },
+    "skipJpeg": {
+      "title": "JPEG 기록 중지",
+      "tooltip": "record 디렉터리에 JPEG 파일 기록을 중지합니다"
+    }
+  },
+  "timelapse": {
+    "tab": "타임랩스 설정",
+    "title": "타임랩스",
+    "setting": {
+      "title": "샘플링 설정"
+    },
+    "note": {
+      "comment": "녹화 후 변환 처리를 위해 타임랩스 녹화 사이에는 5분 이상 간격을 두세요.\n시간이 겹치면 기록되지 않습니다. 겹치지 않도록 설정하세요.\n"
+    },
+    "start": {
+      "title": "동작 상태",
+      "tooltip": "타임랩스가 진행 중입니다."
+    },
+    "stop": {
+      "title": "중지",
+      "tooltip": "타임랩스를 중지합니다.",
+      "button": "중지",
+      "comment": "중지 처리: 파일 기록 중"
+    },
+    "fps": {
+      "title": "출력 fps",
+      "tooltip": "출력 파일의 프레임 레이트"
+    }
+  },
+  "media": {
+    "tab": "미디어 설정"
+  },
+  "SDCardSettings": {
+    "title": "SD 카드 설정",
+    "smbAccess": {
+      "title": "smb 접근",
+      "tooltip": "SD 카드를 CIFS(smb) 서버로 LAN에 공개합니다"
+    },
+    "directWrite": {
+      "title": "녹화 직접 기록",
+      "tooltip": "보통은 RAM-DISK에 녹화한 후 SD 카드에 복사하지만, RAM 절약을 위해 SD 카드에 직접 기록합니다"
+    },
+    "eraseSDCard": {
+      "title": "SD 카드 지우기",
+      "tooltip": "SD 카드의 녹화 폴더를 지웁니다",
+      "button": "지우기"
+    }
+  },
+  "NASSettings": {
+    "title": "NAS 설정",
+    "networkPath": {
+      "title": "네트워크 경로",
+      "tooltip": "NAS 경로를 설정합니다. (//server/folder/ 형식)",
+      "placeholder": "//192.168.1.10/atomcam/"
+    },
+    "account": {
+      "title": "계정",
+      "tooltip": "NAS 사용자 이름을 설정합니다",
+      "placeholder": "user1"
+    },
+    "password": {
+      "title": "비밀번호",
+      "tooltip": "NAS 비밀번호를 설정합니다"
+    }
+  },
+  "RTSP": {
+    "tab": "스트리밍 설정",
+    "title": "RTSP",
+    "main": {
+      "title": "메인 스트림 (1080p·고화질)",
+      "tooltip": "메인 스트림 AVC/H.264 (1080p)를 시작합니다",
+      "audio": {
+        "title": "오디오",
+        "tooltip": "메인 스트림의 오디오 코덱을 설정합니다",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "note": {
+        "comment": "RTMP를 사용하려면 AAC 또는 off를 선택하세요.\n"
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "이 URL을 VLC 등에 복사해 붙여넣으세요"
+      }
+    },
+    "mainHEVC": {
+      "title": "메인 스트림 HEVC (H.265)",
+      "tooltip": "메인 스트림 HEVC/H.265 (1080p)를 시작합니다",
+      "audio": {
+        "title": "오디오",
+        "tooltip": "메인 스트림 (HEVC)의 오디오 코덱을 설정합니다",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "이 URL을 VLC 등에 복사해 붙여넣으세요"
+      }
+    },
+    "sub": {
+      "title": "서브 스트림 (360p·저부하)",
+      "tooltip": "서브 스트림 (360p 또는 320p)을 시작합니다",
+      "audio": {
+        "title": "오디오",
+        "tooltip": "서브 스트림의 오디오 코덱을 설정합니다",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "이 URL을 VLC 등에 복사해 붙여넣으세요"
+      }
+    },
+    "http": {
+      "title": "RTSP over HTTP",
+      "tooltip": "RTSP를 HTTP 경유로 스트리밍합니다"
+    },
+    "auth": {
+      "title": "비밀번호 인증",
+      "tooltip": "RTSP에 비밀번호 인증을 요구합니다"
+    },
+    "account": {
+      "title": "계정",
+      "tooltip": "RTSP 사용자 이름을 설정합니다"
+    },
+    "password": {
+      "title": "비밀번호",
+      "tooltip": "RTSP 비밀번호를 설정합니다"
+    }
+  },
+  "HomeKit": {
+    "title": "HomeKit",
+    "tooltip": "스트리밍 설정의 「메인 스트림」을 켜야 합니다",
+    "unpair": {
+      "title": "강제 페어링 해제",
+      "tooltip": "HomeKit 페어링을 강제로 해제합니다"
+    },
+    "note": {
+      "comment": "오디오를 출력하려면 「메인 스트림」의 오디오를 OPUS로 설정하세요.\n"
+    }
+  },
+  "RTMP": {
+    "title": "RTMP",
+    "tooltip": "「메인 스트림」을 켜고 오디오를 AAC 또는 off로 설정해야 합니다",
+    "URL": {
+      "title": "URL",
+      "tooltip": "전송 대상 URL을 설정하세요"
+    },
+    "Restart": "재시작",
+    "IntervalRestart": {
+      "title": "주기적 재시작",
+      "unit": "분",
+      "tooltip": "RTMP를 정기적으로 재시작합니다"
+    }
+  },
+  "WebRTC": {
+    "title": "WebRTC",
+    "tooltip": "스트리밍 설정의 「메인 스트림」을 켜야 합니다",
+    "URL": {
+      "title": "URL",
+      "tooltip": "이 URL을 브라우저에 복사해 붙여넣으세요"
+    },
+    "note": {
+      "comment": "오디오를 출력하려면 「메인 스트림」의 오디오를 OPUS로 설정하세요.\n"
+    }
+  },
+  "event": {
+    "tab": "이벤트 알림",
+    "webhook": {
+      "title": "WebHook",
+      "URL": {
+        "title": "알림 URL",
+        "tooltip": "WebHook 이벤트 발생 시 POST할 URL"
+      },
+      "insecure": {
+        "title": "비보안 연결 허용",
+        "tooltip": "TLS 사용 시 인증되지 않은 인증서의 서버 연결을 허용합니다"
+      },
+      "alarm": {
+        "title": "모션 감지",
+        "tooltip": "알람 발생을 알립니다",
+        "comment": "type: alarmEvent"
+      },
+      "information": {
+        "title": "감지 인식 정보",
+        "tooltip": "알람 발생 시 인식 정보를 알립니다",
+        "comment": "type: recognitionNotify"
+      },
+      "recordingEnd": {
+        "title": "감지 녹화 종료",
+        "tooltip": "알람 발생 시 녹화 저장을 알립니다",
+        "comment": "type: uploadVideoFinish"
+      },
+      "recordingTransfer": {
+        "title": "감지 녹화 전송",
+        "tooltip": "알람 발생 시 녹화 파일을 전송합니다",
+        "comment": "mime: video/mp4"
+      },
+      "screenshotEnd": {
+        "title": "감지 스틸 저장",
+        "tooltip": "알람 발생 시 스틸 이미지 저장을 알립니다",
+        "comment": "type: uploadPictureFinish"
+      },
+      "screenshotTransfer": {
+        "title": "감지 스틸 전송",
+        "tooltip": "알람 발생 시 스틸 이미지 파일을 전송합니다",
+        "comment": "mime: image/jpeg"
+      },
+      "recordingSave": {
+        "title": "상시 녹화 저장",
+        "tooltip": "녹화 저장을 알립니다",
+        "comment": "type: recordEvent"
+      },
+      "startTimelapse": {
+        "title": "타임랩스 시작",
+        "tooltip": "타임랩스 시작을 알립니다",
+        "comment": "type: timelapseStart"
+      },
+      "recordTimelapse": {
+        "title": "타임랩스 기록",
+        "tooltip": "타임랩스 이벤트를 알립니다",
+        "comment": "type: timelapseEvent"
+      },
+      "endTimeLapse": {
+        "title": "타임랩스 완료",
+        "tooltip": "타임랩스 녹화 완료를 알립니다",
+        "comment": "type: timelapseFinish"
+      }
+    }
+  },
+  "cruise": {
+    "tab": "크루즈 설정",
+    "title": "크루즈",
+    "initialPosition": {
+      "title": "Swing 좌표 초기화",
+      "tooltip": "양쪽 끝점 접촉으로 Swing 좌표를 보정합니다",
+      "button": "초기화"
+    },
+    "cameraMotion": {
+      "title": "크루즈 동작",
+      "tooltip": "크루즈 경로를 설정하고 순회 동작을 합니다"
+    },
+    "direction": {
+      "tooltip": "카메라 방향과 이동 속도를 설정합니다. jpeg 창에서도 조정할 수 있습니다",
+      "pan": "pan",
+      "tilt": "tilt",
+      "speed": "속도"
+    },
+    "waitAfterMotion": {
+      "title": "동작 후 대기 시간",
+      "unit": "초",
+      "tooltip": "카메라 동작 후 대기 시간을 설정합니다"
+    },
+    "detect": {
+      "title": "감지",
+      "tooltip": "대기 중 모션을 감지하면 대기 시간을 연장합니다"
+    },
+    "follow": {
+      "title": "추적",
+      "tooltip": "대기 중 모션을 감지하면 추적하고 대기 시간을 연장합니다"
+    },
+    "waitAfterDetect": {
+      "title": "감지 후 대기 시간",
+      "unit": "초",
+      "tooltip": "모션 감지 종료 후 대기 시간을 설정합니다"
+    },
+    "followingSpeed": {
+      "title": "추적 속도",
+      "tooltip": "추적 시 속도입니다. 9가 고속, 1이 저속입니다."
+    }
+  },
+  "systemSettings": {
+    "tab": "시스템 설정"
+  },
+  "deviceSettings": {
+    "title": "장치 설정",
+    "deviceName": {
+      "title": "장치 이름",
+      "tooltip": "NAS 저장 폴더 이름과 원격 접근용 이름을 설정합니다"
+    },
+    "loginAuthentication": {
+      "title": "로그인 인증",
+      "tooltip": "이 페이지 접근에 로그인 인증을 요구합니다"
+    },
+    "account": {
+      "title": "계정",
+      "tooltip": "로그인 사용자 계정을 설정합니다"
+    },
+    "password": {
+      "title": "비밀번호",
+      "tooltip": "로그인 비밀번호를 설정합니다"
+    }
+  },
+  "tailscaleSettings": {
+    "title": "Tailscale 설정",
+    "enable": {
+      "title": "Tailscale 활성화",
+      "tooltip": "Tailscale을 시작하고 테일넷에 연결합니다"
+    },
+    "authKey": {
+      "title": "Auth Key",
+      "tooltip": "Tailscale 인증 키 (tskey-...)"
+    },
+    "hostname": {
+      "title": "호스트 이름",
+      "tooltip": "비워 두면 장치 이름을 사용합니다"
+    },
+    "tags": {
+      "title": "태그",
+      "tooltip": "advertise-tags에 전달할 태그. 비워 두면 tag:cctv를 사용합니다"
+    },
+    "extraArgs": {
+      "title": "추가 인수",
+      "tooltip": "tailscale up에 추가할 인수를 지정합니다"
+    },
+    "exitNodeOnly": {
+      "title": "Tailscale 전용 접근",
+      "tooltip": "LAN 측 공개 포트(80/8080/8554)를 닫고 Tailscale 경유만 허용합니다"
+    }
+  },
+  "motionDetect": {
+    "title": "모션 감지",
+    "sensorPeriod": {
+      "title": "감지 주기 단축",
+      "tooltip": "알람의 무감지 시간을 5분에서 30초로 단축합니다"
+    },
+    "uploadStop": {
+      "title": "감지 영상 업로드 중지",
+      "tooltip": "AtomTech 서버로의 감지 영상 전송을 중지합니다. 앱에서 확인할 수 없게 됩니다. 서버 전송이 우려되면 설정하세요."
+    }
+  },
+  "videoSpec": {
+    "title": "비디오 설정",
+    "frameRate": {
+      "title": "프레임 레이트",
+      "tooltip": "초당 프레임 수(1-28FPS)를 설정합니다"
+    },
+    "bitrateMain": {
+      "title": "메인 스트림 비트레이트",
+      "tooltip": "메인 스트림 (HD)의 비트레이트(300-2000bps)를 설정합니다"
+    },
+    "bitrateMainHEVC": {
+      "title": "메인 스트림 (HEVC) 비트레이트",
+      "tooltip": "메인 스트림 HEVC/H.265의 비트레이트(300-2000bps)를 설정합니다"
+    },
+    "bitrateSub": {
+      "title": "서브 스트림 비트레이트",
+      "tooltip": "서브 스트림 (360p/320p)의 비트레이트(100-500bps)를 설정합니다"
+    }
+  },
+  "watermark": {
+    "title": "로고",
+    "image": {
+      "title": "PNG 이미지",
+      "comment": "500px x 200px 이내의 PNG 파일을 만들어 드롭하세요."
+    }
+  },
+  "maintenance": {
+    "tab": "유지 보수"
+  },
+  "monitoring": {
+    "title": "모니터링",
+    "network": {
+      "title": "네트워크 확인",
+      "tooltip": "네트워크 연결을 정기적으로 확인하고 필요하면 다시 연결합니다"
+    },
+    "reboot": {
+      "title": "이상 시 재부팅",
+      "tooltip": "재연결에 실패하면 시스템을 재부팅합니다"
+    },
+    "ping": {
+      "title": "ping",
+      "tooltip": "지정한 URL로 상태를 확인할 수 있게 합니다"
+    },
+    "URL": {
+      "title": "알림 URL",
+      "tooltip": "지정한 URL로 1분마다 http get을 보냅니다"
+    }
+  },
+  "update": {
+    "title": "Update",
+    "toolsUpdate": {
+      "title": "Update",
+      "tooltip": "atomcam tools를 업데이트합니다"
+    },
+    "customZip": {
+      "title": "커스텀 업데이트 ZIP 파일",
+      "tooltip": "로컬에서 커스텀 업데이트 ZIP을 만들어 사용할 수 있습니다",
+      "URL": {
+        "title": "URL",
+        "tooltip": "커스텀 업데이트 ZIP 파일의 다운로드 URL을 지정합니다"
+      }
+    }
+  },
+  "reboot": {
+    "title": "재부팅",
+    "periodicRestart": {
+      "title": "정기 재시작",
+      "tooltip": "정기적으로 재부팅하도록 설정합니다"
+    },
+    "reboot": {
+      "title": "재부팅",
+      "tooltip": "재부팅합니다",
+      "button": "재부팅"
+    }
+  },
+  "schedule": {
+    "allDay": "종일",
+    "startTime": "시작 시간",
+    "endTime": "종료 시간",
+    "time": "설정 시간",
+    "timelapse": {
+      "startTime": "시작 시간",
+      "endTime": " ~ {endTime}까지",
+      "interval": {
+        "title": "주기",
+        "unit": "초",
+        "count": "회"
+      },
+      "tommorow": "다음 날",
+      "daysLater": "{days}일 후"
+    },
+    "weekDays": [
+      "월",
+      "화",
+      "수",
+      "목",
+      "금",
+      "토",
+      "일"
+    ]
+  },
+  "submit": "적용",
+  "executing": "설정 변경 중입니다. 잠시 기다려 주세요.",
+  "erasing": "SD 카드 지우는 중입니다. 잠시 기다려 주세요.",
+  "downloading": "다운로드 중입니다. 잠시 기다려 주세요.",
+  "downloadError": "다운로드에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+  "rebooting": "재부팅 중입니다. 시작될 때까지 기다려 주세요. (약 80초)"
+}
