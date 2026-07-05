@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { springBouncy, springGentle } from '@/lib/motion-tokens';
+import { Brand } from './Brand';
 import { LangSwitch } from './LangSwitch';
 import { ThemeToggle } from './ThemeToggle';
 import { NAV, type NavGroup, type NavItem } from './nav';
@@ -78,8 +79,7 @@ export function AppLayout() {
       {/* デスクトップ: M3 ナビゲーションレール(schedule.spec が aside 内のリンク名に依存) */}
       <aside className="sticky top-0 hidden h-dvh w-[88px] shrink-0 flex-col items-center bg-surface-container-low/60 md:flex">
         <div className="flex h-14 items-center" title={t('app.title')}>
-          <span className="inline-block size-2.5 rounded-full bg-primary shadow-elevation-1" />
-          <span className="sr-only">{t('app.title')}</span>
+          <Brand />
         </div>
         <nav className="flex w-full flex-1 flex-col items-center gap-0.5 overflow-y-auto px-2 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {GROUPS.map((key, gi) => {
@@ -104,8 +104,13 @@ export function AppLayout() {
       <div className="flex min-w-0 flex-1 flex-col">
         {/* ヘッダーはモバイルのみ(デスクトップは言語/テーマをレール下部に集約) */}
         <header className="sticky top-0 z-10 flex h-12 items-center justify-between border-b border-border/50 bg-background/80 px-4 backdrop-blur md:hidden">
-          <span className="text-sm font-medium text-muted-foreground">
-            {current ? t(current.labelKey) : t('app.title')}
+          <span className="flex items-center gap-2.5">
+            <Brand withName />
+            {current && (
+              <span className="border-l border-border pl-2.5 text-sm font-medium text-muted-foreground">
+                {t(current.labelKey)}
+              </span>
+            )}
           </span>
           <div className="flex items-center gap-1">
             <LangSwitch />
