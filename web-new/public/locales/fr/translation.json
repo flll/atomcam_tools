@@ -1,0 +1,662 @@
+{
+  "camera": {
+    "tab": "Image de la caméra"
+  },
+  "CameraSettings": {
+    "tab": "Réglages caméra"
+  },
+  "FeatureSettings": {
+    "title": "Fonctions",
+    "nightVision": {
+      "title": "Vision nocturne",
+      "tooltip": "Sur on, image nocturne en noir et blanc ; sur off, image en couleur ; auto bascule automatiquement"
+    },
+    "nightCutThr": {
+      "title": "Seuil de bascule",
+      "text": [
+        "Sombre",
+        "Très sombre"
+      ],
+      "tooltip": "Niveau de luminosité déclenchant la vision nocturne"
+    },
+    "IrLED": {
+      "title": "Éclairage infrarouge"
+    }
+  },
+  "AlarmSettings": {
+    "title": "Détection",
+    "motionDet": {
+      "title": "Détection de mouvement"
+    },
+    "Level": {
+      "title": "Sensibilité",
+      "text": [
+        "Haute",
+        "Moyenne",
+        "Basse"
+      ]
+    },
+    "motionArea": {
+      "title": "Zone de détection",
+      "text": [
+        "Toute la zone",
+        "Zone sélectionnée"
+      ]
+    },
+    "soundDet": {
+      "title": "Détection sonore"
+    },
+    "cautionDet": {
+      "title": "Détection d'alarme incendie/CO"
+    },
+    "drawBoxSwitch": {
+      "title": "Marquage de mouvement",
+      "tooltip": "Affiche un cadre vert sur les objets détectés"
+    },
+    "recordType": {
+      "title": "Mode d'enregistrement",
+      "text": [
+        "Continu",
+        "Sur détection",
+        "Désactivé"
+      ]
+    }
+  },
+  "OtherSettings": {
+    "title": "Autres",
+    "indicator": {
+      "title": "Voyant d'état"
+    },
+    "rotate": {
+      "title": "Pivoter l'image de 180°"
+    },
+    "audioRec": {
+      "title": "Enregistrer le son"
+    },
+    "timestamp": {
+      "title": "Horodatage"
+    },
+    "watermark": {
+      "title": "Logo"
+    }
+  },
+  "AdvancedSettings": {
+    "title": "Réglages avancés",
+    "contrast": {
+      "title": "Contraste",
+      "tooltip": "Ajuste l'écart entre zones claires et sombres. Plus haut, l'image est plus marquée ; plus bas, plus douce."
+    },
+    "brightness": {
+      "title": "Luminosité",
+      "tooltip": "Ajuste la luminosité globale de l'image."
+    },
+    "saturation": {
+      "title": "Saturation",
+      "tooltip": "Ajuste l'intensité des couleurs. Plus bas, l'image se rapproche du noir et blanc."
+    },
+    "sharpness": {
+      "title": "Netteté",
+      "tooltip": "Ajuste l'accentuation des contours. Une valeur trop élevée peut amplifier le bruit."
+    },
+    "sinter": {
+      "title": "2D-NR intensity",
+      "tooltip": "Set 2D noise reduction intensity."
+    },
+    "temper": {
+      "title": "3D-NR intensity",
+      "tooltip": "Set 3D noise reduction intensity."
+    },
+    "dpc": {
+      "title": "DPC Strength",
+      "tooltip": "Set DPC Strength."
+    },
+    "drc": {
+      "title": "DRC Strength",
+      "tooltip": "Set DRC Strength."
+    },
+    "hilight": {
+      "title": "highlight intensity",
+      "tooltip": "Set highlight intensity controls."
+    },
+    "again": {
+      "title": "Max Analog Gain",
+      "tooltip": "Sets the Max value of sensor analog gain."
+    },
+    "dgain": {
+      "title": "Max Digital Gain",
+      "tooltip": "Set the Max value of sensor Digital gain."
+    },
+    "expmode": {
+      "title": "Exposure mode",
+      "tooltip": "Setting the exposure mode.",
+      "text": [
+        "auto",
+        "manual"
+      ]
+    },
+    "aecomp": {
+      "title": "AE compensation",
+      "tooltip": "Setting AE compensation."
+    },
+    "aeitmin": {
+      "title": "AE ITMin",
+      "tooltip": "The min value of integration time, the unit is line."
+    },
+    "aeitmax": {
+      "title": "AE ITMax",
+      "tooltip": "The max value of integration time, the unit is line."
+    },
+    "expline": {
+      "title": "Exposure line",
+      "tooltip": "Setting Exposure integration line."
+    }
+  },
+  "SDCard": {
+    "tab": "Carte SD",
+    "remainingCapacity": "Espace libre"
+  },
+  "record": {
+    "tab": "Enregistrement",
+    "periodicRec": {
+      "title": "Enregistrement continu"
+    },
+    "alarmRec": {
+      "title": "Enregistrement sur détection"
+    },
+    "SDCard": {
+      "title": "Enregistrement sur carte SD",
+      "tooltip": "Enregistre sur la carte SD",
+      "savePath": {
+        "title": "Chemin de sauvegarde",
+        "tooltip": "Indiquez le chemin d'enregistrement au format strftime. L'extension est ajoutée à la fin"
+      },
+      "automaticDeletion": {
+        "title": "Suppression automatique",
+        "tooltip": "Supprime automatiquement les enregistrements de la carte SD"
+      },
+      "daysToKeep": {
+        "title": "Durée de conservation (jours)",
+        "tooltip": "Supprimés après le nombre de jours indiqué"
+      }
+    },
+    "NAS": {
+      "title": "Enregistrement sur NAS",
+      "tooltip": "Enregistre sur un NAS (serveur CIFS)",
+      "savePath": {
+        "title": "Chemin de sauvegarde",
+        "tooltip": "Indiquez le chemin après le chemin réseau au format strftime. L'extension est ajoutée à la fin"
+      },
+      "automaticDeletion": {
+        "title": "Suppression automatique",
+        "tooltip": "Supprime automatiquement les enregistrements du NAS (serveur CIFS)"
+      },
+      "daysToKeep": {
+        "title": "Durée de conservation (jours)",
+        "tooltip": "Supprimés après le nombre de jours indiqué"
+      }
+    },
+    "recordTypeWarn": {
+      "comment": "Réglez le mode d'enregistrement de la caméra sur Continu ou Sur détection. S'il est désactivé, rien ne sera enregistré.\n"
+    },
+    "alarmRecWarn": {
+      "comment": "Activez au moins une des détections (mouvement, son, alarme incendie/CO) dans les réglages caméra. Si tout est désactivé, rien ne sera enregistré.\n"
+    },
+    "recordingSchedule": {
+      "title": "Programme d'enregistrement",
+      "tooltip": "Définit les plages horaires d'enregistrement sur carte SD/NAS",
+      "text": [
+        "Enregistrement permanent",
+        "Programme"
+      ]
+    },
+    "skipJpeg": {
+      "title": "Ignorer l'enregistrement JPEG",
+      "tooltip": "Cesse d'écrire des fichiers JPEG dans le répertoire record"
+    }
+  },
+  "timelapse": {
+    "tab": "Timelapse",
+    "title": "Timelapse",
+    "setting": {
+      "title": "Réglage d'échantillonnage"
+    },
+    "note": {
+      "comment": "Laissez au moins 5 minutes entre deux timelapses pour le traitement après enregistrement.\nEn cas de chevauchement horaire, rien ne sera enregistré. Configurez sans chevauchement.\n"
+    },
+    "start": {
+      "title": "État",
+      "tooltip": "Timelapse en cours."
+    },
+    "stop": {
+      "title": "Arrêter",
+      "tooltip": "Interrompt le timelapse.",
+      "button": "Arrêter",
+      "comment": "Arrêt en cours : écriture du fichier"
+    },
+    "fps": {
+      "title": "fps de sortie",
+      "tooltip": "Fréquence d'images du fichier de sortie"
+    }
+  },
+  "media": {
+    "tab": "Multimédia"
+  },
+  "SDCardSettings": {
+    "title": "Carte SD",
+    "smbAccess": {
+      "title": "Accès smb",
+      "tooltip": "Partage la carte SD comme serveur CIFS (smb) sur le réseau local"
+    },
+    "directWrite": {
+      "title": "Écriture directe",
+      "tooltip": "Normalement l'enregistrement passe par le RAM-DISK avant copie sur la carte SD ; pour économiser la RAM, écrit directement sur la carte SD"
+    },
+    "eraseSDCard": {
+      "title": "Effacer la carte SD",
+      "tooltip": "Efface les dossiers d'enregistrement de la carte SD",
+      "button": "Effacer"
+    }
+  },
+  "NASSettings": {
+    "title": "NAS",
+    "networkPath": {
+      "title": "Chemin réseau",
+      "tooltip": "Chemin du NAS. (au format //serveur/dossier/)",
+      "placeholder": "//192.168.1.10/atomcam/"
+    },
+    "account": {
+      "title": "Compte",
+      "tooltip": "Nom d'utilisateur du NAS",
+      "placeholder": "user1"
+    },
+    "password": {
+      "title": "Mot de passe",
+      "tooltip": "Mot de passe du NAS"
+    }
+  },
+  "RTSP": {
+    "tab": "Diffusion",
+    "title": "RTSP",
+    "main": {
+      "title": "Flux principal (1080p · haute qualité)",
+      "tooltip": "Démarre le flux principal AVC/H.264 (1080p)",
+      "audio": {
+        "title": "Audio",
+        "tooltip": "Codec audio du flux principal",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "note": {
+        "comment": "Pour utiliser RTMP, choisissez AAC ou off.\n"
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "Copiez-collez cette URL dans VLC ou un autre lecteur"
+      }
+    },
+    "mainHEVC": {
+      "title": "Flux principal HEVC (H.265)",
+      "tooltip": "Démarre le flux principal HEVC/H.265 (1080p)",
+      "audio": {
+        "title": "Audio",
+        "tooltip": "Codec audio du flux principal (HEVC)",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "Copiez-collez cette URL dans VLC ou un autre lecteur"
+      }
+    },
+    "sub": {
+      "title": "Flux secondaire (360p · faible charge)",
+      "tooltip": "Démarre le flux secondaire (360p ou 320p)",
+      "audio": {
+        "title": "Audio",
+        "tooltip": "Codec audio du flux secondaire",
+        "text": [
+          "off",
+          "PCM",
+          "AAC",
+          "OPUS"
+        ]
+      },
+      "URL": {
+        "title": "URL",
+        "tooltip": "Copiez-collez cette URL dans VLC ou un autre lecteur"
+      }
+    },
+    "http": {
+      "title": "RTSP over HTTP",
+      "tooltip": "Diffuse le RTSP via HTTP"
+    },
+    "auth": {
+      "title": "Authentification par mot de passe",
+      "tooltip": "Exige une authentification par mot de passe pour le RTSP"
+    },
+    "account": {
+      "title": "Compte",
+      "tooltip": "Nom d'utilisateur RTSP"
+    },
+    "password": {
+      "title": "Mot de passe",
+      "tooltip": "Mot de passe RTSP"
+    }
+  },
+  "HomeKit": {
+    "title": "HomeKit",
+    "tooltip": "Le « Flux principal » doit être activé dans les réglages de diffusion",
+    "unpair": {
+      "title": "Dissociation forcée",
+      "tooltip": "Dissocie HomeKit de force"
+    },
+    "note": {
+      "comment": "Pour la sortie audio, réglez l'audio du « Flux principal » sur OPUS.\n"
+    }
+  },
+  "RTMP": {
+    "title": "RTMP",
+    "tooltip": "Activez le « Flux principal » et réglez l'audio sur AAC ou off",
+    "URL": {
+      "title": "URL",
+      "tooltip": "URL de destination de la diffusion"
+    },
+    "Restart": "redémarrer",
+    "IntervalRestart": {
+      "title": "Redémarrage périodique",
+      "unit": "minutes",
+      "tooltip": "Redémarre le RTMP périodiquement"
+    }
+  },
+  "WebRTC": {
+    "title": "WebRTC",
+    "tooltip": "Le « Flux principal » doit être activé dans les réglages de diffusion",
+    "URL": {
+      "title": "URL",
+      "tooltip": "Copiez-collez cette URL dans le navigateur"
+    },
+    "note": {
+      "comment": "Pour la sortie audio, réglez l'audio du « Flux principal » sur OPUS.\n"
+    }
+  },
+  "event": {
+    "tab": "Notifications",
+    "webhook": {
+      "title": "WebHook",
+      "URL": {
+        "title": "URL de notification",
+        "tooltip": "URL recevant un POST lorsqu'un événement WebHook survient"
+      },
+      "insecure": {
+        "title": "Autoriser les connexions non sécurisées",
+        "tooltip": "Autorise la connexion à des serveurs au certificat non vérifié avec TLS"
+      },
+      "alarm": {
+        "title": "Détection de mouvement",
+        "tooltip": "Notifie le déclenchement d'une alarme",
+        "comment": "type: alarmEvent"
+      },
+      "information": {
+        "title": "Informations de reconnaissance",
+        "tooltip": "Envoie les informations de reconnaissance au déclenchement d'une alarme",
+        "comment": "type: recognitionNotify"
+      },
+      "recordingEnd": {
+        "title": "Fin d'enregistrement sur détection",
+        "tooltip": "Notifie la sauvegarde de l'enregistrement au déclenchement d'une alarme",
+        "comment": "type: uploadVideoFinish"
+      },
+      "recordingTransfer": {
+        "title": "Transfert d'enregistrement sur détection",
+        "tooltip": "Transfère le fichier vidéo au déclenchement d'une alarme",
+        "comment": "mime: video/mp4"
+      },
+      "screenshotEnd": {
+        "title": "Sauvegarde d'image sur détection",
+        "tooltip": "Notifie la sauvegarde de l'image fixe au déclenchement d'une alarme",
+        "comment": "type: uploadPictureFinish"
+      },
+      "screenshotTransfer": {
+        "title": "Transfert d'image sur détection",
+        "tooltip": "Transfère le fichier d'image fixe au déclenchement d'une alarme",
+        "comment": "mime: image/jpeg"
+      },
+      "recordingSave": {
+        "title": "Sauvegarde d'enregistrement régulier",
+        "tooltip": "Notifie la sauvegarde des enregistrements réguliers",
+        "comment": "type: recordEvent"
+      },
+      "startTimelapse": {
+        "title": "Début du timelapse",
+        "tooltip": "Notifie le début du timelapse",
+        "comment": "type: timelapseStart"
+      },
+      "recordTimelapse": {
+        "title": "Enregistrement du timelapse",
+        "tooltip": "Notifie les événements du timelapse",
+        "comment": "type: timelapseEvent"
+      },
+      "endTimeLapse": {
+        "title": "Fin du timelapse",
+        "tooltip": "Notifie la fin de l'enregistrement du timelapse",
+        "comment": "type: timelapseFinish"
+      }
+    }
+  },
+  "cruise": {
+    "tab": "Patrouille",
+    "title": "Patrouille",
+    "initialPosition": {
+      "title": "Réinitialiser la position du Swing",
+      "tooltip": "Corrige les coordonnées du Swing en touchant les butées des deux côtés",
+      "button": "Réinitialiser"
+    },
+    "cameraMotion": {
+      "title": "Mouvement de patrouille",
+      "tooltip": "Définit la trajectoire de patrouille et effectue la ronde"
+    },
+    "direction": {
+      "tooltip": "Réglez la direction et la vitesse de la caméra. Ajustable aussi dans la fenêtre jpeg",
+      "pan": "pan",
+      "tilt": "tilt",
+      "speed": "vitesse"
+    },
+    "waitAfterMotion": {
+      "title": "Attente après mouvement",
+      "unit": "s",
+      "tooltip": "Temps d'attente après le mouvement de la caméra"
+    },
+    "detect": {
+      "title": "Détection",
+      "tooltip": "Prolonge l'attente si un mouvement est détecté pendant celle-ci"
+    },
+    "follow": {
+      "title": "Suivi",
+      "tooltip": "Suit le mouvement détecté pendant l'attente et prolonge celle-ci"
+    },
+    "waitAfterDetect": {
+      "title": "Attente après détection",
+      "unit": "s",
+      "tooltip": "Temps d'attente après la fin de la détection de mouvement"
+    },
+    "followingSpeed": {
+      "title": "Vitesse de suivi",
+      "tooltip": "Vitesse pendant le suivi. 9 est rapide, 1 est lent."
+    }
+  },
+  "systemSettings": {
+    "tab": "Système"
+  },
+  "deviceSettings": {
+    "title": "Appareil",
+    "deviceName": {
+      "title": "Nom de l'appareil",
+      "tooltip": "Nom du dossier NAS et nom pour l'accès distant"
+    },
+    "loginAuthentication": {
+      "title": "Authentification de connexion",
+      "tooltip": "Exige une connexion pour accéder à cette page"
+    },
+    "account": {
+      "title": "Compte",
+      "tooltip": "Nom d'utilisateur de connexion"
+    },
+    "password": {
+      "title": "Mot de passe",
+      "tooltip": "Mot de passe de connexion"
+    }
+  },
+  "tailscaleSettings": {
+    "title": "Tailscale",
+    "enable": {
+      "title": "Activer Tailscale",
+      "tooltip": "Démarre Tailscale et se connecte à votre tailnet"
+    },
+    "authKey": {
+      "title": "Auth Key",
+      "tooltip": "Clé d'authentification Tailscale (tskey-...)"
+    },
+    "hostname": {
+      "title": "Nom d'hôte",
+      "tooltip": "Si vide, le nom de l'appareil est utilisé"
+    },
+    "tags": {
+      "title": "Tags",
+      "tooltip": "Tags passés à advertise-tags. Si vide, tag:cctv est utilisé"
+    },
+    "extraArgs": {
+      "title": "Arguments supplémentaires",
+      "tooltip": "Arguments supplémentaires pour tailscale up"
+    },
+    "exitNodeOnly": {
+      "title": "Accès Tailscale uniquement",
+      "tooltip": "Ferme les ports exposés au LAN (80/8080/8554) et n'autorise l'accès que via Tailscale"
+    }
+  },
+  "motionDetect": {
+    "title": "Détection de mouvement",
+    "sensorPeriod": {
+      "title": "Raccourcir le cycle de détection",
+      "tooltip": "Réduit la fenêtre sans détection de l'alarme de 5 minutes à 30 secondes"
+    },
+    "uploadStop": {
+      "title": "Arrêter l'envoi des vidéos de détection",
+      "tooltip": "Arrête l'envoi des vidéos de détection vers les serveurs AtomTech. Elles n'apparaîtront plus dans l'application. Activez cette option si ces envois vous préoccupent."
+    }
+  },
+  "videoSpec": {
+    "title": "Vidéo",
+    "frameRate": {
+      "title": "Fréquence d'images",
+      "tooltip": "Nombre d'images par seconde (1-28FPS)"
+    },
+    "bitrateMain": {
+      "title": "Débit du flux principal",
+      "tooltip": "Débit du flux principal (HD) (300-2000bps)"
+    },
+    "bitrateMainHEVC": {
+      "title": "Débit du flux principal (HEVC)",
+      "tooltip": "Débit du flux principal HEVC/H.265 (300-2000bps)"
+    },
+    "bitrateSub": {
+      "title": "Débit du flux secondaire",
+      "tooltip": "Débit du flux secondaire (360p/320p) (100-500bps)"
+    }
+  },
+  "watermark": {
+    "title": "Logo",
+    "image": {
+      "title": "Image PNG",
+      "comment": "Créez un fichier PNG de 500px x 200px maximum et déposez-le ici."
+    }
+  },
+  "maintenance": {
+    "tab": "Maintenance"
+  },
+  "monitoring": {
+    "title": "Surveillance",
+    "network": {
+      "title": "Vérification du réseau",
+      "tooltip": "Vérifie périodiquement la connexion réseau et se reconnecte si nécessaire"
+    },
+    "reboot": {
+      "title": "Redémarrage sur incident",
+      "tooltip": "Redémarre le système si la reconnexion échoue"
+    },
+    "ping": {
+      "title": "ping",
+      "tooltip": "Permet de vérifier l'état via l'URL indiquée"
+    },
+    "URL": {
+      "title": "URL de notification",
+      "tooltip": "Envoie un http get à cette URL toutes les minutes"
+    }
+  },
+  "update": {
+    "title": "Update",
+    "toolsUpdate": {
+      "title": "Update",
+      "tooltip": "Met à jour atomcam tools"
+    },
+    "customZip": {
+      "title": "Fichier ZIP de mise à jour personnalisé",
+      "tooltip": "Vous pouvez créer et utiliser un ZIP de mise à jour personnalisé en local",
+      "URL": {
+        "title": "URL",
+        "tooltip": "URL de téléchargement du ZIP de mise à jour personnalisé"
+      }
+    }
+  },
+  "reboot": {
+    "title": "Redémarrage",
+    "periodicRestart": {
+      "title": "Redémarrage périodique",
+      "tooltip": "Programme des redémarrages périodiques"
+    },
+    "reboot": {
+      "title": "Redémarrer",
+      "tooltip": "Redémarre la caméra",
+      "button": "Redémarrer"
+    }
+  },
+  "schedule": {
+    "allDay": "Toute la journée",
+    "startTime": "Début",
+    "endTime": "Fin",
+    "time": "Heure",
+    "timelapse": {
+      "startTime": "Début",
+      "endTime": " jusqu'à {endTime}",
+      "interval": {
+        "title": "Intervalle",
+        "unit": "s",
+        "count": "fois"
+      },
+      "tommorow": "demain",
+      "daysLater": "{days} jours plus tard"
+    },
+    "weekDays": [
+      "lun",
+      "mar",
+      "mer",
+      "jeu",
+      "ven",
+      "sam",
+      "dim"
+    ]
+  },
+  "submit": "Appliquer",
+  "executing": "Application des réglages. Veuillez patienter.",
+  "erasing": "Effacement de la carte SD. Veuillez patienter.",
+  "downloading": "Téléchargement en cours. Veuillez patienter.",
+  "downloadError": "Échec du téléchargement. Réessayez dans quelques instants.",
+  "rebooting": "Redémarrage en cours. Patientez jusqu'au démarrage (environ 80 s)"
+}

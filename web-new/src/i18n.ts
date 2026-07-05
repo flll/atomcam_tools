@@ -11,11 +11,12 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'ja',
+    // 欠けたキーは en → ja の順で補完する(ja が正、en が国際共通)
+    fallbackLng: ['en', 'ja'],
     // ja-JP 等の地域付きロケールで存在しない /locales/ja-JP/*.json を
     // 要求して 404 になるのを防ぐ(言語部分のみでロードする)
     load: 'languageOnly',
-    supportedLngs: ['ja', 'en'],
+    supportedLngs: ['ja', 'en', 'zh', 'ko', 'es', 'fr', 'de', 'pt'],
     nonExplicitSupportedLngs: true,
     // translation: 旧 YAML 由来（自動生成）/ ui: 新 UI 文言（手書き）
     ns: ['ui', 'translation'],

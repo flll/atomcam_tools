@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "ATOMCam"
+  },
+  "nav": {
+    "live": "라이브",
+    "settings": "설정",
+    "camera": "카메라 설정",
+    "recording": "녹화",
+    "storage": "저장소",
+    "streaming": "스트리밍",
+    "events": "이벤트 알림",
+    "cruise": "크루즈",
+    "system": "시스템",
+    "files": "SD 카드",
+    "maintenance": "유지 보수",
+    "tools": "도구",
+    "more": "더보기"
+  },
+  "common": {
+    "theme": "테마",
+    "language": "언어",
+    "dark": "다크",
+    "light": "라이트",
+    "online": "연결됨",
+    "offline": "연결 안 됨",
+    "loading": "불러오는 중…",
+    "save": "저장",
+    "cancel": "취소",
+    "unsavedChanges": "저장하지 않은 변경 사항이 있습니다",
+    "discard": "취소",
+    "saved": "저장했습니다",
+    "saveFailed": "저장에 실패했습니다",
+    "saving": "저장 중…",
+    "execFailed": "작업에 실패했습니다",
+    "close": "닫기"
+  },
+  "live": {
+    "title": "라이브 뷰",
+    "ptz": "팬 / 틸트",
+    "pan": "팬",
+    "tilt": "틸트",
+    "speed": "속도",
+    "center": "중앙으로",
+    "nightVision": "나이트 비전",
+    "snapshot": "스냅숏",
+    "fps": "{{fps}} fps",
+    "noSignal": "영상 없음",
+    "connecting": "연결 중…",
+    "freeSpace": "남은 용량",
+    "model": "모델",
+    "firmware": "펌웨어",
+    "webrtcHint": "스트리밍 설정에서 RTSP 메인 + WebRTC를 켜면 저지연 화면으로 볼 수 있습니다:",
+    "audioOn": "소리 재생",
+    "audioOff": "음소거",
+    "watchOnLive": "라이브 페이지에서 보기",
+    "live": "LIVE",
+    "fullscreen": "전체 화면",
+    "exitFullscreen": "전체 화면 종료",
+    "theater": "시어터 모드",
+    "exitTheater": "시어터 모드 종료",
+    "pip": "화면 속 화면",
+    "reconnecting": "다시 연결 중…",
+    "openPtz": "팬/틸트 조작",
+    "flip": "상하 반전"
+  },
+  "placeholder": {
+    "comingSoon": "페이지를 찾을 수 없습니다.",
+    "backToLive": "라이브로 돌아가기"
+  },
+  "schedule": {
+    "add": "추가",
+    "delete": "삭제",
+    "errNoDays": "요일을 하나 이상 선택하세요",
+    "errTimeRange": "종료 시간은 시작 시간보다 늦어야 합니다",
+    "errInterval": "주기는 1 이상이어야 합니다",
+    "errCount": "횟수는 1 이상이어야 합니다"
+  },
+  "storage": {
+    "usageTitle": "SD 카드 사용 현황",
+    "usedPct": "{{pct}}% 사용 중",
+    "free": "여유 {{free}}",
+    "sdSectionDesc": "SD 카드의 LAN 공유와 녹화 기록 방식을 설정합니다.",
+    "nasSectionDesc": "녹화·타임랩스 저장 대상으로 사용할 NAS(SMB/CIFS 공유)의 연결 정보입니다. 각 녹화 설정에서 「NAS에 저장」을 켜면 사용됩니다.",
+    "eraseConfirmTitle": "SD 카드를 지울까요?",
+    "eraseConfirmBody": "SD 카드의 녹화 폴더(연속 녹화·알람 녹화)를 삭제합니다. 이 작업은 되돌릴 수 없습니다.",
+    "eraseConfirmAction": "지우기",
+    "eraseStarted": "지우기를 시작했습니다"
+  },
+  "settings": {
+    "defaultValue": "기본값: {{value}}",
+    "resetToDefault": "기본값으로 되돌리기"
+  },
+  "camera": {
+    "compare": "비교",
+    "before": "변경 전",
+    "holdToCompare": "누르고 있는 동안 변경 전 화면과 비교합니다"
+  }
+}

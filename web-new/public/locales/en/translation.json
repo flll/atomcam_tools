@@ -8,14 +8,14 @@
   "FeatureSettings": {
     "title": "Feature settings",
     "nightVision": {
-      "title": "Nighght Vision",
+      "title": "Night vision",
       "tooltip": "Black and white image for night vision when on, color image when off"
     },
     "nightCutThr": {
       "title": "Conditions",
       "text": [
-        "Duck",
-        "Dark"
+        "Dusk",
+        "Very dark"
       ],
       "tooltip": "Level of night vision switching"
     },
@@ -29,7 +29,7 @@
       "title": "Motion alarm"
     },
     "Level": {
-      "title": "sensitivity",
+      "title": "Sensitivity",
       "text": [
         "High",
         "Mid",
@@ -74,7 +74,7 @@
       "title": "Record sound"
     },
     "timestamp": {
-      "title": "show Timestamp"
+      "title": "Show timestamp"
     },
     "watermark": {
       "title": "Show Logo"
@@ -206,7 +206,7 @@
       "tooltip": "SD-Card/NAS Recording Time Window",
       "text": [
         "Schedule",
-        "Constant Recoring"
+        "Constant Recording"
       ]
     },
     "skipJpeg": {
@@ -281,7 +281,7 @@
       "tooltip": "Start Main RTSP(1080p)",
       "audio": {
         "title": "Audio",
-        "tooltip": "Activaet Audio on Main RTSP",
+        "tooltip": "Activate audio on Main RTSP",
         "text": [
           "off",
           "PCM",
@@ -302,7 +302,7 @@
       "tooltip": "Start Main HEVC RTSP(1080p)",
       "audio": {
         "title": "Audio",
-        "tooltip": "Activaet Audio on Main HEVC RTSP",
+        "tooltip": "Activate audio on Main HEVC RTSP",
         "text": [
           "off",
           "PCM",
@@ -320,7 +320,7 @@
       "tooltip": "Start Sub RTSP (360p/320p)",
       "audio": {
         "title": "Audio",
-        "tooltip": "Activate audio on Sub RTSP Sub",
+        "tooltip": "Activate audio on Sub RTSP",
         "text": [
           "off",
           "PCM",
@@ -598,7 +598,7 @@
     },
     "URL": {
       "title": "Notification URL",
-      "tooltip": "Send an http get requiest at one minute intervals to this url"
+      "tooltip": "Send an http get request at one minute intervals to this url"
     }
   },
   "update": {
@@ -646,7 +646,7 @@
         "unit": "sec",
         "count": "times"
       },
-      "tommorow": "tommorow",
+      "tommorow": "tomorrow",
       "daysLater": "after {days} days"
     },
     "weekDays": [

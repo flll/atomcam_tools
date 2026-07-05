@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "ATOMCam"
+  },
+  "nav": {
+    "live": "Direct",
+    "settings": "Réglages",
+    "camera": "Caméra",
+    "recording": "Enregistrement",
+    "storage": "Stockage",
+    "streaming": "Diffusion",
+    "events": "Événements",
+    "cruise": "Patrouille",
+    "system": "Système",
+    "files": "Carte SD",
+    "maintenance": "Maintenance",
+    "tools": "Outils",
+    "more": "Plus"
+  },
+  "common": {
+    "theme": "Thème",
+    "language": "Langue",
+    "dark": "Sombre",
+    "light": "Clair",
+    "online": "Connecté",
+    "offline": "Hors ligne",
+    "loading": "Chargement…",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "unsavedChanges": "Des modifications ne sont pas enregistrées",
+    "discard": "Abandonner",
+    "saved": "Enregistré",
+    "saveFailed": "Échec de l'enregistrement",
+    "saving": "Enregistrement…",
+    "execFailed": "L'opération a échoué",
+    "close": "Fermer"
+  },
+  "live": {
+    "title": "Vue en direct",
+    "ptz": "Pan / Tilt",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "speed": "Vitesse",
+    "center": "Centrer",
+    "nightVision": "Vision nocturne",
+    "snapshot": "Instantané",
+    "fps": "{{fps}} fps",
+    "noSignal": "Pas de signal",
+    "connecting": "Connexion…",
+    "freeSpace": "Espace libre",
+    "model": "Modèle",
+    "firmware": "Micrologiciel",
+    "webrtcHint": "Activez RTSP principal + WebRTC dans les réglages de diffusion pour une faible latence :",
+    "audioOn": "Activer le son",
+    "audioOff": "Couper le son",
+    "watchOnLive": "Regarder sur la page Direct",
+    "live": "LIVE",
+    "fullscreen": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran",
+    "theater": "Mode cinéma",
+    "exitTheater": "Quitter le mode cinéma",
+    "pip": "Image dans l'image",
+    "reconnecting": "Reconnexion…",
+    "openPtz": "Commandes Pan/Tilt",
+    "flip": "Retourner"
+  },
+  "placeholder": {
+    "comingSoon": "Page introuvable.",
+    "backToLive": "Retour au direct"
+  },
+  "schedule": {
+    "add": "Ajouter",
+    "delete": "Supprimer",
+    "errNoDays": "Sélectionnez au moins un jour",
+    "errTimeRange": "L'heure de fin doit être après l'heure de début",
+    "errInterval": "L'intervalle doit être d'au moins 1",
+    "errCount": "Le nombre doit être d'au moins 1"
+  },
+  "storage": {
+    "usageTitle": "Utilisation de la carte SD",
+    "usedPct": "{{pct}}% utilisés",
+    "free": "{{free}} libres",
+    "sdSectionDesc": "Configurez le partage LAN et le mode d'écriture des enregistrements de la carte SD.",
+    "nasSectionDesc": "Informations de connexion du NAS (partage SMB/CIFS) utilisé comme destination des enregistrements et timelapses. Utilisé quand « Enregistrer sur le NAS » est activé dans chaque réglage d'enregistrement.",
+    "eraseConfirmTitle": "Effacer la carte SD ?",
+    "eraseConfirmBody": "Supprime les dossiers d'enregistrement de la carte SD (continu et alarme). Cette opération est irréversible.",
+    "eraseConfirmAction": "Effacer",
+    "eraseStarted": "Effacement démarré"
+  },
+  "settings": {
+    "defaultValue": "Par défaut : {{value}}",
+    "resetToDefault": "Rétablir la valeur par défaut"
+  },
+  "camera": {
+    "compare": "Comparer",
+    "before": "Avant",
+    "holdToCompare": "Maintenez pour comparer avec l'aspect précédent"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "app": {
+    "title": "ATOMCam"
+  },
+  "nav": {
+    "live": "Ao vivo",
+    "settings": "Configurações",
+    "camera": "Câmera",
+    "recording": "Gravação",
+    "storage": "Armazenamento",
+    "streaming": "Transmissão",
+    "events": "Eventos",
+    "cruise": "Patrulha",
+    "system": "Sistema",
+    "files": "Cartão SD",
+    "maintenance": "Manutenção",
+    "tools": "Ferramentas",
+    "more": "Mais"
+  },
+  "common": {
+    "theme": "Tema",
+    "language": "Idioma",
+    "dark": "Escuro",
+    "light": "Claro",
+    "online": "Conectado",
+    "offline": "Desconectado",
+    "loading": "Carregando…",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "unsavedChanges": "Há alterações não salvas",
+    "discard": "Descartar",
+    "saved": "Salvo",
+    "saveFailed": "Falha ao salvar",
+    "saving": "Salvando…",
+    "execFailed": "A operação falhou",
+    "close": "Fechar"
+  },
+  "live": {
+    "title": "Visualização ao vivo",
+    "ptz": "Pan / Tilt",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "speed": "Velocidade",
+    "center": "Centralizar",
+    "nightVision": "Visão noturna",
+    "snapshot": "Instantâneo",
+    "fps": "{{fps}} fps",
+    "noSignal": "Sem sinal",
+    "connecting": "Conectando…",
+    "freeSpace": "Espaço livre",
+    "model": "Modelo",
+    "firmware": "Firmware",
+    "webrtcHint": "Ative RTSP principal + WebRTC nas configurações de transmissão para baixa latência:",
+    "audioOn": "Ativar som",
+    "audioOff": "Silenciar",
+    "watchOnLive": "Assistir na página Ao vivo",
+    "live": "LIVE",
+    "fullscreen": "Tela cheia",
+    "exitFullscreen": "Sair da tela cheia",
+    "theater": "Modo cinema",
+    "exitTheater": "Sair do modo cinema",
+    "pip": "Picture-in-Picture",
+    "reconnecting": "Reconectando…",
+    "openPtz": "Controles Pan/Tilt",
+    "flip": "Inverter"
+  },
+  "placeholder": {
+    "comingSoon": "Página não encontrada.",
+    "backToLive": "Voltar ao Ao vivo"
+  },
+  "schedule": {
+    "add": "Adicionar",
+    "delete": "Excluir",
+    "errNoDays": "Selecione pelo menos um dia",
+    "errTimeRange": "O horário final deve ser depois do inicial",
+    "errInterval": "O intervalo deve ser pelo menos 1",
+    "errCount": "O número de vezes deve ser pelo menos 1"
+  },
+  "storage": {
+    "usageTitle": "Uso do cartão SD",
+    "usedPct": "{{pct}}% em uso",
+    "free": "{{free}} livres",
+    "sdSectionDesc": "Configure o compartilhamento na LAN e o modo de gravação do cartão SD.",
+    "nasSectionDesc": "Dados de conexão do NAS (compartilhamento SMB/CIFS) usado como destino de gravações e timelapse. Usado quando «Salvar no NAS» está ativado em cada configuração de gravação.",
+    "eraseConfirmTitle": "Apagar o cartão SD?",
+    "eraseConfirmBody": "Exclui as pastas de gravação do cartão SD (contínua e por alarme). Esta operação não pode ser desfeita.",
+    "eraseConfirmAction": "Apagar",
+    "eraseStarted": "Apagamento iniciado"
+  },
+  "settings": {
+    "defaultValue": "Padrão: {{value}}",
+    "resetToDefault": "Restaurar padrão"
+  },
+  "camera": {
+    "compare": "Comparar",
+    "before": "Antes",
+    "holdToCompare": "Mantenha pressionado para comparar com o aspecto anterior"
+  }
+}

@@ -1,0 +1,526 @@
+camera:
+  tab: 摄像头画面
+
+CameraSettings:
+  tab: 摄像头设置
+FeatureSettings:
+  title: 功能设置
+  nightVision:
+    title: 夜视
+    tooltip: 设为 on 时显示夜视黑白图像，off 时显示彩色图像，auto 为自动切换
+  nightCutThr:
+    title: 切换时机
+    text:
+      - 昏暗
+      - 非常暗
+    tooltip: 夜视切换的亮度级别
+  IrLED:
+    title: 红外补光灯
+AlarmSettings:
+  title: 检测设置
+  motionDet:
+    title: 移动侦测
+  Level:
+    title: 灵敏度
+    text:
+      - 高
+      - 中
+      - 低
+  motionArea:
+    title: 侦测区域
+    text:
+      - 全部区域
+      - 指定区域
+  soundDet:
+    title: 声音侦测
+  cautionDet:
+    title: 火灾/CO 警报音侦测
+  drawBoxSwitch:
+    title: 移动标记
+    tooltip: 侦测到移动时在目标上显示绿色边框
+  recordType:
+    title: 录像模式
+    text:
+      - 连续
+      - 侦测时
+      - 关闭
+OtherSettings:
+  title: 其他
+  indicator:
+    title: 状态指示灯
+  rotate:
+    title: 图像旋转180°
+  audioRec:
+    title: 录音
+  timestamp:
+    title: 时间戳
+  watermark:
+    title: 标志
+AdvancedSettings:
+  title: 高级设置
+  contrast:
+    title: 对比度
+    tooltip: 调整明暗差异。调高画面更鲜明，调低画面更柔和。
+  brightness:
+    title: 亮度
+    tooltip: 调整画面整体亮度。
+  saturation:
+    title: 饱和度
+    tooltip: 调整色彩的鲜艳程度。越低越接近黑白。
+  sharpness:
+    title: 锐度
+    tooltip: 调整轮廓的强调程度。过高可能使噪点更明显。
+  sinter:
+    title: 2D-NR intensity
+    tooltip: Set 2D noise reduction intensity.
+  temper:
+    title: 3D-NR intensity
+    tooltip: Set 3D noise reduction intensity.
+  dpc:
+    title: DPC Strength
+    tooltip: Set DPC Strength.
+  drc:
+    title: DRC Strength
+    tooltip: Set DRC Strength.
+  hilight:
+    title: highlight intensity
+    tooltip: Set highlight intensity controls.
+  again:
+    title: Max Analog Gain
+    tooltip: Sets the Max value of sensor analog gain.
+  dgain:
+    title: Max Digital Gain
+    tooltip: Set the Max value of sensor Digital gain.
+  expmode:
+    title: Exposure mode
+    tooltip: Setting the exposure mode.
+    text:
+      - auto
+      - manual
+  aecomp:
+    title: AE compensation
+    tooltip: Setting AE compensation.
+  aeitmin:
+    title: AE ITMin
+    tooltip: The min value of integration time, the unit is line.
+  aeitmax:
+    title: AE ITMax
+    tooltip: The max value of integration time, the unit is line.
+  expline:
+    title: Exposure line
+    tooltip: Setting Exposure integration line.
+
+SDCard:
+  tab: SD卡
+  remainingCapacity: 剩余容量
+
+record:
+  tab: 录像设置
+  periodicRec:
+    title: 连续录像
+  alarmRec:
+    title: 移动侦测录像
+  SDCard:
+    title: SD卡录像
+    tooltip: 录制到 SD 卡
+    savePath:
+      title: 保存路径
+      tooltip: 以 strftime 格式指定录像保存路径，末尾会自动附加扩展名
+    automaticDeletion:
+      title: 自动删除文件
+      tooltip: 自动删除 SD 卡上的录像文件
+    daysToKeep:
+      title: 保存天数
+      tooltip: 超过指定天数后删除
+  NAS:
+    title: NAS录像
+    tooltip: 录制到 NAS(CIFS 服务器)
+    savePath:
+      title: 保存路径
+      tooltip: 以 strftime 格式指定网络路径之后的保存路径，末尾会自动附加扩展名
+    automaticDeletion:
+      title: 自动删除文件
+      tooltip: 自动删除 NAS(CIFS 服务器)上的录像文件
+    daysToKeep:
+      title: 保存天数
+      tooltip: 超过指定天数后删除
+  recordTypeWarn:
+    comment: |
+      请将摄像头设置中的录像模式设为“连续”或“侦测时”。设为关闭时不会录像。
+  alarmRecWarn:
+    comment: |
+      请在摄像头设置中开启移动侦测、声音侦测或火灾/CO警报音侦测中的至少一项。全部关闭时不会录像。
+  recordingSchedule:
+    title: 录像时间表
+    tooltip: 设置录制到 SD 卡/NAS 的时间段
+    text:
+      - 常时录像
+      - 时间表
+  skipJpeg:
+    title: 停止JPEG记录
+    tooltip: 停止向 record 目录写入 JPEG 文件
+
+timelapse:
+  tab: 延时摄影设置
+  title: 延时摄影
+  setting:
+    title: 采样设置
+  note:
+    comment: |
+      两次延时摄影之间请留出至少5分钟用于记录后的转换处理。
+      时间重叠时将不会记录，请确保没有重叠。
+  start:
+    title: 运行状态
+    tooltip: 延时摄影进行中。
+  stop:
+    title: 中止
+    tooltip: 中止延时摄影。
+    button: 中止
+    comment: 停止处理：正在写入文件
+  fps:
+    title: 输出fps
+    tooltip: 输出文件的帧率
+
+media:
+  tab: 媒体设置
+SDCardSettings:
+  title: SD卡设置
+  smbAccess:
+    title: smb访问
+    tooltip: 将 SD 卡作为 CIFS(smb) 服务器在局域网内共享
+  directWrite:
+    title: 直接写入录像
+    tooltip: 通常先录制到 RAM-DISK 再复制到 SD 卡；为节省内存，可直接写入 SD 卡
+  eraseSDCard:
+    title: 清除SD卡
+    tooltip: 清除 SD 卡上的录像文件夹
+    button: 清除
+
+NASSettings:
+  title: NAS设置
+  networkPath:
+    title: 网络路径
+    tooltip: 设置 NAS 的路径。(格式为 //server/folder/)
+    placeholder: //192.168.1.10/atomcam/
+  account:
+    title: 账号
+    tooltip: 设置 NAS 用户名
+    placeholder: user1
+  password:
+    title: 密码
+    tooltip: 设置 NAS 密码
+
+RTSP:
+  tab: 推流设置
+  title: RTSP
+  main:
+    title: 主码流 (1080p·高画质)
+    tooltip: 开始主码流 AVC/H.264 (1080p)
+    audio:
+      title: 音频
+      tooltip: 设置主码流的音频编码
+      text:
+        - off
+        - PCM
+        - AAC
+        - OPUS
+    note:
+      comment: |
+        使用 RTMP 时请选择 AAC 或 off。
+    URL:
+      title: URL
+      tooltip: 将此 URL 复制粘贴到 VLC 等播放器
+  mainHEVC:
+    title: 主码流 HEVC (H.265)
+    tooltip: 开始主码流 HEVC/H.265 (1080p)
+    audio:
+      title: 音频
+      tooltip: 设置主码流 (HEVC) 的音频编码
+      text:
+        - off
+        - PCM
+        - AAC
+        - OPUS
+    URL:
+      title: URL
+      tooltip: 将此 URL 复制粘贴到 VLC 等播放器
+  sub:
+    title: 子码流 (360p·低负载)
+    tooltip: 开始子码流 (360p 或 320p)
+    audio:
+      title: 音频
+      tooltip: 设置子码流的音频编码
+      text:
+        - off
+        - PCM
+        - AAC
+        - OPUS
+    URL:
+      title: URL
+      tooltip: 将此 URL 复制粘贴到 VLC 等播放器
+  http:
+    title: RTSP over HTTP
+    tooltip: 通过 HTTP 传输 RTSP
+  auth:
+    title: 密码认证
+    tooltip: 访问 RTSP 需要密码认证
+  account:
+    title: 账号
+    tooltip: 设置 RTSP 用户名
+  password:
+    title: 密码
+    tooltip: 设置 RTSP 密码
+
+HomeKit:
+  title: HomeKit
+  tooltip: 需要开启推流设置中的“主码流”
+  unpair:
+    title: 强制解除配对
+    tooltip: 强制解除 HomeKit 配对
+  note:
+    comment: |
+      要输出音频，请将“主码流”的音频设为 OPUS。
+
+RTMP:
+  title: RTMP
+  tooltip: 需要开启“主码流”并将音频设为 AAC 或 off
+  URL:
+    title: URL
+    tooltip: 设置推流目标 URL
+  Restart: 重启
+  IntervalRestart:
+    title: 定时重启
+    unit: 分钟
+    tooltip: 定期重新启动 RTMP
+
+WebRTC:
+  title: WebRTC
+  tooltip: 需要开启推流设置中的“主码流”
+  URL:
+    title: URL
+    tooltip: 将此 URL 复制粘贴到浏览器
+  note:
+    comment: |
+      要输出音频，请将“主码流”的音频设为 OPUS。
+
+event:
+  tab: 事件通知
+  webhook:
+    title: WebHook
+    URL:
+      title: 通知URL
+      tooltip: WebHook 事件发生时用于 POST 通知的 URL
+    insecure:
+      title: 允许不安全连接
+      tooltip: 使用 TLS 时允许连接证书未经验证的服务器
+    alarm:
+      title: 移动侦测
+      tooltip: 触发警报时发送通知
+      comment: 'type: alarmEvent'
+    information:
+      title: 侦测识别信息
+      tooltip: 触发警报时发送识别信息
+      comment: 'type: recognitionNotify'
+    recordingEnd:
+      title: 侦测录像结束
+      tooltip: 触发警报时通知录像已保存
+      comment: 'type: uploadVideoFinish'
+    recordingTransfer:
+      title: 侦测录像传输
+      tooltip: 触发警报时传输录像文件
+      comment: 'mime: video/mp4'
+    screenshotEnd:
+      title: 侦测截图保存
+      tooltip: 触发警报时通知截图已保存
+      comment: 'type: uploadPictureFinish'
+    screenshotTransfer:
+      title: 侦测截图传输
+      tooltip: 触发警报时传输截图文件
+      comment: 'mime: image/jpeg'
+    recordingSave:
+      title: 常规录像保存
+      tooltip: 通知常规录像已保存
+      comment: 'type: recordEvent'
+    startTimelapse:
+      title: 延时摄影开始
+      tooltip: 通知延时摄影开始
+      comment: 'type: timelapseStart'
+    recordTimelapse:
+      title: 延时摄影记录
+      tooltip: 通知延时摄影事件
+      comment: 'type: timelapseEvent'
+    endTimeLapse:
+      title: 延时摄影完成
+      tooltip: 通知延时摄影录制完成
+      comment: 'type: timelapseFinish'
+
+cruise:
+  tab: 巡航设置
+  title: 巡航
+  initialPosition:
+    title: Swing坐标初始化
+    tooltip: 通过两侧限位校正 Swing 的坐标
+    button: 初始化
+  cameraMotion:
+    title: 巡航动作
+    tooltip: 设置巡航轨迹并执行巡回动作
+  direction:
+    tooltip: 设置摄像头方向和移动速度。也可在 jpeg 窗口中调整
+    pan: pan
+    tilt: tilt
+    speed: 速度
+  waitAfterMotion:
+    title: 动作后等待时间
+    unit: 秒
+    tooltip: 设置摄像头动作后的等待时间
+  detect:
+    title: 侦测
+    tooltip: 等待期间侦测到移动时延长等待时间
+  follow:
+    title: 追踪
+    tooltip: 等待期间侦测到移动时进行追踪并延长等待时间
+  waitAfterDetect:
+    title: 侦测后等待时间
+    unit: 秒
+    tooltip: 设置移动侦测结束后的等待时间
+  followingSpeed:
+    title: 追踪速度
+    tooltip: 追踪时的移动速度。9 为高速，1 为低速。
+
+systemSettings:
+  tab: 系统设置
+
+deviceSettings:
+  title: 设备设置
+  deviceName:
+    title: 设备名称
+    tooltip: 设置 NAS 保存文件夹名及远程访问所用的名称
+  loginAuthentication:
+    title: 登录认证
+    tooltip: 访问本页面需要登录认证
+  account:
+    title: 账号
+    tooltip: 设置登录用户名
+  password:
+    title: 密码
+    tooltip: 设置登录密码
+
+tailscaleSettings:
+  title: Tailscale设置
+  enable:
+    title: 启用Tailscale
+    tooltip: 启动 Tailscale 并连接到您的 tailnet
+  authKey:
+    title: Auth Key
+    tooltip: Tailscale 认证密钥 (tskey-...)
+  hostname:
+    title: 主机名
+    tooltip: 留空时使用设备名称
+  tags:
+    title: 标签
+    tooltip: 传递给 advertise-tags 的标签。留空时使用 tag:cctv
+  extraArgs:
+    title: 附加参数
+    tooltip: 指定追加到 tailscale up 的参数
+  exitNodeOnly:
+    title: 仅限Tailscale访问
+    tooltip: 关闭 LAN 侧开放端口(80/8080/8554)，仅允许通过 Tailscale 访问
+
+motionDetect:
+  title: 移动侦测
+  sensorPeriod:
+    title: 缩短侦测间隔
+    tooltip: 将警报的无侦测间隔从5分钟缩短到30秒
+  uploadStop:
+    title: 停止上传侦测录像
+    tooltip: 停止向 AtomTech 服务器传输侦测视频。App 中将无法查看。如担心数据被上传请开启此项。
+
+videoSpec:
+  title: 视频设置
+  frameRate:
+    title: 帧率
+    tooltip: 设置每秒帧数(1-28FPS)
+  bitrateMain:
+    title: 主码流码率
+    tooltip: 设置主码流 (HD) 的码率(300-2000bps)
+  bitrateMainHEVC:
+    title: 主码流 (HEVC) 码率
+    tooltip: 设置主码流 HEVC/H.265 的码率(300-2000bps)
+  bitrateSub:
+    title: 子码流码率
+    tooltip: 设置子码流 (360p/320p) 的码率(100-500bps)
+watermark:
+    title: 标志
+    image:
+      title: PNG图像
+      comment: 请制作 500px x 200px 以内的 PNG 文件并拖放到此处。
+
+maintenance:
+  tab: 维护
+
+monitoring:
+  title: 监控
+  network:
+    title: 网络检查
+    tooltip: 定期确认网络连接，必要时重新连接
+  reboot:
+    title: 异常时重启
+    tooltip: 无法重新连接时重启系统
+  ping:
+    title: ping
+    tooltip: 允许通过指定 URL 确认运行状态
+  URL:
+    title: 通知URL
+    tooltip: 每分钟向指定 URL 发送一次 http get
+
+update:
+  title: Update
+  toolsUpdate:
+    title: Update
+    tooltip: 更新 atomcam tools
+  customZip:
+    title: 自定义更新ZIP文件
+    tooltip: 可在本地制作自定义更新 ZIP 并使用
+    URL:
+      title: URL
+      tooltip: 指定自定义更新 ZIP 文件的下载 URL
+
+reboot:
+  title: 重启
+  periodicRestart:
+    title: 定期重启
+    tooltip: 设置定期自动重启
+  reboot:
+    title: 重启
+    tooltip: 重新启动摄像头
+    button: 重启
+
+schedule:
+  allDay: 全天
+  startTime: 开始时间
+  endTime: 结束时间
+  time: 设定时间
+  timelapse:
+    startTime: 开始时间
+    endTime: ' 至 {endTime}'
+    interval:
+      title: 间隔
+      unit: 秒
+      count: 次
+    tommorow: 次日
+    daysLater: '{days}天后'
+  weekDays:
+    - 一
+    - 二
+    - 三
+    - 四
+    - 五
+    - 六
+    - 日
+
+submit: 应用
+executing: 正在更改设置，请稍候。
+erasing: 正在清除SD卡，请稍候。
+downloading: 正在下载，请稍候。
+downloadError: 下载失败。请稍后重试。
+rebooting: 正在重启，请稍候。(约80秒)

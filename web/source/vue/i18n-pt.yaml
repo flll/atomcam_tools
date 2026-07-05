@@ -1,0 +1,526 @@
+camera:
+  tab: Imagem da câmera
+
+CameraSettings:
+  tab: Configurações da câmera
+FeatureSettings:
+  title: Funções
+  nightVision:
+    title: Visão noturna
+    tooltip: Com on, imagem noturna em preto e branco; com off, imagem colorida; auto alterna automaticamente
+  nightCutThr:
+    title: Momento de troca
+    text:
+      - Escuro
+      - Muito escuro
+    tooltip: Nível de luz para alternar a visão noturna
+  IrLED:
+    title: Luz infravermelha
+AlarmSettings:
+  title: Detecção
+  motionDet:
+    title: Detecção de movimento
+  Level:
+    title: Sensibilidade
+    text:
+      - Alta
+      - Média
+      - Baixa
+  motionArea:
+    title: Área de detecção
+    text:
+      - Toda a área
+      - Área selecionada
+  soundDet:
+    title: Detecção de som
+  cautionDet:
+    title: Detecção de alarme de incêndio/CO
+  drawBoxSwitch:
+    title: Marcação de movimento
+    tooltip: Exibe um quadro verde sobre os objetos ao detectar movimento
+  recordType:
+    title: Modo de gravação
+    text:
+      - Contínua
+      - Ao detectar
+      - Desligado
+OtherSettings:
+  title: Outros
+  indicator:
+    title: Luz de status
+  rotate:
+    title: Girar imagem 180°
+  audioRec:
+    title: Gravar som
+  timestamp:
+    title: Carimbo de hora
+  watermark:
+    title: Logotipo
+AdvancedSettings:
+  title: Configurações avançadas
+  contrast:
+    title: Contraste
+    tooltip: Ajusta a diferença entre claro e escuro. Mais alto deixa a imagem mais marcante; mais baixo, mais suave.
+  brightness:
+    title: Brilho
+    tooltip: Ajusta o brilho geral da imagem.
+  saturation:
+    title: Saturação
+    tooltip: Ajusta a intensidade das cores. Quanto mais baixo, mais próximo do preto e branco.
+  sharpness:
+    title: Nitidez
+    tooltip: Ajusta o realce de contornos. Valores muito altos podem realçar o ruído.
+  sinter:
+    title: 2D-NR intensity
+    tooltip: Set 2D noise reduction intensity.
+  temper:
+    title: 3D-NR intensity
+    tooltip: Set 3D noise reduction intensity.
+  dpc:
+    title: DPC Strength
+    tooltip: Set DPC Strength.
+  drc:
+    title: DRC Strength
+    tooltip: Set DRC Strength.
+  hilight:
+    title: highlight intensity
+    tooltip: Set highlight intensity controls.
+  again:
+    title: Max Analog Gain
+    tooltip: Sets the Max value of sensor analog gain.
+  dgain:
+    title: Max Digital Gain
+    tooltip: Set the Max value of sensor Digital gain.
+  expmode:
+    title: Exposure mode
+    tooltip: Setting the exposure mode.
+    text:
+      - auto
+      - manual
+  aecomp:
+    title: AE compensation
+    tooltip: Setting AE compensation.
+  aeitmin:
+    title: AE ITMin
+    tooltip: The min value of integration time, the unit is line.
+  aeitmax:
+    title: AE ITMax
+    tooltip: The max value of integration time, the unit is line.
+  expline:
+    title: Exposure line
+    tooltip: Setting Exposure integration line.
+
+SDCard:
+  tab: Cartão SD
+  remainingCapacity: Espaço livre
+
+record:
+  tab: Gravação
+  periodicRec:
+    title: Gravação contínua
+  alarmRec:
+    title: Gravação por detecção de movimento
+  SDCard:
+    title: Gravação no cartão SD
+    tooltip: Grava no cartão SD
+    savePath:
+      title: Caminho de gravação
+      tooltip: Indique o caminho de gravação no formato strftime. A extensão é adicionada ao final
+    automaticDeletion:
+      title: Exclusão automática de arquivos
+      tooltip: Exclui automaticamente as gravações do cartão SD
+    daysToKeep:
+      title: Dias de retenção
+      tooltip: Excluídas após o número de dias indicado
+  NAS:
+    title: Gravação em NAS
+    tooltip: Grava em um NAS (servidor CIFS)
+    savePath:
+      title: Caminho de gravação
+      tooltip: Indique o caminho após o caminho de rede no formato strftime. A extensão é adicionada ao final
+    automaticDeletion:
+      title: Exclusão automática de arquivos
+      tooltip: Exclui automaticamente as gravações do NAS (servidor CIFS)
+    daysToKeep:
+      title: Dias de retenção
+      tooltip: Excluídas após o número de dias indicado
+  recordTypeWarn:
+    comment: |
+      Defina o modo de gravação da câmera como Contínua ou Ao detectar. Se estiver Desligado, nada será gravado.
+  alarmRecWarn:
+    comment: |
+      Ative pelo menos uma detecção (movimento, som ou alarme de incêndio/CO) nas configurações da câmera. Se todas estiverem desligadas, nada será gravado.
+  recordingSchedule:
+    title: Agenda de gravação
+    tooltip: Define os horários de gravação no cartão SD/NAS
+    text:
+      - Gravação constante
+      - Agenda
+  skipJpeg:
+    title: Ignorar gravação JPEG
+    tooltip: Para de gravar arquivos JPEG no diretório record
+
+timelapse:
+  tab: Timelapse
+  title: Timelapse
+  setting:
+    title: Configuração de amostragem
+  note:
+    comment: |
+      Deixe pelo menos 5 minutos entre gravações de timelapse para o processamento posterior.
+      Se os horários se sobrepuserem, nada será gravado. Configure sem sobreposição.
+  start:
+    title: Status
+    tooltip: Timelapse em andamento.
+  stop:
+    title: Interromper
+    tooltip: Interrompe o timelapse.
+    button: Interromper
+    comment: 'Interrompendo: gravando arquivo'
+  fps:
+    title: fps de saída
+    tooltip: Taxa de quadros do arquivo de saída
+
+media:
+  tab: Mídia
+SDCardSettings:
+  title: Cartão SD
+  smbAccess:
+    title: Acesso smb
+    tooltip: Compartilha o cartão SD como servidor CIFS (smb) na rede local
+  directWrite:
+    title: Gravação direta
+    tooltip: Normalmente grava primeiro no RAM-DISK e depois copia para o cartão SD; para economizar RAM, grava diretamente no cartão SD
+  eraseSDCard:
+    title: Apagar cartão SD
+    tooltip: Apaga as pastas de gravação do cartão SD
+    button: Apagar
+
+NASSettings:
+  title: NAS
+  networkPath:
+    title: Caminho de rede
+    tooltip: Caminho do NAS. (use o formato //servidor/pasta/)
+    placeholder: //192.168.1.10/atomcam/
+  account:
+    title: Conta
+    tooltip: Nome de usuário do NAS
+    placeholder: user1
+  password:
+    title: Senha
+    tooltip: Senha do NAS
+
+RTSP:
+  tab: Transmissão
+  title: RTSP
+  main:
+    title: Stream principal (1080p · alta qualidade)
+    tooltip: Inicia o stream principal AVC/H.264 (1080p)
+    audio:
+      title: Áudio
+      tooltip: Codec de áudio do stream principal
+      text:
+        - off
+        - PCM
+        - AAC
+        - OPUS
+    note:
+      comment: |
+        Para usar RTMP, escolha AAC ou off.
+    URL:
+      title: URL
+      tooltip: Copie e cole este URL no VLC ou similar
+  mainHEVC:
+    title: Stream principal HEVC (H.265)
+    tooltip: Inicia o stream principal HEVC/H.265 (1080p)
+    audio:
+      title: Áudio
+      tooltip: Codec de áudio do stream principal (HEVC)
+      text:
+        - off
+        - PCM
+        - AAC
+        - OPUS
+    URL:
+      title: URL
+      tooltip: Copie e cole este URL no VLC ou similar
+  sub:
+    title: Stream secundário (360p · carga baixa)
+    tooltip: Inicia o stream secundário (360p ou 320p)
+    audio:
+      title: Áudio
+      tooltip: Codec de áudio do stream secundário
+      text:
+        - off
+        - PCM
+        - AAC
+        - OPUS
+    URL:
+      title: URL
+      tooltip: Copie e cole este URL no VLC ou similar
+  http:
+    title: RTSP over HTTP
+    tooltip: Transmite RTSP via HTTP
+  auth:
+    title: Autenticação por senha
+    tooltip: Exige autenticação por senha para o RTSP
+  account:
+    title: Conta
+    tooltip: Nome de usuário do RTSP
+  password:
+    title: Senha
+    tooltip: Senha do RTSP
+
+HomeKit:
+  title: HomeKit
+  tooltip: O «Stream principal» deve estar ativado nas configurações de transmissão
+  unpair:
+    title: Despareamento forçado
+    tooltip: Desfaz o pareamento do HomeKit à força
+  note:
+    comment: |
+      Para saída de áudio, defina o áudio do «Stream principal» como OPUS.
+
+RTMP:
+  title: RTMP
+  tooltip: Ative o «Stream principal» e defina o áudio como AAC ou off
+  URL:
+    title: URL
+    tooltip: URL de destino da transmissão
+  Restart: reiniciar
+  IntervalRestart:
+    title: Reinício periódico
+    unit: minutos
+    tooltip: Reinicia o RTMP periodicamente
+
+WebRTC:
+  title: WebRTC
+  tooltip: O «Stream principal» deve estar ativado nas configurações de transmissão
+  URL:
+    title: URL
+    tooltip: Copie e cole este URL no navegador
+  note:
+    comment: |
+      Para saída de áudio, defina o áudio do «Stream principal» como OPUS.
+
+event:
+  tab: Notificações
+  webhook:
+    title: WebHook
+    URL:
+      title: URL de notificação
+      tooltip: URL que recebe um POST quando ocorre um evento de WebHook
+    insecure:
+      title: Permitir conexões não seguras
+      tooltip: Permite conectar a servidores com certificado não verificado ao usar TLS
+    alarm:
+      title: Detecção de movimento
+      tooltip: Notifica quando um alarme é acionado
+      comment: 'type: alarmEvent'
+    information:
+      title: Informações de reconhecimento
+      tooltip: Envia as informações de reconhecimento quando um alarme é acionado
+      comment: 'type: recognitionNotify'
+    recordingEnd:
+      title: Fim da gravação por detecção
+      tooltip: Notifica o salvamento da gravação quando um alarme é acionado
+      comment: 'type: uploadVideoFinish'
+    recordingTransfer:
+      title: Transferência de gravação por detecção
+      tooltip: Transfere o arquivo de vídeo quando um alarme é acionado
+      comment: 'mime: video/mp4'
+    screenshotEnd:
+      title: Salvamento de imagem por detecção
+      tooltip: Notifica o salvamento da imagem estática quando um alarme é acionado
+      comment: 'type: uploadPictureFinish'
+    screenshotTransfer:
+      title: Transferência de imagem por detecção
+      tooltip: Transfere o arquivo de imagem estática quando um alarme é acionado
+      comment: 'mime: image/jpeg'
+    recordingSave:
+      title: Salvamento de gravação regular
+      tooltip: Notifica o salvamento das gravações regulares
+      comment: 'type: recordEvent'
+    startTimelapse:
+      title: Início do timelapse
+      tooltip: Notifica o início do timelapse
+      comment: 'type: timelapseStart'
+    recordTimelapse:
+      title: Registro do timelapse
+      tooltip: Notifica os eventos do timelapse
+      comment: 'type: timelapseEvent'
+    endTimeLapse:
+      title: Fim do timelapse
+      tooltip: Notifica a conclusão da gravação do timelapse
+      comment: 'type: timelapseFinish'
+
+cruise:
+  tab: Patrulha
+  title: Patrulha
+  initialPosition:
+    title: Redefinir posição do Swing
+    tooltip: Corrige as coordenadas do Swing tocando os limites de ambos os lados
+    button: Redefinir
+  cameraMotion:
+    title: Movimento de patrulha
+    tooltip: Define a trajetória de patrulha e executa a ronda
+  direction:
+    tooltip: Ajuste a direção e a velocidade da câmera. Também ajustável na janela jpeg
+    pan: pan
+    tilt: tilt
+    speed: velocidade
+  waitAfterMotion:
+    title: Espera após o movimento
+    unit: s
+    tooltip: Tempo de espera após o movimento da câmera
+  detect:
+    title: Detecção
+    tooltip: Prolonga a espera se houver detecção de movimento durante ela
+  follow:
+    title: Rastreamento
+    tooltip: Rastreia o movimento detectado durante a espera e prolonga o tempo
+  waitAfterDetect:
+    title: Espera após a detecção
+    unit: s
+    tooltip: Tempo de espera após o fim da detecção de movimento
+  followingSpeed:
+    title: Velocidade de rastreamento
+    tooltip: Velocidade durante o rastreamento. 9 é rápido, 1 é lento.
+
+systemSettings:
+  tab: Sistema
+
+deviceSettings:
+  title: Dispositivo
+  deviceName:
+    title: Nome do dispositivo
+    tooltip: Nome da pasta no NAS e nome para acesso remoto
+  loginAuthentication:
+    title: Autenticação de login
+    tooltip: Exige login para acessar esta página
+  account:
+    title: Conta
+    tooltip: Usuário para login
+  password:
+    title: Senha
+    tooltip: Senha para login
+
+tailscaleSettings:
+  title: Tailscale
+  enable:
+    title: Ativar Tailscale
+    tooltip: Inicia o Tailscale e conecta à sua tailnet
+  authKey:
+    title: Auth Key
+    tooltip: Chave de autenticação do Tailscale (tskey-...)
+  hostname:
+    title: Nome do host
+    tooltip: Se vazio, usa o nome do dispositivo
+  tags:
+    title: Tags
+    tooltip: Tags passadas a advertise-tags. Se vazio, usa tag:cctv
+  extraArgs:
+    title: Argumentos extras
+    tooltip: Argumentos adicionais para tailscale up
+  exitNodeOnly:
+    title: Acesso somente via Tailscale
+    tooltip: Fecha as portas expostas à LAN (80/8080/8554) e permite acesso apenas via Tailscale
+
+motionDetect:
+  title: Detecção de movimento
+  sensorPeriod:
+    title: Encurtar o ciclo de detecção
+    tooltip: Reduz a janela sem detecção do alarme de 5 minutos para 30 segundos
+  uploadStop:
+    title: Parar upload de vídeos de detecção
+    tooltip: Interrompe o envio de vídeos de detecção aos servidores da AtomTech. Eles deixarão de aparecer no app. Ative se o envio aos servidores for uma preocupação.
+
+videoSpec:
+  title: Vídeo
+  frameRate:
+    title: Taxa de quadros
+    tooltip: Quadros por segundo (1-28FPS)
+  bitrateMain:
+    title: Bitrate do stream principal
+    tooltip: Bitrate do stream principal (HD) (300-2000bps)
+  bitrateMainHEVC:
+    title: Bitrate do stream principal (HEVC)
+    tooltip: Bitrate do stream principal HEVC/H.265 (300-2000bps)
+  bitrateSub:
+    title: Bitrate do stream secundário
+    tooltip: Bitrate do stream secundário (360p/320p) (100-500bps)
+watermark:
+    title: Logotipo
+    image:
+      title: Imagem PNG
+      comment: Crie um arquivo PNG de até 500px x 200px e arraste-o aqui.
+
+maintenance:
+  tab: Manutenção
+
+monitoring:
+  title: Monitoramento
+  network:
+    title: Verificação de rede
+    tooltip: Verifica periodicamente a conexão de rede e reconecta se necessário
+  reboot:
+    title: Reinício em caso de falha
+    tooltip: Reinicia o sistema se a reconexão falhar
+  ping:
+    title: ping
+    tooltip: Permite verificar o status pela URL indicada
+  URL:
+    title: URL de notificação
+    tooltip: Envia um http get a esta URL a cada minuto
+
+update:
+  title: Update
+  toolsUpdate:
+    title: Update
+    tooltip: Atualiza o atomcam tools
+  customZip:
+    title: Arquivo ZIP de atualização personalizado
+    tooltip: Você pode criar e usar um ZIP de atualização personalizado localmente
+    URL:
+      title: URL
+      tooltip: URL de download do ZIP de atualização personalizado
+
+reboot:
+  title: Reiniciar
+  periodicRestart:
+    title: Reinício periódico
+    tooltip: Programa reinícios periódicos
+  reboot:
+    title: Reiniciar
+    tooltip: Reinicia a câmera
+    button: Reiniciar
+
+schedule:
+  allDay: O dia todo
+  startTime: Início
+  endTime: Fim
+  time: Hora
+  timelapse:
+    startTime: Início
+    endTime: ' até {endTime}'
+    interval:
+      title: Intervalo
+      unit: s
+      count: vezes
+    tommorow: amanhã
+    daysLater: '{days} dias depois'
+  weekDays:
+    - seg
+    - ter
+    - qua
+    - qui
+    - sex
+    - sáb
+    - dom
+
+submit: Aplicar
+executing: Aplicando as configurações. Aguarde um momento.
+erasing: Apagando o cartão SD. Aguarde um momento.
+downloading: Baixando. Aguarde um momento.
+downloadError: Falha no download. Tente novamente mais tarde.
+rebooting: Reiniciando. Aguarde até a inicialização (cerca de 80 s)
