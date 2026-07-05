@@ -1,6 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
+import '@fontsource-variable/inter/index.css';
+import '@fontsource-variable/noto-sans-jp/index.css';
 import App from './App';
 import { ThemeProvider } from './components/theme-provider';
 import './i18n';
