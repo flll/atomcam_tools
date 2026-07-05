@@ -278,11 +278,11 @@
     "tab": "配信設定",
     "title": "RTSP",
     "main": {
-      "title": "Main",
-      "tooltip": "RTSP Main AVC(1080p)を開始します",
+      "title": "メイン配信 (1080p・高画質)",
+      "tooltip": "メイン配信 AVC/H.264 (1080p) を開始します",
       "audio": {
         "title": "音声",
-        "tooltip": "RTSP Main AVCの音声を設定します",
+        "tooltip": "メイン配信の音声コーデックを設定します",
         "text": [
           "off",
           "PCM",
@@ -299,11 +299,11 @@
       }
     },
     "mainHEVC": {
-      "title": "Main HEVC",
-      "tooltip": "RTSP Main HEVC(1080p)を開始します",
+      "title": "メイン配信 HEVC (H.265)",
+      "tooltip": "メイン配信 HEVC/H.265 (1080p) を開始します",
       "audio": {
         "title": "音声",
-        "tooltip": "RTSP Main HEVCの音声を設定します",
+        "tooltip": "メイン配信 (HEVC) の音声コーデックを設定します",
         "text": [
           "off",
           "PCM",
@@ -317,11 +317,11 @@
       }
     },
     "sub": {
-      "title": "Sub",
-      "tooltip": "RTSP Sub(360p or 320p)を開始します",
+      "title": "サブ配信 (360p・低負荷)",
+      "tooltip": "サブ配信 (360p または 320p) を開始します",
       "audio": {
         "title": "音声",
-        "tooltip": "RTSP Subの音声を設定します",
+        "tooltip": "サブ配信の音声コーデックを設定します",
         "text": [
           "off",
           "PCM",
@@ -353,18 +353,18 @@
   },
   "HomeKit": {
     "title": "HomeKit",
-    "tooltip": "RTSP Mainをonにする必要があります",
+    "tooltip": "配信設定の「メイン配信」を on にする必要があります",
     "unpair": {
       "title": "強制接続解除",
       "tooltip": "HomeKitの接続を強制的に解除します"
     },
     "note": {
-      "comment": "音声を出すにはRTSP Mainの音声をOPUSに設定してください。\n"
+      "comment": "音声を出すには「メイン配信」の音声を OPUS に設定してください。\n"
     }
   },
   "RTMP": {
     "title": "RTMP",
-    "tooltip": "RTSP Mainをonにして音声をAACかoffにする必要があります",
+    "tooltip": "「メイン配信」を on にして音声を AAC か off にする必要があります",
     "URL": {
       "title": "URL",
       "tooltip": "送信先のURLを設定してください"
@@ -378,13 +378,13 @@
   },
   "WebRTC": {
     "title": "WebRTC",
-    "tooltip": "RTSP Mainをonにする必要があります",
+    "tooltip": "配信設定の「メイン配信」を on にする必要があります",
     "URL": {
       "title": "URL",
       "tooltip": "ブラウザーにURLをcopy&pasteしてください"
     },
     "note": {
-      "comment": "音声を出すにはRTSP Mainの音声をOPUSに設定してください。\n"
+      "comment": "音声を出すには「メイン配信」の音声を OPUS に設定してください。\n"
     }
   },
   "event": {
@@ -559,16 +559,16 @@
       "tooltip": "１秒あたりのフレーム数(1-28FPS)を設定します"
     },
     "bitrateMain": {
-      "title": "Mainの帯域",
-      "tooltip": "Main HDのビットレート(300-2000bps)を設定します"
+      "title": "メイン配信の帯域",
+      "tooltip": "メイン配信 (HD) のビットレート(300-2000bps)を設定します"
     },
     "bitrateMainHEVC": {
-      "title": "MainHEVCの帯域",
-      "tooltip": "Main H.265/HEVC HDのビットレート(300-2000bps)を設定します"
+      "title": "メイン配信 (HEVC) の帯域",
+      "tooltip": "メイン配信 HEVC/H.265 のビットレート(300-2000bps)を設定します"
     },
     "bitrateSub": {
-      "title": "Subの帯域",
-      "tooltip": "Sub360p/320pのビットレート(100-500bps)を設定します"
+      "title": "サブ配信の帯域",
+      "tooltip": "サブ配信 (360p/320p) のビットレート(100-500bps)を設定します"
     }
   },
   "watermark": {

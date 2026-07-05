@@ -277,7 +277,7 @@
     "tab": "Streaming",
     "title": "RTSP",
     "main": {
-      "title": "Main",
+      "title": "Main stream (1080p)",
       "tooltip": "Start Main RTSP(1080p)",
       "audio": {
         "title": "Audio",
@@ -298,7 +298,7 @@
       }
     },
     "mainHEVC": {
-      "title": "Main HEVC",
+      "title": "Main stream HEVC (H.265)",
       "tooltip": "Start Main HEVC RTSP(1080p)",
       "audio": {
         "title": "Audio",
@@ -316,7 +316,7 @@
       }
     },
     "sub": {
-      "title": "Sub",
+      "title": "Sub stream (360p)",
       "tooltip": "Start Sub RTSP (360p/320p)",
       "audio": {
         "title": "Audio",
@@ -560,15 +560,15 @@
       "tooltip": "Set the number of frames per second. (1-28FPS)"
     },
     "bitrateMainAVC": {
-      "title": "Main bitrate",
+      "title": "Main stream bitrate",
       "tooltip": "Set the bitrate of Main HD. (300-2000bps)"
     },
     "bitrateMainHEVC": {
-      "title": "MainHEVC bitrate",
+      "title": "Main stream (HEVC) bitrate",
       "tooltip": "Set the bitrate of Main H.265/HEVC HD. (300-2000bps)"
     },
     "bitrateSub": {
-      "title": "Sub bitrate",
+      "title": "Sub stream bitrate",
       "tooltip": "Set the bitrate of Sub 360p/320p. (100-500bps)"
     }
   },
