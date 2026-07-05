@@ -88,6 +88,12 @@
     "eraseStarted": "消去を開始しました"
   },
   "settings": {
-    "defaultValue": "初期値: {{value}}"
+    "defaultValue": "初期値: {{value}}",
+    "resetToDefault": "初期値に戻す"
+  },
+  "camera": {
+    "compare": "比較",
+    "before": "変更前",
+    "holdToCompare": "押している間、変更前の見え方と比較します"
   }
 }

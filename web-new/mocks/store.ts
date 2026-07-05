@@ -30,12 +30,17 @@ const DEFAULT_HACK_INI: Record<string, string> = {
   TAILSCALE_ENABLE: 'off',
 };
 
+// 開発/E2E 用: `?mockModel=ATOMCAM2` 等で機種を上書きできる(既定は AtomSwing)。
+// /settings/camera(ATOM 専用ページ)をモック環境で表示するために使う。
+const mockModel =
+  typeof location !== 'undefined' ? new URLSearchParams(location.search).get('mockModel') : null;
+
 export const mock: MockState = {
   pan: 177,
   tilt: 90,
   horSwitch: 0,
   verSwitch: 0,
-  hackIni: { ...DEFAULT_HACK_INI },
+  hackIni: { ...DEFAULT_HACK_INI, ...(mockModel ? { PRODUCT_MODEL: mockModel } : {}) },
   isp: { cont: '128', bri: '128', expmode: 'auto' },
   property: { nightVision: 'auto', motionDet: 'on', recordType: 'cont', watermark: 'off' },
 };

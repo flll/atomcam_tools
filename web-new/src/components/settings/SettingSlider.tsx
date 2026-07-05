@@ -1,3 +1,5 @@
+import { useId } from 'react';
+import { RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
@@ -20,18 +22,39 @@ export function SettingSlider({
 }) {
   const { t } = useTranslation('translation');
   const { t: tUi } = useTranslation('ui');
+  // label で全体を包むとリセットボタンが「最初の labelable 要素」になり
+  // input の名前が失われるため、htmlFor/id で明示的に関連付ける
+  const id = useId();
   const desc = t(`${i18nKey}.tooltip`, { defaultValue: '' });
   const modified = defaultValue != null && value !== defaultValue;
   const pct = defaultValue != null && max > min ? (defaultValue - min) / (max - min) : null;
   return (
-    <label className="block rounded-lg border border-border px-3 py-2">
-      <div className="mb-1 flex justify-between gap-4 text-sm">
-        <span>{t(`${i18nKey}.title`)}</span>
-        <span className={cn('font-mono', modified ? 'font-medium text-primary' : 'text-muted-foreground')}>
-          {value}
+    <div className="block rounded-lg border border-border px-3 py-2">
+      <div className="mb-1 flex items-center justify-between gap-4 text-sm">
+        <label htmlFor={id}>{t(`${i18nKey}.title`)}</label>
+        <span className="flex items-center gap-1.5">
+          {modified && (
+            // 初期値からズレているときだけ出すワンタップリセット
+            <button
+              type="button"
+              aria-label={tUi('settings.resetToDefault')}
+              title={tUi('settings.resetToDefault')}
+              onClick={() => onChange(defaultValue!)}
+              className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <RotateCcw className="size-3.5" />
+            </button>
+          )}
+          <span className={cn('font-mono', modified ? 'font-medium text-primary' : 'text-muted-foreground')}>
+            {value}
+          </span>
         </span>
       </div>
-      {desc && <p className="mb-1.5 text-xs leading-relaxed text-muted-foreground">{desc}</p>}
+      {desc && (
+        <p id={`${id}-desc`} className="mb-1.5 text-xs leading-relaxed text-muted-foreground">
+          {desc}
+        </p>
+      )}
       <div
         className="relative"
         title={defaultValue != null ? tUi('settings.defaultValue', { value: defaultValue }) : undefined}
@@ -46,15 +69,17 @@ export function SettingSlider({
           />
         )}
         <input
+          id={id}
           type="range"
           min={min}
           max={max}
           step={step}
           value={value}
+          aria-describedby={desc ? `${id}-desc` : undefined}
           onChange={(e) => onChange(Number(e.target.value))}
           className="w-full accent-[hsl(var(--primary))]"
         />
       </div>
-    </label>
+    </div>
   );
 }

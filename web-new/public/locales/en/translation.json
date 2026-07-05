@@ -83,20 +83,20 @@
   "AdvancedSettings": {
     "title": "Advanced settings",
     "contrast": {
-      "title": "contrast",
-      "tooltip": "Set the contrast of image effect."
+      "title": "Contrast",
+      "tooltip": "Adjusts the difference between light and dark areas."
     },
     "brightness": {
-      "title": "brightness",
-      "tooltip": "Set the brightness of image effect."
+      "title": "Brightness",
+      "tooltip": "Adjusts the overall brightness of the image."
     },
     "saturation": {
-      "title": "saturation",
-      "tooltip": "Set the saturation of image effect."
+      "title": "Saturation",
+      "tooltip": "Adjusts color intensity. Lower values approach black and white."
     },
     "sharpness": {
-      "title": "sharpness",
-      "tooltip": "Set the sharpness of image effect."
+      "title": "Sharpness",
+      "tooltip": "Adjusts edge enhancement. Very high values may amplify noise."
     },
     "sinter": {
       "title": "2D-NR intensity",

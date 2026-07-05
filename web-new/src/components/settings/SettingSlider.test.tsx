@@ -1,14 +1,19 @@
 // @vitest-environment jsdom
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { SettingSlider } from './SettingSlider';
 
 beforeAll(async () => {
   await i18next.use(initReactI18next).init({
     lng: 'ja',
-    resources: { ja: { translation: {}, ui: { settings: { defaultValue: '初期値: {{value}}' } } } },
+    resources: {
+      ja: {
+        translation: {},
+        ui: { settings: { defaultValue: '初期値: {{value}}', resetToDefault: '初期値に戻す' } },
+      },
+    },
   });
 });
 
@@ -40,5 +45,19 @@ describe('SettingSlider 初期値マーカー', () => {
     );
     expect(label().className).toContain('text-primary');
     expect(label().textContent).toBe('200');
+  });
+
+  it('初期値からズレているときだけリセットボタンが出て、押すと初期値が渡る', () => {
+    const onChange = vi.fn();
+    const { container, rerender } = render(
+      <SettingSlider i18nKey="AdvancedSettings.contrast" value={128} min={0} max={255} defaultValue={128} onChange={onChange} />,
+    );
+    const reset = () => container.querySelector<HTMLElement>('[aria-label="初期値に戻す"]');
+    expect(reset()).toBeNull();
+    rerender(
+      <SettingSlider i18nKey="AdvancedSettings.contrast" value={200} min={0} max={255} defaultValue={128} onChange={onChange} />,
+    );
+    fireEvent.click(reset()!);
+    expect(onChange).toHaveBeenCalledWith(128);
   });
 });

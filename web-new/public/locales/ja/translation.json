@@ -83,20 +83,20 @@
   "AdvancedSettings": {
     "title": "詳細設定",
     "contrast": {
-      "title": "contrast",
-      "tooltip": "Set the contrast of image effect."
+      "title": "コントラスト",
+      "tooltip": "明暗の差を調整します。上げるとメリハリが強く、下げると柔らかい映像になります。"
     },
     "brightness": {
-      "title": "brightness",
-      "tooltip": "Set the brightness of image effect."
+      "title": "明るさ",
+      "tooltip": "映像全体の明るさを調整します。"
     },
     "saturation": {
-      "title": "saturation",
-      "tooltip": "Set the saturation of image effect."
+      "title": "彩度",
+      "tooltip": "色の鮮やかさを調整します。下げるほど白黒に近づきます。"
     },
     "sharpness": {
-      "title": "sharpness",
-      "tooltip": "Set the sharpness of image effect."
+      "title": "シャープネス",
+      "tooltip": "輪郭の強調を調整します。上げすぎるとノイズが目立つことがあります。"
     },
     "sinter": {
       "title": "2D-NR intensity",
