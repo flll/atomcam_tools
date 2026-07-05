@@ -1,47 +1,46 @@
+@import './styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --primary: 199 89% 48%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 199 89% 48%;
+    /* 既存セマンティック名は M3 トークン(tokens.css 生成物)のエイリアス。
+       既存ページを壊さないための互換層 — 新規コードは M3 名(surface-container 等)を
+       直接使ってよい。ダークは tokens.css 側で --md-* が切り替わるため再定義不要 */
+    --background: var(--md-surface);
+    --foreground: var(--md-on-surface);
+    --card: var(--md-surface-container-low);
+    --card-foreground: var(--md-on-surface);
+    --primary: var(--md-primary);
+    --primary-foreground: var(--md-on-primary);
+    --secondary: var(--md-secondary-container);
+    --secondary-foreground: var(--md-on-secondary-container);
+    --muted: var(--md-surface-container);
+    --muted-foreground: var(--md-on-surface-variant);
+    --accent: var(--md-surface-container-high);
+    --accent-foreground: var(--md-on-surface);
+    --destructive: var(--md-error);
+    --destructive-foreground: var(--md-on-error);
+    --border: var(--md-outline-variant);
+    --input: var(--md-outline-variant);
+    --ring: var(--md-primary);
     --radius: 0.6rem;
-  }
 
-  .dark {
-    --background: 222 25% 7%;
-    --foreground: 210 20% 96%;
-    --card: 222 22% 10%;
-    --card-foreground: 210 20% 96%;
-    --primary: 199 89% 52%;
-    --primary-foreground: 222 47% 8%;
-    --secondary: 217 19% 18%;
-    --secondary-foreground: 210 20% 96%;
-    --muted: 217 19% 16%;
-    --muted-foreground: 215 14% 60%;
-    --accent: 217 19% 20%;
-    --accent-foreground: 210 20% 96%;
-    --destructive: 0 63% 50%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 217 19% 20%;
-    --input: 217 19% 22%;
-    --ring: 199 89% 52%;
+    /* M3 モーショントークン(src/lib/motion-tokens.ts と値を揃える) */
+    --motion-duration-short-2: 100ms;
+    --motion-duration-short-4: 200ms;
+    --motion-duration-medium-2: 300ms;
+    --motion-duration-long-2: 500ms;
+    --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+    --motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+    /* M3 elevation(影のみ。tint は surface-container の段階で表現) */
+    --elevation-1: 0 1px 2px 0 hsl(var(--md-shadow) / 0.3), 0 1px 3px 1px hsl(var(--md-shadow) / 0.15);
+    --elevation-2: 0 1px 2px 0 hsl(var(--md-shadow) / 0.3), 0 2px 6px 2px hsl(var(--md-shadow) / 0.15);
+    --elevation-3: 0 1px 3px 0 hsl(var(--md-shadow) / 0.3), 0 4px 8px 3px hsl(var(--md-shadow) / 0.15);
   }
 
   * {
