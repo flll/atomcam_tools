@@ -52,3 +52,13 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+/* Live プレイヤー用アニメーション(アイドル時の動きは最小限に保つ) */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

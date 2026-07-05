@@ -53,7 +53,16 @@
     "webrtcHint": "配信設定で RTSP メイン + WebRTC を有効にすると低遅延表示になります:",
     "audioOn": "音声を再生",
     "audioOff": "音声をミュート",
-    "watchOnLive": "ライブページで視聴する"
+    "watchOnLive": "ライブページで視聴する",
+    "live": "LIVE",
+    "fullscreen": "フルスクリーン",
+    "exitFullscreen": "フルスクリーン解除",
+    "theater": "シアターモード",
+    "exitTheater": "シアター解除",
+    "pip": "ピクチャインピクチャ",
+    "reconnecting": "再接続中…",
+    "openPtz": "パン/チルト操作",
+    "flip": "上下反転"
   },
   "placeholder": {
     "comingSoon": "ページが見つかりません。",

@@ -53,7 +53,16 @@
     "webrtcHint": "Enable RTSP main + WebRTC in streaming settings for low-latency view:",
     "audioOn": "Unmute audio",
     "audioOff": "Mute audio",
-    "watchOnLive": "Watch on the Live page"
+    "watchOnLive": "Watch on the Live page",
+    "live": "LIVE",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "theater": "Theater mode",
+    "exitTheater": "Exit theater",
+    "pip": "Picture-in-Picture",
+    "reconnecting": "Reconnecting…",
+    "openPtz": "Pan/Tilt controls",
+    "flip": "Flip"
   },
   "placeholder": {
     "comingSoon": "Page not found.",
