@@ -77,5 +77,8 @@
     "eraseConfirmBody": "Deletes the recording folders (continuous and alarm) on the SD card. This cannot be undone.",
     "eraseConfirmAction": "Erase",
     "eraseStarted": "Erase started"
+  },
+  "settings": {
+    "defaultValue": "Default: {{value}}"
   }
 }

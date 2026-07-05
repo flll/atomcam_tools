@@ -77,5 +77,8 @@
     "eraseConfirmBody": "SDカードの録画フォルダ(常時録画・アラーム録画)を削除します。この操作は取り消せません。",
     "eraseConfirmAction": "消去する",
     "eraseStarted": "消去を開始しました"
+  },
+  "settings": {
+    "defaultValue": "初期値: {{value}}"
   }
 }
