@@ -53,7 +53,7 @@ function StatusLine({ status }: { status: NotifyStatus }) {
   const ok = status.ok === true;
   const Icon = ok ? CircleCheck : CircleX;
   return (
-    <div className={cn('flex items-center gap-2 text-xs', ok ? 'text-primary' : 'text-destructive')}>
+    <div className={cn('flex items-center gap-2 text-xs', ok ? 'text-success' : 'text-destructive')}>
       <Icon className="size-3.5 shrink-0" />
       <span>
         {ok ? tUi('events.sendOk') : tUi('events.sendFail')}
@@ -93,7 +93,7 @@ export default function EventsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('event.tab')}</h1>
+      <h1 className="text-title-xl">{t('event.tab')}</h1>
 
       {/* WebHook */}
       <Section title="WebHook" description={tUi('events.webhookDesc')}>
@@ -142,13 +142,13 @@ export default function EventsPage() {
       </Section>
 
       {/* テスト送信 */}
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card p-4">
+      <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-card p-4">
         <Button variant="secondary" disabled={testing || (!webhookOn && !mqttOn)} onClick={sendTest}>
           <Send className="size-4" />
           {testing ? tUi('events.sending') : tUi('events.sendTest')}
         </Button>
         {!webhookOn && !mqttOn
-          ? <span className="flex items-center gap-1.5 text-xs text-muted-foreground"><Activity className="size-3.5" />{tUi('events.needTarget')}</span>
+          ? <span className="flex items-center gap-2 text-xs text-muted-foreground"><Activity className="size-3.5" />{tUi('events.needTarget')}</span>
           : <StatusLine status={status} />}
       </div>
 

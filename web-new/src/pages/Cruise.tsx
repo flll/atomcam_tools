@@ -53,7 +53,7 @@ export default function CruisePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('cruise.title')}</h1>
+      <h1 className="text-title-xl">{t('cruise.title')}</h1>
       <Section title={t('cruise.title')}>
         <Button variant="outline" onClick={() => runCmd(api.exec('moveinit'))}>{t('cruise.initialPosition.title')}</Button>
         <SettingSwitch icon={Route} i18nKey="cruise.cameraMotion" value={draft.CRUISE ?? 'off'} onChange={(v) => patch({ CRUISE: v })} />

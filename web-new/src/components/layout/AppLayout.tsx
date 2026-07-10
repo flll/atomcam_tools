@@ -221,7 +221,7 @@ export function AppLayout() {
                     onClick={() => setMoreOpen(false)}
                     className={({ isActive }) =>
                       cn(
-                        'flex flex-col items-center gap-1.5 rounded-2xl p-3 text-xs transition-colors duration-short-4 ease-standard active:scale-[0.97]',
+                        'flex flex-col items-center gap-2 rounded-2xl p-3 text-xs transition-colors duration-short-4 ease-standard active:scale-[0.97]',
                         isActive
                           ? 'bg-secondary-container text-on-secondary-container'
                           : 'text-on-surface-variant hover:bg-foreground/10 hover:text-foreground',

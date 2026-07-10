@@ -74,9 +74,9 @@ export default function StoragePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('SDCardSettings.title')}</h1>
+      <h1 className="text-title-xl">{t('SDCardSettings.title')}</h1>
 
-      <section className="rounded-xl border border-border bg-card p-4">
+      <section className="rounded-card border border-border bg-card p-4">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-sm font-semibold text-muted-foreground">{tUi('storage.usageTitle')}</h2>
           <span className="font-mono text-xs tabular-nums text-muted-foreground">
@@ -114,7 +114,7 @@ export default function StoragePage() {
             {info.swaps.map((s) => (
               <div key={s.name} className="space-y-1">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="flex min-w-0 items-center gap-1.5 text-muted-foreground">
+                  <span className="flex min-w-0 items-center gap-2 text-muted-foreground">
                     <HardDriveDownload aria-hidden="true" className="size-3.5 shrink-0" />
                     <span className="truncate font-mono" title={s.name}>
                       {tUi('storage.swap')}: {s.name.split('/').pop()}
@@ -130,7 +130,7 @@ export default function StoragePage() {
             {info.memTotalKb != null && info.memAvailKb != null && (
               <div className="space-y-1">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <span className="flex items-center gap-2 text-muted-foreground">
                     <MemoryStick aria-hidden="true" className="size-3.5 shrink-0" />
                     {tUi('storage.memory')}
                   </span>
@@ -150,7 +150,7 @@ export default function StoragePage() {
         {/* 録画フォルダ内訳(du は重いのでオンデマンド) */}
         <div className="mt-4 border-t border-border/60 pt-3">
           <div className="flex items-center justify-between gap-4">
-            <h3 className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+            <h3 className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <FolderSearch aria-hidden="true" className="size-3.5" />
               {tUi('storage.duTitle')}
             </h3>
@@ -192,7 +192,7 @@ export default function StoragePage() {
       <Section title={t('SDCardSettings.title')} description={tUi('storage.sdSectionDesc')}>
         <SettingSwitch icon={Share2} i18nKey="SDCardSettings.smbAccess" value={draft.STORAGE_SDCARD_PUBLISH ?? 'off'} onChange={(v) => patch({ STORAGE_SDCARD_PUBLISH: v })} />
         <SettingSwitch icon={HardDriveDownload} i18nKey="SDCardSettings.directWrite" value={draft.STORAGE_SDCARD_DIRECT_WRITE ?? 'off'} onChange={(v) => patch({ STORAGE_SDCARD_DIRECT_WRITE: v })} />
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-destructive/40 px-3 py-2">
+        <div className="flex items-center justify-between gap-4 rounded-control border border-destructive/40 px-3 py-2">
           <span className="min-w-0">
             <span className="block text-sm">{t('SDCardSettings.eraseSDCard.title')}</span>
             <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">

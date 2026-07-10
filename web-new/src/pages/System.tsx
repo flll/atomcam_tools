@@ -13,7 +13,7 @@ export default function SystemPage({ section }: { section?: 'device' | 'tailscal
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('systemSettings.tab', { defaultValue: 'System' })}</h1>
+      <h1 className="text-title-xl">{t('systemSettings.tab', { defaultValue: 'System' })}</h1>
 
       {showDevice && (
         <>

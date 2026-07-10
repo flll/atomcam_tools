@@ -53,7 +53,7 @@ function CopyButton({ text }: { text: string }) {
           .catch(() => toast.error(tUi('common.execFailed', { defaultValue: 'copy failed' })));
       }}
     >
-      {done ? <Check className="size-3.5 text-primary" /> : <Copy className="size-3.5" />}
+      {done ? <Check className="size-3.5 text-success" /> : <Copy className="size-3.5" />}
     </Button>
   );
 }
@@ -76,8 +76,8 @@ function UrlRow({ url, qrLabel }: { url: string; qrLabel: string }) {
   }
 
   return (
-    <div className="space-y-2 px-4 py-2.5">
-      <div className="flex items-center gap-1.5 rounded-md border border-border bg-surface-container-low px-2 py-1.5">
+    <div className="space-y-2 px-4 py-3">
+      <div className="flex items-center gap-2 rounded-control border border-border bg-surface-container-low px-2 py-1.5">
         <code className="min-w-0 flex-1 truncate font-mono text-xs" title={url}>{url}</code>
         <CopyButton text={url} />
         <Button
@@ -95,7 +95,7 @@ function UrlRow({ url, qrLabel }: { url: string; qrLabel: string }) {
       {qrOpen && qrSvg && (
         <div
           data-testid="qr-popover"
-          className="mx-auto w-40 rounded-lg bg-white p-2 [&>svg]:h-full [&>svg]:w-full"
+          className="mx-auto w-40 rounded-sheet bg-white p-2 [&>svg]:h-full [&>svg]:w-full"
           dangerouslySetInnerHTML={{ __html: qrSvg }}
         />
       )}
@@ -106,7 +106,7 @@ function UrlRow({ url, qrLabel }: { url: string; qrLabel: string }) {
 function SnippetBlock({ text }: { text: string }) {
   return (
     <div className="relative">
-      <pre className="max-h-72 overflow-auto rounded-md border border-border bg-surface-container-low p-3 pr-10 font-mono text-[11px] leading-relaxed">{text}</pre>
+      <pre className="max-h-72 overflow-auto rounded-control border border-border bg-surface-container-low p-3 pr-10 font-mono text-[11px] leading-relaxed">{text}</pre>
       <div className="absolute right-1.5 top-1.5">
         <CopyButton text={text} />
       </div>
@@ -128,9 +128,9 @@ function IntegrationCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-3 rounded-xl border border-border bg-card p-4">
+    <div className="space-y-3 rounded-card border border-border bg-card p-4">
       <div className="flex items-start gap-3">
-        <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-secondary-container text-on-secondary-container">
+        <div className="grid size-10 shrink-0 place-items-center rounded-control bg-secondary-container text-on-secondary-container">
           <Icon aria-hidden="true" className="size-5" />
         </div>
         <div className="min-w-0">
@@ -209,12 +209,12 @@ export default function StreamingPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('RTSP.tab')}</h1>
+      <h1 className="text-title-xl">{t('RTSP.tab')}</h1>
 
       {/* 同時有効化の警告(実測に基づく) */}
       {memWarn && (
-        <div data-testid="mem-warn" className="flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-3">
-          <ShieldAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-destructive" />
+        <div data-testid="mem-warn" className="flex items-start gap-3 rounded-card border border-warning/40 bg-warning/10 p-3">
+          <ShieldAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-warning" />
           <p className="text-xs leading-relaxed">{tUi('hub.memWarn')}</p>
         </div>
       )}
@@ -265,7 +265,7 @@ export default function StreamingPage() {
             {rtmpOn && (
               <SubSettings>
                 <SettingInput icon={Link2} i18nKey="RTMP.URL" value={draft.RTMP_URL ?? ''} onChange={(v) => patch({ RTMP_URL: v })} />
-                <p className="px-4 py-2.5 text-xs leading-relaxed text-muted-foreground">{tUi('hub.youtube.autoNote')}</p>
+                <p className="px-4 py-3 text-xs leading-relaxed text-muted-foreground">{tUi('hub.youtube.autoNote')}</p>
                 <SettingInputNumber icon={TimerReset} i18nKey="RTMP.IntervalRestart" value={Math.abs(Number(draft.RTMP_RESTART ?? 240))} min={20} max={2880} onChange={(v) => patch({ RTMP_RESTART: String(-v) })} />
               </SubSettings>
             )}
@@ -281,13 +281,13 @@ export default function StreamingPage() {
             {homekitOn && (
               <SubSettings>
                 {pinDisplay ? (
-                  <p className="px-4 py-2.5 text-sm">
+                  <p className="px-4 py-3 text-sm">
                     {tUi('hub.homekit.pin')}: <code className="rounded bg-surface-container-low px-2 py-0.5 font-mono text-base tabular-nums">{pinDisplay}</code>
                   </p>
                 ) : (
-                  <p className="px-4 py-2.5 text-xs text-muted-foreground">{tUi('hub.homekit.pinAfterSave')}</p>
+                  <p className="px-4 py-3 text-xs text-muted-foreground">{tUi('hub.homekit.pinAfterSave')}</p>
                 )}
-                <p className="px-4 py-2.5 text-xs leading-relaxed text-muted-foreground">{tUi('hub.homekit.steps')}</p>
+                <p className="px-4 py-3 text-xs leading-relaxed text-muted-foreground">{tUi('hub.homekit.steps')}</p>
               </SubSettings>
             )}
           </IntegrationCard>
@@ -306,7 +306,7 @@ export default function StreamingPage() {
         <SettingSwitch icon={Smartphone} i18nKey="RTSP.sub" value={draft.RTSP_VIDEO1 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO1: v })} />
         {subOn && (
           <SubSettings>
-            <p className="px-4 py-2.5 text-xs leading-relaxed text-muted-foreground">{tUi('hub.subHint')}</p>
+            <p className="px-4 py-3 text-xs leading-relaxed text-muted-foreground">{tUi('hub.subHint')}</p>
             <UrlRow url={rtspUrl(host, 'video1', auth)} qrLabel={tUi('hub.qr')} />
           </SubSettings>
         )}

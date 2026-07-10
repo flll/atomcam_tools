@@ -45,7 +45,7 @@ export function UnsavedBar({
 
   return (
     <div className="fixed inset-x-0 bottom-16 z-40 px-4 md:bottom-4 md:left-60">
-      <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-lg border border-border bg-card p-3 shadow-lg">
+      <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-sheet border border-border bg-card p-3 shadow-lg">
         <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
           {t('common.unsavedChanges')}
         </span>

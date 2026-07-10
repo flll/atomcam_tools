@@ -18,10 +18,11 @@ export function Toaster() {
           role={item.variant === 'error' ? 'alert' : 'status'}
           onClick={() => dismissToast(item.id)}
           className={cn(
-            'pointer-events-auto max-w-md rounded-lg border px-4 py-2.5 text-sm shadow-lg',
+            'pointer-events-auto max-w-md rounded-sheet border px-4 py-3 text-sm shadow-lg',
             item.variant === 'error'
               ? 'border-destructive/50 bg-destructive text-destructive-foreground'
-              : 'border-border bg-card text-foreground',
+              : // 成功は LDSG Role Color(success)の縁で「完了」を示す
+                'border-success/50 bg-card text-foreground',
           )}
         >
           {item.message}

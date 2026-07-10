@@ -25,7 +25,7 @@ export default function MaintenancePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('maintenance.tab')}</h1>
+      <h1 className="text-title-xl">{t('maintenance.tab')}</h1>
       <Section title={t('monitoring.title')}>
         <SettingSwitch icon={Wifi} i18nKey="monitoring.network" value={draft.MONITORING_NETWORK ?? 'on'} onChange={(v) => patch({ MONITORING_NETWORK: v })} />
         <SettingSwitch icon={HeartPulse} i18nKey="monitoring.ping" value={draft.HEALTHCHECK ?? 'off'} onChange={(v) => patch({ HEALTHCHECK: v })} />
