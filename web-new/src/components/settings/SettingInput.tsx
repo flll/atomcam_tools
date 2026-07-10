@@ -20,7 +20,7 @@ export function SettingInput({
   const desc = t(`${i18nKey}.tooltip`, { defaultValue: '' });
   const placeholder = t(`${i18nKey}.placeholder`, { defaultValue: '' });
   return (
-    <label className="block rounded-lg border border-border px-3 py-2">
+    <label className="block px-4 py-3">
       <span className="flex items-center gap-2 text-sm">
         {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}
         {t(`${i18nKey}.title`)}

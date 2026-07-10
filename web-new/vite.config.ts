@@ -44,6 +44,10 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
       __DEMO__: JSON.stringify(isDemo),
+      // ロケール JSON のキャッシュバスター。lighttpd は Cache-Control を返さず、
+      // ブラウザのヒューリスティックキャッシュで更新後も古い翻訳が使われ続ける
+      // (実機で hub.* キーが生表示される事故が発生)。ビルドごとに URL を変える
+      __BUILD_ID__: JSON.stringify(Date.now().toString(36)),
     },
     resolve: {
       alias: {

@@ -55,7 +55,17 @@ export function WatermarkEditor() {
         onDragLeave={() => setDrag(false)}
         onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f?.name.endsWith('.png')) onDrop(f); }}
       >
-        <canvas ref={canvasRef} className="max-w-full bg-transparent" />
+        {/* 透過 PNG が白ロゴでも黒ロゴでも見えるよう、背景は CSS の市松模様にする
+            (canvas 自体には描かない: ピクセルデータはそのままカメラへ送るため) */}
+        <canvas
+          ref={canvasRef}
+          className="max-w-full rounded"
+          style={{
+            backgroundImage:
+              'repeating-conic-gradient(rgba(128,128,128,0.35) 0% 25%, rgba(128,128,128,0.12) 0% 50%)',
+            backgroundSize: '16px 16px',
+          }}
+        />
         <p className="mt-2 text-xs text-muted-foreground">{t('watermark.image.comment')}</p>
       </div>
     </SettingComment>
