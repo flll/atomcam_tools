@@ -92,7 +92,7 @@ export default function EventsPage() {
   }
 
   return (
-    {/* pb-28: フローティングの未保存バー(高さ約76px)が最後のテスト送信ボタンを覆わないよう余白を確保 */}
+    // pb-28: フローティングの未保存バー(高さ約76px)が最後のテスト送信ボタンを覆わないよう余白を確保
     <div className="mx-auto max-w-3xl space-y-6 pb-28">
       <h1 className="text-xl font-semibold">{t('event.tab')}</h1>
 
