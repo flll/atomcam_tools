@@ -4,6 +4,12 @@
 #
 
 start() {
+	# 既に crond が動いていれば二重起動しない(重複起動すると root crontab の
+	# 全ジョブが毎回2回実行される。実機で crond 2 プロセスを確認済み)
+	if pidof crond >/dev/null 2>&1; then
+		echo "crond already running, skip"
+		return 0
+	fi
 	printf "Starting crond: "
 	/usr/sbin/crond -l 8
 	echo "OK"
