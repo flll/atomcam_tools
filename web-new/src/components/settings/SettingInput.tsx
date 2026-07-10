@@ -32,7 +32,7 @@ export function SettingInput({
         value={value}
         placeholder={placeholder || undefined}
         onChange={(e) => onChange?.(e.target.value)}
-        className="mt-1.5 w-full rounded-md border border-input bg-background px-2 py-1 text-sm placeholder:text-muted-foreground/50"
+        className="mt-2 w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-sm placeholder:text-muted-foreground/50"
       />
     </label>
   );

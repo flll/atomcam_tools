@@ -17,7 +17,7 @@ import {
   User,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { Section, SettingInput, SettingInputNumber, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { Disclosure } from '@/components/ui/disclosure';
 import { Button } from '@/components/ui/button';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -92,27 +92,25 @@ export default function EventsPage() {
   }
 
   return (
-    // pb-28: フローティングの未保存バー(高さ約76px)が最後のテスト送信ボタンを覆わないよう余白を確保
-    <div className="mx-auto max-w-3xl space-y-6 pb-28">
+    <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-xl font-semibold">{t('event.tab')}</h1>
 
       {/* WebHook */}
       <Section title="WebHook" description={tUi('events.webhookDesc')}>
         <SettingInput icon={Link2} i18nKey="event.webhook.URL" value={draft.WEBHOOK_URL ?? ''} onChange={(v) => patch({ WEBHOOK_URL: v })} />
         <SettingSwitch icon={ShieldAlert} i18nKey="event.webhook.insecure" value={draft.WEBHOOK_INSECURE ?? 'off'} onChange={(v) => patch({ WEBHOOK_INSECURE: v })} />
-        <div className="px-4 py-3">
-          <Disclosure summary={tUi('events.presets')}>
-            <p className="text-xs leading-relaxed text-muted-foreground">{tUi('events.presetsNote')}</p>
-            {PRESETS.map((p) => (
-              <div key={p.key} className="flex items-center justify-between gap-3 py-1 text-sm">
-                <span className="flex items-center gap-2"><Radio className="size-3.5 text-muted-foreground" />{p.label}</span>
-                {p.url
-                  ? <code className="truncate font-mono text-xs text-muted-foreground">{p.url}</code>
-                  : <span className="text-xs text-muted-foreground">{tUi('events.viaRelay')}</span>}
-              </div>
-            ))}
-          </Disclosure>
-        </div>
+        {/* カード内の行として溶かす(枠を消し px を行と揃える)。二重枠に見えるのを防ぐ */}
+        <Disclosure summary={tUi('events.presets')} className="rounded-none border-0" summaryClassName="px-4 py-3" bodyClassName="px-4">
+          <p className="text-xs leading-relaxed text-muted-foreground">{tUi('events.presetsNote')}</p>
+          {PRESETS.map((p) => (
+            <div key={p.key} className="flex items-center justify-between gap-3 py-1 text-sm">
+              <span className="flex items-center gap-2"><Radio className="size-3.5 text-muted-foreground" />{p.label}</span>
+              {p.url
+                ? <code className="truncate font-mono text-xs text-muted-foreground">{p.url}</code>
+                : <span className="text-xs text-muted-foreground">{tUi('events.viaRelay')}</span>}
+            </div>
+          ))}
+        </Disclosure>
       </Section>
 
       {/* MQTT(Home Assistant) */}
@@ -121,7 +119,7 @@ export default function EventsPage() {
         {mqttOn && (
           <>
             <SettingInput icon={Server} i18nKey="event.mqtt.host" value={draft.MQTT_HOST ?? ''} onChange={(v) => patch({ MQTT_HOST: v })} />
-            <SettingInput icon={Link2} i18nKey="event.mqtt.port" value={draft.MQTT_PORT ?? ''} onChange={(v) => patch({ MQTT_PORT: v })} />
+            <SettingInputNumber icon={Link2} i18nKey="event.mqtt.port" value={Number(draft.MQTT_PORT ?? 1883)} min={1} max={65535} onChange={(v) => patch({ MQTT_PORT: String(v) })} />
             <SettingInput icon={User} i18nKey="event.mqtt.user" value={draft.MQTT_USER ?? ''} onChange={(v) => patch({ MQTT_USER: v })} />
             <SettingInput icon={KeyRound} i18nKey="event.mqtt.pass" type="password" value={draft.MQTT_PASS ?? ''} onChange={(v) => patch({ MQTT_PASS: v })} />
             <SettingInput icon={Radio} i18nKey="event.mqtt.topic" value={draft.MQTT_TOPIC ?? ''} onChange={(v) => patch({ MQTT_TOPIC: v })} />

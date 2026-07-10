@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 // 子(Setting* 行)は区切り線で仕切る。
 export function SubSettings({ children }: { children: ReactNode }) {
   return (
-    <div className="divide-y divide-border/40 border-l-2 border-primary/50 bg-foreground/[0.02]">
+    <div className="divide-y divide-border/70 border-l-2 border-primary/50 bg-foreground/[0.02]">
       {children}
     </div>
   );

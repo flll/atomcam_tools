@@ -28,7 +28,7 @@ export function Section({
       <div
         className={cn(
           card
-            ? 'divide-y divide-border/60 overflow-hidden rounded-xl border border-border bg-card'
+            ? 'divide-y divide-border overflow-hidden rounded-xl border border-border bg-card'
             : 'space-y-2',
         )}
       >

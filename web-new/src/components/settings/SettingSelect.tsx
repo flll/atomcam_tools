@@ -29,7 +29,7 @@ export function SettingSelect({
         {desc && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{desc}</span>}
       </span>
       <select
-        className="shrink-0 rounded-md border border-input bg-background px-2 py-1 text-sm"
+        className="shrink-0 rounded-md border border-input bg-background px-2.5 py-1.5 text-sm"
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
