@@ -75,9 +75,11 @@ export default function CameraPage() {
   }, [osd]);
 
   // AUTO 中はカメラの現在値を 1 秒間隔で取得してスライダーに反映する
+  // (非表示タブでは取得しない: 実機の CGI 負荷を無駄にしないため)
   useEffect(() => {
     if (!isAuto || comparing) return;
     const id = setInterval(() => {
+      if (document.hidden) return;
       runCmd(mutate(), { quiet: true });
     }, 1000);
     return () => clearInterval(id);

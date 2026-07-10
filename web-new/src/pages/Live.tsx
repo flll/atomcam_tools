@@ -34,7 +34,9 @@ export default function Live() {
   const webrtcConfigured = config?.RTSP_VIDEO0 === 'on' && config?.WEBRTC_ENABLE === 'on';
   const { state: rtcState, videoRef } = useWebRtcStream(webrtcConfigured);
   const rtcActive = rtcState === 'connected';
-  const { src, online, fps } = useJpegStream(500, !rtcActive);
+  // PiP 表示中はメインタブが非表示でも JPEG 取得を続ける必要がある
+  const pip = useDocumentPip();
+  const { src, online, fps } = useJpegStream(500, !rtcActive, pip.pipWindow != null);
 
   // 初回フレーム前に offline 判定しない(起動直後・遅い回線への猶予)
   const [graceOver, setGraceOver] = useState(false);
@@ -53,7 +55,6 @@ export default function Live() {
         : 'connecting';
 
   const fullscreen = useFullscreen(stageRef);
-  const pip = useDocumentPip();
   const { visible, handlers } = useControlsVisibility(3000, focusPin || ptzOpen);
 
   // T キーでシアターモード、Escape で解除(サブモニタ運用の要)
