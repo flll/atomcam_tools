@@ -310,14 +310,6 @@ export default function StreamingPage() {
             <UrlRow url={rtspUrl(host, 'video1', auth)} qrLabel={tUi('hub.qr')} />
           </SubSettings>
         )}
-        {webrtcOn && mainOn && (
-          <SubSettings>
-            <UrlRow url={webrtcPageUrl(host, window.location.protocol)} qrLabel={tUi('hub.qr')} />
-            <Link to="/" className="inline-block text-sm text-primary underline-offset-2 hover:underline">
-              {tUi('live.watchOnLive')}
-            </Link>
-          </SubSettings>
-        )}
         <SettingSwitch icon={Lock} i18nKey="RTSP.auth" value={draft.RTSP_AUTH ?? 'off'} onChange={(v) => patch({ RTSP_AUTH: v })} />
         {auth.on && (
           <SubSettings>
@@ -326,6 +318,14 @@ export default function StreamingPage() {
           </SubSettings>
         )}
         <SettingSwitch i18nKey="WebRTC" value={draft.WEBRTC_ENABLE ?? 'off'} onChange={(v) => patch({ WEBRTC_ENABLE: v })} />
+        {webrtcOn && mainOn && (
+          <SubSettings>
+            <UrlRow url={webrtcPageUrl(host, window.location.protocol)} qrLabel={tUi('hub.qr')} />
+            <Link to="/" className="inline-block text-sm text-primary underline-offset-2 hover:underline">
+              {tUi('live.watchOnLive')}
+            </Link>
+          </SubSettings>
+        )}
       </Section>
 
       {/* 詳細設定(既定で畳む): HEVC / RTSP over HTTP */}
