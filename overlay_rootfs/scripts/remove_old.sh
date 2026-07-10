@@ -18,19 +18,19 @@ PERIODICREC_SDCARD=$(awk -F "=" '/^PERIODICREC_SDCARD *=/ {print $2}' $HACK_INI)
 HOSTNAME=`hostname`
 
 if [ "$ALARMREC_SDCARD_REMOVE" = "on" ] && [ "$ALARMREC_SDCARD_REMOVE_DAYS" != "" ]; then
-  find /media/mmc/alarm_record -depth -type f -mtime +$ALARMREC_SDCARD_REMOVE_DAYS -delete
-  find /media/mmc/alarm_record -depth -type d -mmin +3 -empty -delete
+  find /media/mmc/alarm_record -depth -type f -mtime +$ALARMREC_SDCARD_REMOVE_DAYS -exec rm -f {} +
+  find /media/mmc/alarm_record -depth -type d -mmin +3 -empty -exec rmdir {} ;
 fi
 if [ "$PERIODICREC_SDCARD_REMOVE" = "on" ] && [ "$PERIODICREC_SDCARD_REMOVE_DAYS" != "" ]; then
-  find /media/mmc/record -depth -type f -mtime +$PERIODICREC_SDCARD_REMOVE_DAYS -delete
-  find /media/mmc/record -depth -type d -mmin +3 -empty -delete
+  find /media/mmc/record -depth -type f -mtime +$PERIODICREC_SDCARD_REMOVE_DAYS -exec rm -f {} +
+  find /media/mmc/record -depth -type d -mmin +3 -empty -exec rmdir {} ;
 fi
 if [ "$TIMELAPSE_SDCARD_REMOVE" = "on" ] && [ "$TIMELAPSE_SDCARD_REMOVE_DAYS" != "" ]; then
-  find /media/mmc/time_lapse -depth -type f -mtime +$TIMELAPSE_SDCARD_REMOVE_DAYS -delete
-  find /media/mmc/time_lapse -depth -type d -mmin +3 -empty -delete
+  find /media/mmc/time_lapse -depth -type f -mtime +$TIMELAPSE_SDCARD_REMOVE_DAYS -exec rm -f {} +
+  find /media/mmc/time_lapse -depth -type d -mmin +3 -empty -exec rmdir {} ;
 fi
-find /media/mmc/time_lapse -depth -type f -name '*._mp4' -mtime +3 -delete
-find /media/mmc/time_lapse -depth -type f -name '*.stsz' -mtime +3 -delete
+find /media/mmc/time_lapse -depth -type f -name '*._mp4' -mtime +3 -exec rm -f {} +
+find /media/mmc/time_lapse -depth -type f -name '*.stsz' -mtime +3 -exec rm -f {} +
 
 # 空き床ガード: 空きが 1GB を切ったら最古の録画日ディレクトリから削除し、
 # SD フル起因の全機能不全(録画停止・ログ死・設定保存失敗)を防ぐ安全網。
@@ -55,14 +55,14 @@ fi
 /atom_patch/system_bin/mount_cifs.sh || exit -1
 
 if [ "$ALARMREC_CIFS_REMOVE" = "on" ] && [ "$ALARMREC_CIFS_REMOVE_DAYS" != "" ]; then
-  find /atom/mnt/$HOSTNAME/alarm_record -depth -type f -mtime +$ALARMREC_CIFS_REMOVE_DAYS -delete
-  find /atom/mnt/$HOSTNAME/alarm_record -depth -type d -mmin +3 -empty -delete
+  find /atom/mnt/$HOSTNAME/alarm_record -depth -type f -mtime +$ALARMREC_CIFS_REMOVE_DAYS -exec rm -f {} +
+  find /atom/mnt/$HOSTNAME/alarm_record -depth -type d -mmin +3 -empty -exec rmdir {} ;
 fi
 if [ "$PERIODICREC_CIFS_REMOVE" = "on" ] && [ "$PERIODICREC_CIFS_REMOVE_DAYS" != "" ]; then
-  find /atom/mnt/$HOSTNAME/record -depth -type f -mtime +$PERIODICREC_CIFS_REMOVE_DAYS -delete
-  find /atom/mnt/$HOSTNAME/record -depth -type d -mmin +3 -empty -delete
+  find /atom/mnt/$HOSTNAME/record -depth -type f -mtime +$PERIODICREC_CIFS_REMOVE_DAYS -exec rm -f {} +
+  find /atom/mnt/$HOSTNAME/record -depth -type d -mmin +3 -empty -exec rmdir {} ;
 fi
 if [ "$TIMELAPSE_CIFS_REMOVE" = "on" ] && [ "$TIMELAPSE_CIFS_REMOVE_DAYS" != "" ]; then
-  find /atom/mnt/$HOSTNAME/time_lapse -depth -type f -mtime +$TIMELAPSE_CIFS_REMOVE_DAYS -delete
-  find /atom/mnt/$HOSTNAME/time_lapse -depth -type d -mmin +3 -empty -delete
+  find /atom/mnt/$HOSTNAME/time_lapse -depth -type f -mtime +$TIMELAPSE_CIFS_REMOVE_DAYS -exec rm -f {} +
+  find /atom/mnt/$HOSTNAME/time_lapse -depth -type d -mmin +3 -empty -exec rmdir {} ;
 fi
