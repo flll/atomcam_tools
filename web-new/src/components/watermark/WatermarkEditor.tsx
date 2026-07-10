@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { SettingComment } from '@/components/settings';
 import { useWatermark } from '@/hooks/useWatermark';
 import { runCmd } from '@/lib/runCmd';
 
 export function WatermarkEditor() {
-  const { t } = useTranslation('translation');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { blob, dims, saveCanvas } = useWatermark();
   const [drag, setDrag] = useState(false);
@@ -66,7 +64,6 @@ export function WatermarkEditor() {
             backgroundSize: '16px 16px',
           }}
         />
-        <p className="mt-2 text-xs text-muted-foreground">{t('watermark.image.comment')}</p>
       </div>
     </SettingComment>
   );

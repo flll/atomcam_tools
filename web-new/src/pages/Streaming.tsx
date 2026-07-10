@@ -76,8 +76,8 @@ function UrlRow({ url, qrLabel }: { url: string; qrLabel: string }) {
   }
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-1.5 rounded-md border border-border bg-surface-container-low px-2 py-1">
+    <div className="space-y-2 px-4 py-2.5">
+      <div className="flex items-center gap-1.5 rounded-md border border-border bg-surface-container-low px-2 py-1.5">
         <code className="min-w-0 flex-1 truncate font-mono text-xs" title={url}>{url}</code>
         <CopyButton text={url} />
         <Button
@@ -265,7 +265,7 @@ export default function StreamingPage() {
             {rtmpOn && (
               <SubSettings>
                 <SettingInput icon={Link2} i18nKey="RTMP.URL" value={draft.RTMP_URL ?? ''} onChange={(v) => patch({ RTMP_URL: v })} />
-                <p className="text-xs leading-relaxed text-muted-foreground">{tUi('hub.youtube.autoNote')}</p>
+                <p className="px-4 py-2.5 text-xs leading-relaxed text-muted-foreground">{tUi('hub.youtube.autoNote')}</p>
                 <SettingInputNumber icon={TimerReset} i18nKey="RTMP.IntervalRestart" value={Math.abs(Number(draft.RTMP_RESTART ?? 240))} min={20} max={2880} onChange={(v) => patch({ RTMP_RESTART: String(-v) })} />
               </SubSettings>
             )}
@@ -281,13 +281,13 @@ export default function StreamingPage() {
             {homekitOn && (
               <SubSettings>
                 {pinDisplay ? (
-                  <p className="text-sm">
+                  <p className="px-4 py-2.5 text-sm">
                     {tUi('hub.homekit.pin')}: <code className="rounded bg-surface-container-low px-2 py-0.5 font-mono text-base tabular-nums">{pinDisplay}</code>
                   </p>
                 ) : (
-                  <p className="text-xs text-muted-foreground">{tUi('hub.homekit.pinAfterSave')}</p>
+                  <p className="px-4 py-2.5 text-xs text-muted-foreground">{tUi('hub.homekit.pinAfterSave')}</p>
                 )}
-                <p className="text-xs leading-relaxed text-muted-foreground">{tUi('hub.homekit.steps')}</p>
+                <p className="px-4 py-2.5 text-xs leading-relaxed text-muted-foreground">{tUi('hub.homekit.steps')}</p>
               </SubSettings>
             )}
           </IntegrationCard>
@@ -306,7 +306,7 @@ export default function StreamingPage() {
         <SettingSwitch icon={Smartphone} i18nKey="RTSP.sub" value={draft.RTSP_VIDEO1 ?? 'off'} onChange={(v) => patch({ RTSP_VIDEO1: v })} />
         {subOn && (
           <SubSettings>
-            <p className="text-xs leading-relaxed text-muted-foreground">{tUi('hub.subHint')}</p>
+            <p className="px-4 py-2.5 text-xs leading-relaxed text-muted-foreground">{tUi('hub.subHint')}</p>
             <UrlRow url={rtspUrl(host, 'video1', auth)} qrLabel={tUi('hub.qr')} />
           </SubSettings>
         )}
@@ -321,7 +321,7 @@ export default function StreamingPage() {
         {webrtcOn && mainOn && (
           <SubSettings>
             <UrlRow url={webrtcPageUrl(host, window.location.protocol)} qrLabel={tUi('hub.qr')} />
-            <Link to="/" className="inline-block text-sm text-primary underline-offset-2 hover:underline">
+            <Link to="/" className="mx-4 my-2.5 inline-block text-sm text-primary underline-offset-2 hover:underline">
               {tUi('live.watchOnLive')}
             </Link>
           </SubSettings>

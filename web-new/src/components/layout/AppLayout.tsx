@@ -124,8 +124,10 @@ export function AppLayout() {
         <main
           className={cn(
             'flex-1',
-            // Live(ルート)は没入型: ステージをエッジ to エッジにする
-            location.pathname === '/' ? 'p-0 pb-20 md:pb-0' : 'p-4 pb-24 md:p-8 md:pb-8',
+            // Live(ルート)は没入型: ステージをエッジ to エッジにする。
+            // 設定ページの下余白はフローティングの未保存バー(+モバイルはボトムナビ)が
+            // 最下部の操作要素を覆わない量を全ページ共通で確保する
+            location.pathname === '/' ? 'p-0 pb-20 md:pb-0' : 'p-4 pb-40 md:p-8 md:pb-28',
           )}
         >
           <Suspense fallback={<div className="p-8 text-muted-foreground">{t('common.loading')}</div>}>
