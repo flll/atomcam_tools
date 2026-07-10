@@ -95,6 +95,43 @@
     "duLoad": "Measure",
     "duLoading": "Measuring…"
   },
+  "hub": {
+    "integrations": "Integrations",
+    "integrationsDesc": "Pick the service you want to use — we take care of the required stream settings.",
+    "ready": "Ready",
+    "enabled": "Enabled",
+    "snippet": "Show config example",
+    "copy": "Copy",
+    "copied": "Copied",
+    "qr": "QR code",
+    "frigate": {
+      "desc": "AI-detection NVR. Connects with the officially recommended two-stream setup: detect on the sub stream, record on the main stream.",
+      "enable": "Enable recommended setup (main + sub)",
+      "hint": "Paste this example into Frigate's config.yml."
+    },
+    "ha": {
+      "desc": "Bring the live view in via the go2rtc add-on or the Generic Camera integration.",
+      "enable": "Enable main stream"
+    },
+    "youtube": {
+      "title": "Live streaming (YouTube Live etc.)",
+      "desc": "Stream the camera directly to any RTMP-capable platform.",
+      "autoNote": "Saving automatically enables the main stream with AAC audio. Enter the platform's RTMP URL + stream key."
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "Add the camera to the Home app on iPhone / iPad / Mac.",
+      "pin": "Pairing PIN",
+      "pinAfterSave": "A PIN is generated on save and shown here.",
+      "steps": "Home app → Add Accessory → \"More options…\" and enter this PIN."
+    },
+    "streams": "Streams",
+    "streamsDesc": "The RTSP streams that power the integrations. Copy a URL or hand it to a player (VLC etc.) via QR code.",
+    "subHint": "Low resolution (360p). Ideal for AI detection (Frigate's detect role) and mobile viewing.",
+    "memWarn": "Enabling multiple streams together with WebRTC/live streaming approaches the memory limit (measured: 61/87MB with RTSP+WebRTC). Turn off what you don't use.",
+    "advanced": "Advanced",
+    "hevcNote": "HEVC (H.265) saves bandwidth but has limited player support and uses more memory. The main H.264 stream is recommended for most setups."
+  },
   "settings": {
     "defaultValue": "Default: {{value}}",
     "resetToDefault": "Reset to default"

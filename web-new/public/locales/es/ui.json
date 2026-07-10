@@ -95,6 +95,43 @@
     "duLoad": "Medir",
     "duLoading": "Midiendo…"
   },
+  "hub": {
+    "integrations": "Integraciones",
+    "integrationsDesc": "Elija el servicio que quiere usar: los ajustes de stream necesarios se configuran automáticamente.",
+    "ready": "Listo",
+    "enabled": "Activado",
+    "snippet": "Ver ejemplo de configuración",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "qr": "Código QR",
+    "frigate": {
+      "desc": "NVR con detección por IA. Se conecta con la configuración oficial de dos streams: detección en el secundario, grabación en el principal.",
+      "enable": "Activar configuración recomendada (principal + secundario)",
+      "hint": "Pegue este ejemplo en el config.yml de Frigate."
+    },
+    "ha": {
+      "desc": "Integre la vista en vivo mediante el add-on go2rtc o Generic Camera.",
+      "enable": "Activar stream principal"
+    },
+    "youtube": {
+      "title": "Emisión en vivo (YouTube Live, etc.)",
+      "desc": "Transmita la cámara directamente a cualquier plataforma compatible con RTMP.",
+      "autoNote": "Al guardar se activa automáticamente el stream principal con audio AAC. Introduzca la URL RTMP + clave de emisión."
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "Añada la cámara a la app Casa en iPhone / iPad / Mac.",
+      "pin": "PIN de emparejamiento",
+      "pinAfterSave": "El PIN se genera al guardar y se muestra aquí.",
+      "steps": "App Casa → Añadir accesorio → \"Más opciones…\" e introduzca este PIN."
+    },
+    "streams": "Streams",
+    "streamsDesc": "Los streams RTSP en los que se apoyan las integraciones. Copie la URL o pásela a un reproductor (VLC, etc.) con el código QR.",
+    "subHint": "Baja resolución (360p). Ideal para detección por IA (rol detect de Frigate) y visualización móvil.",
+    "memWarn": "Activar varios streams junto con WebRTC/emisión en vivo acerca el equipo al límite de memoria (medido: 61/87MB con RTSP+WebRTC). Apague lo que no use.",
+    "advanced": "Avanzado",
+    "hevcNote": "HEVC (H.265) ahorra ancho de banda pero tiene soporte limitado y usa más memoria. En general se recomienda el stream principal (H.264)."
+  },
   "settings": {
     "defaultValue": "Predeterminado: {{value}}",
     "resetToDefault": "Restablecer valor predeterminado"
