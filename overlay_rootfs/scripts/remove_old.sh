@@ -32,6 +32,24 @@ fi
 find /media/mmc/time_lapse -depth -type f -name '*._mp4' -mtime +3 -delete
 find /media/mmc/time_lapse -depth -type f -name '*.stsz' -mtime +3 -delete
 
+# 空き床ガード: 空きが 1GB を切ったら最古の録画日ディレクトリから削除し、
+# SD フル起因の全機能不全(録画停止・ログ死・設定保存失敗)を防ぐ安全網。
+# 保持日数設定(*_REMOVE)とは独立。今日の分は消さない。削除は atomhack.log に記録。
+# 注意: CIFS 未使用時の early-exit(下の exit 0)より前に置くこと。
+FREE_KB=$(df -k /media/mmc | awk 'NR==2 {print $4}')
+if [ -n "$FREE_KB" ] && [ "$FREE_KB" -lt 1048576 ]; then
+  TODAY=$(date +%Y%m%d)
+  for base in /media/mmc/record /media/mmc/alarm_record; do
+    for d in $(ls "$base" 2>/dev/null | sort); do
+      FREE_KB=$(df -k /media/mmc | awk 'NR==2 {print $4}')
+      [ "$FREE_KB" -ge 1572864 ] && break 2
+      [ "$d" = "$TODAY" ] && continue
+      echo "$(date +'%Y/%m/%d %H:%M:%S') : low-space guard: remove $base/$d (free ${FREE_KB}KB)" >> /media/mmc/atomhack.log
+      rm -rf "${base:?}/${d:?}"
+    done
+  done
+fi
+
 [ "$PERIODICREC_CIFS_REMOVE" != "on" ] && [ "$ALARMREC_CIFS_REMOVE" != "on" ] && [ "$TIMELAPSE_CIFS_REMOVE" != "on" ] && exit 0
 
 /atom_patch/system_bin/mount_cifs.sh || exit -1
@@ -47,21 +65,4 @@ fi
 if [ "$TIMELAPSE_CIFS_REMOVE" = "on" ] && [ "$TIMELAPSE_CIFS_REMOVE_DAYS" != "" ]; then
   find /atom/mnt/$HOSTNAME/time_lapse -depth -type f -mtime +$TIMELAPSE_CIFS_REMOVE_DAYS -delete
   find /atom/mnt/$HOSTNAME/time_lapse -depth -type d -mmin +3 -empty -delete
-fi
-
-# 空き床ガード: 空きが 1GB を切ったら最古の録画日ディレクトリから削除し、
-# SD フル起因の全機能不全(録画停止・ログ死・設定保存失敗)を防ぐ安全網。
-# 保持日数設定(*_REMOVE)とは独立。今日の分は消さない。削除は atomhack.log に記録。
-FREE_KB=$(df -k /media/mmc | awk 'NR==2 {print $4}')
-if [ -n "$FREE_KB" ] && [ "$FREE_KB" -lt 1048576 ]; then
-  TODAY=$(date +%Y%m%d)
-  for base in /media/mmc/record /media/mmc/alarm_record; do
-    for d in $(ls "$base" 2>/dev/null | sort); do
-      FREE_KB=$(df -k /media/mmc | awk 'NR==2 {print $4}')
-      [ "$FREE_KB" -ge 1572864 ] && break 2
-      [ "$d" = "$TODAY" ] && continue
-      echo "$(date +'%Y/%m/%d %H:%M:%S') : low-space guard: remove $base/$d (free ${FREE_KB}KB)" >> /media/mmc/atomhack.log
-      rm -rf "${base:?}/${d:?}"
-    done
-  done
 fi
