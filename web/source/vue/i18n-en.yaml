@@ -194,6 +194,10 @@ SDCardSettings:
   directWrite:
     title: Direct Recording
     tooltip: Normally, the recording is made once on the RAM-DISK and then copied to the SD-Card, but to save RAM, the recording is made directly on the SD-Card.
+  eraseSDCard:
+    title: Erase SD card
+    tooltip: Erases the recording folders from the SD card
+    button: Erase
 
 NASSettings:
   title: NAS setting
