@@ -57,6 +57,23 @@ test('比較トグルで変更前⇄変更後を切り替えられる', async ({
   await expect(slider).toBeEnabled();
 });
 
+test('AUTO へ戻すと比較ボタンが消える(古い基準での誤発火防止)', async ({ page }) => {
+  await page.goto(CAMERA_URL);
+  await page.getByRole('radio', { name: 'マニュアル' }).click();
+  const slider = page.getByRole('slider', { name: 'コントラスト' });
+  await slider.fill('200');
+  await expect(page.getByTestId('compare-hold')).toBeVisible();
+
+  // AUTO ではカメラが値を自動変動させるため、旧基準が残っていると
+  // 編集していないのに比較ボタンが出続け、押すと古い値を実機へ送ってしまう
+  await page.getByRole('radio', { name: 'AUTO' }).click();
+  await expect(page.getByTestId('compare-hold')).toHaveCount(0);
+
+  // マニュアルへ戻しても、新たに編集するまで比較ボタンは出ない
+  await page.getByRole('radio', { name: 'マニュアル' }).click();
+  await expect(page.getByTestId('compare-hold')).toHaveCount(0);
+});
+
 test('言語メニューが sticky プレビューより前面に出て操作できる', async ({ page }) => {
   await page.goto(CAMERA_URL);
   await page.locator('aside').getByRole('button', { name: '言語' }).click();

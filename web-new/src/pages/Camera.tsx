@@ -119,6 +119,9 @@ export default function CameraPage() {
   function setMode(v: 'auto' | 'manual') {
     if (!isp || isp.expmode === v) return;
     setComparing(false); // 比較中なら effect cleanup が現在値を復元する
+    // 比較基準も破棄する。残すと AUTO 中の自動変動と旧基準の差分で比較ボタンが
+    // 誤出現し、押すと AUTO のカメラへ古いマニュアル値を送ってしまう
+    setCompareBase(null);
     const next = { ...isp, expmode: v } as IspSettings;
     setIspEdit({ expmode: v });
     apply('expmode', next);
@@ -156,7 +159,7 @@ export default function CameraPage() {
               {!src && <div className="absolute inset-0 animate-pulse bg-white/5" />}
               {src && <img src={src} alt="" className="h-full w-full object-contain" />}
               <PreviewOsd label={comparing ? tUi('camera.before') : osd?.text ?? null} />
-              {dirtyKeys.length > 0 && (
+              {!isAuto && dirtyKeys.length > 0 && (
                 <button
                   type="button"
                   data-testid="compare-hold"
