@@ -95,6 +95,43 @@
     "duLoad": "内訳を計測",
     "duLoading": "計測中…"
   },
+  "hub": {
+    "integrations": "連携",
+    "integrationsDesc": "使いたいサービスから選ぶだけ。必要なストリーム設定はこちらで自動的に整えます。",
+    "ready": "準備OK",
+    "enabled": "有効",
+    "snippet": "設定例を表示",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "qr": "QRコード",
+    "frigate": {
+      "desc": "AI検知NVR。検知はサブ配信・録画はメイン配信を使う公式推奨の2ストリーム構成で接続します。",
+      "enable": "推奨構成を有効化(メイン+サブ)",
+      "hint": "この設定例を Frigate の config.yml に貼り付けてください。"
+    },
+    "ha": {
+      "desc": "go2rtc アドオンまたは Generic Camera 統合でライブ映像を取り込めます。",
+      "enable": "メイン配信を有効化"
+    },
+    "youtube": {
+      "title": "ライブ配信 (YouTube Live 等)",
+      "desc": "RTMP 対応のライブ配信プラットフォームへカメラ映像を直接配信します。",
+      "autoNote": "保存時にメイン配信と AAC 音声を自動で有効化します。URL には配信先の RTMP URL+ストリームキーを入力してください。"
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "iPhone / iPad / Mac の「ホーム」アプリにカメラを追加できます。",
+      "pin": "ペアリングPIN",
+      "pinAfterSave": "保存すると PIN が自動生成され、ここに表示されます。",
+      "steps": "ホームアプリ → アクセサリを追加 → 「コードがない場合はスキャンできない場合」から、この PIN を入力します。"
+    },
+    "streams": "配信ストリーム",
+    "streamsDesc": "連携の土台になる RTSP ストリームです。URL はコピーまたは QR コードでプレーヤー(VLC 等)へ渡せます。",
+    "subHint": "低解像度(360p)。AI検知(Frigate の detect)やモバイル回線での視聴に最適です。",
+    "memWarn": "複数ストリームと WebRTC/ライブ配信の同時有効化はメモリの限界に近づきます(実測: RTSP+WebRTC で 61/87MB 使用)。使わないものはオフを推奨します。",
+    "advanced": "詳細設定",
+    "hevcNote": "HEVC (H.265) は帯域を節約できますが、対応プレーヤーが限られ、メモリ消費も増えます。通常はメイン配信 (H.264) を推奨します。"
+  },
   "settings": {
     "defaultValue": "初期値: {{value}}",
     "resetToDefault": "初期値に戻す"

@@ -95,6 +95,43 @@
     "duLoad": "测量",
     "duLoading": "测量中…"
   },
+  "hub": {
+    "integrations": "联动",
+    "integrationsDesc": "只需选择想使用的服务，所需的推流设置会自动配置。",
+    "ready": "已就绪",
+    "enabled": "已启用",
+    "snippet": "查看配置示例",
+    "copy": "复制",
+    "copied": "已复制",
+    "qr": "二维码",
+    "frigate": {
+      "desc": "AI 侦测 NVR。按官方推荐的双流方案连接：侦测用子码流，录像用主码流。",
+      "enable": "启用推荐配置(主+子)",
+      "hint": "将此示例粘贴到 Frigate 的 config.yml 中。"
+    },
+    "ha": {
+      "desc": "通过 go2rtc 附加组件或 Generic Camera 集成接入实时画面。",
+      "enable": "启用主码流"
+    },
+    "youtube": {
+      "title": "直播推流 (YouTube Live 等)",
+      "desc": "将摄像头画面直接推流到任意支持 RTMP 的平台。",
+      "autoNote": "保存时会自动启用主码流和 AAC 音频。请输入平台的 RTMP 地址+串流密钥。"
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "将摄像头添加到 iPhone / iPad / Mac 的「家庭」App。",
+      "pin": "配对 PIN",
+      "pinAfterSave": "保存后会自动生成 PIN 并显示在这里。",
+      "steps": "家庭 App → 添加配件 → 「更多选项…」，输入此 PIN。"
+    },
+    "streams": "推流",
+    "streamsDesc": "作为联动基础的 RTSP 流。URL 可复制，或通过二维码交给播放器(VLC 等)。",
+    "subHint": "低分辨率(360p)。适合 AI 侦测(Frigate 的 detect)和移动网络观看。",
+    "memWarn": "同时启用多路流与 WebRTC/直播会接近内存上限(实测: RTSP+WebRTC 时 61/87MB)。建议关闭不用的功能。",
+    "advanced": "高级设置",
+    "hevcNote": "HEVC (H.265) 更省带宽，但兼容的播放器有限且更耗内存。一般推荐主码流 (H.264)。"
+  },
   "settings": {
     "defaultValue": "默认值: {{value}}",
     "resetToDefault": "恢复默认值"

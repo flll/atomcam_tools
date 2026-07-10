@@ -27,6 +27,10 @@ export interface HackIni {
   RTSP_USER?: string;
   RTSP_PASSWD?: string;
   HOMEKIT_ENABLE?: OnOff;
+  HOMEKIT_SETUP_ID?: string;
+  HOMEKIT_DEVICE_ID?: string;
+  HOMEKIT_PIN?: string;
+  HOMEKIT_SOURCE?: string;
   WEBRTC_ENABLE?: OnOff;
   RTMP_ENABLE?: OnOff;
   RTMP_URL?: string;

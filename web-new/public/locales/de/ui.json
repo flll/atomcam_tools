@@ -95,6 +95,43 @@
     "duLoad": "Messen",
     "duLoading": "Wird gemessen…"
   },
+  "hub": {
+    "integrations": "Integrationen",
+    "integrationsDesc": "Einfach den gewünschten Dienst wählen — die nötigen Stream-Einstellungen richten wir automatisch ein.",
+    "ready": "Bereit",
+    "enabled": "Aktiv",
+    "snippet": "Konfigurationsbeispiel anzeigen",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "qr": "QR-Code",
+    "frigate": {
+      "desc": "NVR mit KI-Erkennung. Verbindung nach offiziell empfohlenem Zwei-Stream-Aufbau: Erkennung über den Substream, Aufnahme über den Hauptstream.",
+      "enable": "Empfohlene Konfiguration aktivieren (Haupt + Sub)",
+      "hint": "Fügen Sie dieses Beispiel in Frigates config.yml ein."
+    },
+    "ha": {
+      "desc": "Livebild über das go2rtc-Add-on oder die Generic-Camera-Integration einbinden.",
+      "enable": "Hauptstream aktivieren"
+    },
+    "youtube": {
+      "title": "Livestreaming (YouTube Live usw.)",
+      "desc": "Streamen Sie die Kamera direkt zu jeder RTMP-fähigen Plattform.",
+      "autoNote": "Beim Speichern werden Hauptstream und AAC-Audio automatisch aktiviert. Geben Sie RTMP-URL + Streamschlüssel der Plattform ein."
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "Fügen Sie die Kamera der Home-App auf iPhone / iPad / Mac hinzu.",
+      "pin": "Kopplungs-PIN",
+      "pinAfterSave": "Die PIN wird beim Speichern erzeugt und hier angezeigt.",
+      "steps": "Home-App → Gerät hinzufügen → „Weitere Optionen…“ und diese PIN eingeben."
+    },
+    "streams": "Streams",
+    "streamsDesc": "Die RTSP-Streams als Grundlage der Integrationen. URL kopieren oder per QR-Code an einen Player (VLC usw.) übergeben.",
+    "subHint": "Niedrige Auflösung (360p). Ideal für KI-Erkennung (Frigates detect-Rolle) und mobiles Ansehen.",
+    "memWarn": "Mehrere Streams zusammen mit WebRTC/Livestreaming nähern sich der Speichergrenze (gemessen: 61/87MB mit RTSP+WebRTC). Nicht Genutztes ausschalten.",
+    "advanced": "Erweitert",
+    "hevcNote": "HEVC (H.265) spart Bandbreite, hat aber begrenzte Player-Unterstützung und braucht mehr Speicher. Meist ist der Hauptstream (H.264) die bessere Wahl."
+  },
   "settings": {
     "defaultValue": "Standard: {{value}}",
     "resetToDefault": "Auf Standard zurücksetzen"

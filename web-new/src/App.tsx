@@ -30,9 +30,10 @@ export default function App() {
             <Route path="settings/recording/alarm" element={<Recording section="alarm" />} />
             <Route path="settings/recording/timelapse" element={<Recording section="timelapse" />} />
             <Route path="settings/storage" element={<Storage />} />
-            <Route path="settings/streaming" element={<Streaming section="rtsp" />} />
-            <Route path="settings/streaming/rtmp" element={<Streaming section="rtmp" />} />
-            <Route path="settings/streaming/webrtc" element={<Streaming section="webrtc" />} />
+            {/* 連携ハブは1ページ構成。旧サブルートはブックマーク互換のため同一ページへ */}
+            <Route path="settings/streaming" element={<Streaming />} />
+            <Route path="settings/streaming/rtmp" element={<Streaming />} />
+            <Route path="settings/streaming/webrtc" element={<Streaming />} />
             <Route path="settings/events" element={<Events />} />
             <Route path="settings/cruise" element={<Cruise />} />
             <Route path="settings/system" element={<System section="device" />} />

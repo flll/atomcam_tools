@@ -95,6 +95,43 @@
     "duLoad": "Mesurer",
     "duLoading": "Mesure…"
   },
+  "hub": {
+    "integrations": "Intégrations",
+    "integrationsDesc": "Choisissez le service à utiliser : les réglages de flux nécessaires sont préparés automatiquement.",
+    "ready": "Prêt",
+    "enabled": "Activé",
+    "snippet": "Voir l'exemple de configuration",
+    "copy": "Copier",
+    "copied": "Copié",
+    "qr": "Code QR",
+    "frigate": {
+      "desc": "NVR à détection IA. Connexion selon la configuration officielle à deux flux : détection sur le flux secondaire, enregistrement sur le principal.",
+      "enable": "Activer la configuration recommandée (principal + secondaire)",
+      "hint": "Collez cet exemple dans le config.yml de Frigate."
+    },
+    "ha": {
+      "desc": "Intégrez la vue en direct via l'add-on go2rtc ou Generic Camera.",
+      "enable": "Activer le flux principal"
+    },
+    "youtube": {
+      "title": "Diffusion en direct (YouTube Live, etc.)",
+      "desc": "Diffusez la caméra directement vers toute plateforme compatible RTMP.",
+      "autoNote": "L'enregistrement active automatiquement le flux principal avec l'audio AAC. Saisissez l'URL RTMP + la clé de flux."
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "Ajoutez la caméra à l'app Maison sur iPhone / iPad / Mac.",
+      "pin": "PIN de jumelage",
+      "pinAfterSave": "Le PIN est généré à l'enregistrement et affiché ici.",
+      "steps": "App Maison → Ajouter un accessoire → « Plus d'options… » puis saisissez ce PIN."
+    },
+    "streams": "Flux",
+    "streamsDesc": "Les flux RTSP qui alimentent les intégrations. Copiez l'URL ou transmettez-la à un lecteur (VLC, etc.) via le code QR.",
+    "subHint": "Basse résolution (360p). Idéal pour la détection IA (rôle detect de Frigate) et le visionnage mobile.",
+    "memWarn": "Activer plusieurs flux avec WebRTC/diffusion en direct approche la limite mémoire (mesuré : 61/87MB avec RTSP+WebRTC). Désactivez ce qui ne sert pas.",
+    "advanced": "Avancé",
+    "hevcNote": "Le HEVC (H.265) économise la bande passante mais reste peu compatible et consomme plus de mémoire. Le flux principal (H.264) est recommandé."
+  },
   "settings": {
     "defaultValue": "Par défaut : {{value}}",
     "resetToDefault": "Rétablir la valeur par défaut"

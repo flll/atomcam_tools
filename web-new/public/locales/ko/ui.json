@@ -95,6 +95,43 @@
     "duLoad": "측정",
     "duLoading": "측정 중…"
   },
+  "hub": {
+    "integrations": "연동",
+    "integrationsDesc": "사용할 서비스를 고르기만 하면 필요한 스트림 설정은 자동으로 준비됩니다.",
+    "ready": "준비 완료",
+    "enabled": "사용 중",
+    "snippet": "설정 예시 보기",
+    "copy": "복사",
+    "copied": "복사했습니다",
+    "qr": "QR 코드",
+    "frigate": {
+      "desc": "AI 감지 NVR. 공식 권장 2스트림 구성(감지=서브, 녹화=메인)으로 연결합니다.",
+      "enable": "권장 구성 활성화(메인+서브)",
+      "hint": "이 예시를 Frigate의 config.yml에 붙여넣으세요."
+    },
+    "ha": {
+      "desc": "go2rtc 애드온 또는 Generic Camera 통합으로 라이브 영상을 가져올 수 있습니다.",
+      "enable": "메인 스트림 활성화"
+    },
+    "youtube": {
+      "title": "라이브 스트리밍 (YouTube Live 등)",
+      "desc": "RTMP를 지원하는 플랫폼으로 카메라 영상을 직접 송출합니다.",
+      "autoNote": "저장 시 메인 스트림과 AAC 오디오가 자동으로 활성화됩니다. 플랫폼의 RTMP URL+스트림 키를 입력하세요."
+    },
+    "homekit": {
+      "title": "Apple Home (HomeKit)",
+      "desc": "iPhone / iPad / Mac의 '홈' 앱에 카메라를 추가합니다.",
+      "pin": "페어링 PIN",
+      "pinAfterSave": "저장하면 PIN이 자동 생성되어 여기에 표시됩니다.",
+      "steps": "홈 앱 → 액세서리 추가 → '추가 옵션…'에서 이 PIN을 입력하세요."
+    },
+    "streams": "스트림",
+    "streamsDesc": "연동의 기반이 되는 RTSP 스트림입니다. URL을 복사하거나 QR 코드로 플레이어(VLC 등)에 전달할 수 있습니다.",
+    "subHint": "저해상도(360p). AI 감지(Frigate의 detect)와 모바일 회선 시청에 적합합니다.",
+    "memWarn": "여러 스트림과 WebRTC/라이브 송출을 동시에 켜면 메모리 한계에 가까워집니다(실측: RTSP+WebRTC에서 61/87MB). 사용하지 않는 것은 끄는 것을 권장합니다.",
+    "advanced": "고급 설정",
+    "hevcNote": "HEVC (H.265)는 대역폭을 절약하지만 지원 플레이어가 제한적이고 메모리를 더 사용합니다. 일반적으로 메인 스트림(H.264)을 권장합니다."
+  },
   "settings": {
     "defaultValue": "기본값: {{value}}",
     "resetToDefault": "기본값으로 되돌리기"
