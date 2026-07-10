@@ -9,7 +9,10 @@ interface JpegStream {
 
 // get_jpeg.cgi を一定間隔でポーリングし、Blob URL を順次差し替える。
 // 直前の URL は必ず revoke してメモリリークを防ぐ（現行 Vue 実装のバグ修正）。
-export function useJpegStream(intervalMs = 500, enabled = true): JpegStream {
+// タブ非表示中は取得を止めてカメラ負荷を下げる(87MB RAM の実機で JPEG
+// エンコード+配信が毎秒走り続けるのを防ぐ)。Document PiP で別窓表示中は
+// メインタブが hidden でも継続が必要なため keepAliveWhenHidden で opt-out。
+export function useJpegStream(intervalMs = 500, enabled = true, keepAliveWhenHidden = false): JpegStream {
   const [src, setSrc] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [fps, setFps] = useState(0);
@@ -22,6 +25,11 @@ export function useJpegStream(intervalMs = 500, enabled = true): JpegStream {
     let timer: ReturnType<typeof setTimeout>;
 
     async function tick() {
+      // 非表示タブでは取得せず待機だけ続ける(表示復帰後は次の tick で自然再開)
+      if (document.hidden && !keepAliveWhenHidden) {
+        timer = setTimeout(tick, intervalMs);
+        return;
+      }
       try {
         const url = await api.getJpegObjectUrl();
         if (cancelled) {
@@ -54,7 +62,7 @@ export function useJpegStream(intervalMs = 500, enabled = true): JpegStream {
         prevUrl.current = null;
       }
     };
-  }, [intervalMs, enabled]);
+  }, [intervalMs, enabled, keepAliveWhenHidden]);
 
   return { src, online, fps };
 }
