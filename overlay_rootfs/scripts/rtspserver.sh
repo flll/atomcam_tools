@@ -105,7 +105,10 @@ export RTMP_URL=$(awk -F "=" '/^RTMP_URL *=/ {print $2}' $HACK_INI)
 WEBRTC_ENABLE=$(awk -F "=" '/^WEBRTC_ENABLE *=/ {print $2}' $HACK_INI)
 [ "$WEBRTC_ENABLE" = "on" ] && export WEBRTC_LISTEN=":8555/tcp"
 
-[ "$HOMEKIT_SOURCE" = "" ] && exit 0
+# HOMEKIT_SOURCE 未設定でも go2rtc(RTMP/WebRTC/HomeKit)を使えるように既定値へ
+# フォールバックする。このキーは旧 Vue UI だけが保存時に書いており、新 WebUI や
+# 手書きの hack.ini では空のまま RTMP/WebRTC を on にしても go2rtc が起動しなかった
+[ "$HOMEKIT_SOURCE" = "" ] && export HOMEKIT_SOURCE="rtsp://localhost:8554/video0_unicast"
 [ "$HOMEKIT_ENABLE" = "on" -o "$RTMP_ENABLE" = "on" -o "$WEBRTC_ENABLE" = "on" ] || exit 0
 
 # go2rtc config
