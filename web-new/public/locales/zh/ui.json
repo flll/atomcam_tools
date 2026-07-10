@@ -141,5 +141,20 @@
     "before": "更改前",
     "after": "更改后",
     "holdToCompare": "点按可在更改前后的画面之间切换比较(生效约需1–2秒)"
+  },
+  "events": {
+    "webhookDesc": "事件发生时向任意服务器 POST 一个 JSON。",
+    "presets": "通知目标示例",
+    "presetsNote": "ntfy 可直接使用此 URL 形式。Discord / Slack 的 JSON 格式不同，请通过中继服务。",
+    "viaRelay": "需要中继",
+    "mqttDesc": "通过 MQTT 代理与 Home Assistant 等联动。",
+    "mqttDiscovery": "启用 MQTT 并保存后，会发送 Home Assistant 自动发现(MQTT Discovery)配置，自动添加传感器。",
+    "eventsTitle": "要通知的事件",
+    "eventsDesc": "选择哪些事件触发通知。会同时发送到 WebHook 和 MQTT。",
+    "sendTest": "发送测试",
+    "sending": "发送中…",
+    "sendOk": "发送成功",
+    "sendFail": "发送失败",
+    "needTarget": "请先设置 WebHook URL 或 MQTT"
   }
 }

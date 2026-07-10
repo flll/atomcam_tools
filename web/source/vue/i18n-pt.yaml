@@ -304,6 +304,24 @@ WebRTC:
       Para saída de áudio, defina o áudio do «Stream principal» como OPUS.
 
 event:
+  mqtt:
+    enable:
+      title: "Ativar MQTT"
+      tooltip: "Publica eventos em um broker MQTT (ex.: Home Assistant)"
+    host:
+      title: "Endereço do broker"
+      tooltip: "Nome de host ou IP"
+    port:
+      title: "Porta"
+      tooltip: "Padrão 1883"
+    user:
+      title: "Usuário"
+      tooltip: "Vazio se não houver autenticação"
+    pass:
+      title: "Senha"
+    topic:
+      title: "Tópico"
+      tooltip: "Vazio = atomcam/<host>/event"
   tab: Notificações
   webhook:
     title: WebHook

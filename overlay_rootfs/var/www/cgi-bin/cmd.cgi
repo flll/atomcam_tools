@@ -88,6 +88,14 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
     done
     true
   fi
+  if [ "$NAME" = "notify-test" ] ; then
+    # イベント通知のテスト送信。結果 JSON(channel/ok/at)をそのまま返す
+    /scripts/notify.sh --test
+  fi
+  if [ "$NAME" = "notify-status" ] ; then
+    # 直近の送信結果(無ければ空 JSON)
+    [ -f /tmp/webhook_status ] && cat /tmp/webhook_status || echo '{}'
+  fi
 fi
 
 if [ "$REQUEST_METHOD" = "POST" ]; then

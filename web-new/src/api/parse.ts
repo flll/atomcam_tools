@@ -4,6 +4,7 @@ import type {
   HackIni,
   IspSettings,
   MotorPos,
+  NotifyStatus,
   StorageDu,
   StorageInfo,
 } from './types';
@@ -92,6 +93,15 @@ export function parseStorageInfo(text: string): StorageInfo {
     if (!Number.isNaN(free)) info.memAvailKb = free + (Number.isNaN(cached) ? 0 : cached);
   }
   return info;
+}
+
+export function parseNotifyStatus(text: string): NotifyStatus {
+  try {
+    const o = JSON.parse(text.trim()) as NotifyStatus;
+    return o && typeof o === 'object' ? o : {};
+  } catch {
+    return {};
+  }
 }
 
 export function parseStorageDu(text: string): StorageDu {

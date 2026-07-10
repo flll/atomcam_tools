@@ -9,6 +9,7 @@ export interface MockState {
   hackIni: Record<string, string>;
   isp: Record<string, string>;
   property: Record<string, string>;
+  lastNotify?: { channel: string; event: string; ok: boolean; at: string };
 }
 
 const DEFAULT_HACK_INI: Record<string, string> = {

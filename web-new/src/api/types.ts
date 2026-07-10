@@ -113,6 +113,14 @@ export interface StorageInfo {
 // cmd.cgi name=storage-du の結果(録画フォルダ別使用量 kB)。
 export type StorageDu = Partial<Record<'record' | 'alarm_record' | 'time_lapse', number>>;
 
+// cmd.cgi name=notify-test / notify-status(notify.sh が /tmp/webhook_status に残す JSON)。
+export interface NotifyStatus {
+  channel?: 'webhook' | 'mqtt' | 'none';
+  event?: string;
+  ok?: boolean;
+  at?: string;
+}
+
 // cmd.cgi POST の宛先。socket は go2rtc 制御ポート(localhost:4000)直、
 // 既定は /var/run/webcmd 経由。
 
