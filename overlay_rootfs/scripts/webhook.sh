@@ -4,6 +4,7 @@ HACK_INI=/tmp/hack.ini
 mkdir -p /tmp/log
 [ -f /media/mmc/atom-log ] && ATOM_LOG="on"
 [ -f /media/mmc/timelapse_hook.sh ] && TIMELAPSE_HOOK="on"
+/scripts/notify.sh --discovery >/dev/null 2>&1
 while : ; do
 awk -v HACK_INI="$HACK_INI" -v ATOM_LOG="$ATOM_LOG" -v TIMELAPSE_HOOK="$TIMELAPSE_HOOK" '
 BEGIN {
@@ -56,7 +57,7 @@ BEGIN {
     }
     if(!logPause) print >> "/tmp/log/atom.log";
   }
-  if(ENV["WEBHOOK_URL"] == "") next;
+  if(ENV["WEBHOOK_URL"] == "" && ENV["MQTT_ENABLE"] != "on") next;
 }
 
 /\[aiAlgo\] start/ {
@@ -92,11 +93,8 @@ BEGIN {
 }
 
 function Post(event, data) {
-  if(data == "") {
-    system("curl -X POST -m 3 -H \x27Content-Type: application/json\x27 -d \x27{\"type\":\"" event "\", \"device\":\"" HOSTNAME "\"}\x27 " INSECURE_FLAG ENV["WEBHOOK_URL"] " > /dev/null 2>&1");
-  } else {
-    system("curl -X POST -m 3 -H \x27Content-Type: application/json\x27 -d \x27{\"type\":\"" event "\", \"device\":\"" HOSTNAME "\", \"data\":" data "}\x27 " INSECURE_FLAG ENV["WEBHOOK_URL"] " > /dev/null 2>&1");
-  }
+  # 送信口は notify.sh に集約(WebHook + MQTT + 結果記録)。data は JSON 値。
+  system("/scripts/notify.sh \x27" event "\x27 \x27" data "\x27");
 }
 ' /var/run/atomapp
 sleep 2

@@ -388,6 +388,31 @@
     }
   },
   "event": {
+    "mqtt": {
+      "enable": {
+        "title": "Activar MQTT",
+        "tooltip": "Publica eventos en un broker MQTT (p. ej. Home Assistant)"
+      },
+      "host": {
+        "title": "Dirección del broker",
+        "tooltip": "Nombre de host o IP"
+      },
+      "port": {
+        "title": "Puerto",
+        "tooltip": "Predeterminado 1883"
+      },
+      "user": {
+        "title": "Usuario",
+        "tooltip": "Vacío si no hay autenticación"
+      },
+      "pass": {
+        "title": "Contraseña"
+      },
+      "topic": {
+        "title": "Topic",
+        "tooltip": "Vacío = atomcam/<host>/event"
+      }
+    },
     "tab": "Notificaciones",
     "webhook": {
       "title": "WebHook",

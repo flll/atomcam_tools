@@ -3,6 +3,7 @@ import {
   parseIspSettings,
   parseProperty,
   parseStatus,
+  parseNotifyStatus,
   parseStorageDu,
   parseStorageInfo,
   rgbaToBgra,
@@ -14,6 +15,7 @@ import type {
   CmdPort,
   HackIni,
   IspSettings,
+  NotifyStatus,
   StorageDu,
   StorageInfo,
 } from './types';
@@ -80,6 +82,16 @@ export const api = {
 
   async getStorageInfo(): Promise<StorageInfo> {
     return parseStorageInfo(await getText(`${CGI_BASE}/cmd.cgi?name=storage-info`));
+  },
+
+  // イベント通知のテスト送信(WebHook/MQTT へ実際に1発送る)。結果 JSON を返す
+  async notifyTest(): Promise<NotifyStatus> {
+    return parseNotifyStatus(await getText(`${CGI_BASE}/cmd.cgi?name=notify-test`));
+  },
+
+  // 直近の送信結果(未送信なら空)
+  async getNotifyStatus(): Promise<NotifyStatus> {
+    return parseNotifyStatus(await getText(`${CGI_BASE}/cmd.cgi?name=notify-status`));
   },
 
   // du はフォルダサイズ次第で数秒かかるため、ボタン押下時のみ呼ぶ

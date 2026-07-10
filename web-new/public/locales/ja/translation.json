@@ -388,6 +388,31 @@
     }
   },
   "event": {
+    "mqtt": {
+      "enable": {
+        "title": "MQTT有効化",
+        "tooltip": "Home Assistant 等の MQTT ブローカーへイベントを送ります"
+      },
+      "host": {
+        "title": "ブローカーのアドレス",
+        "tooltip": "ホスト名または IP"
+      },
+      "port": {
+        "title": "ポート",
+        "tooltip": "既定 1883"
+      },
+      "user": {
+        "title": "ユーザー名",
+        "tooltip": "未認証なら空欄"
+      },
+      "pass": {
+        "title": "パスワード"
+      },
+      "topic": {
+        "title": "トピック",
+        "tooltip": "空欄なら atomcam/<ホスト名>/event"
+      }
+    },
     "tab": "イベント通知",
     "webhook": {
       "title": "WebHook",

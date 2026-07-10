@@ -57,6 +57,15 @@ export const handlers = [
       return HttpResponse.text(
         ['DU_record=25165824', 'DU_alarm_record=2097152', 'DU_time_lapse=1048576'].join('\n'),
       );
+    // イベント通知のテスト送信/結果取得。WEBHOOK_URL が設定されていれば成功扱い
+    if (name === 'notify-test' || name === 'notify-status') {
+      const hasTarget = (mock.hackIni.WEBHOOK_URL ?? '') !== '' || mock.hackIni.MQTT_ENABLE === 'on';
+      if (name === 'notify-status' && !mock.lastNotify) return HttpResponse.text('{}');
+      const channel = mock.hackIni.MQTT_ENABLE === 'on' ? 'mqtt' : 'webhook';
+      const res = { channel, event: 'testEvent', ok: hasTarget, at: '2026/07/11 02:00:00' };
+      if (name === 'notify-test') mock.lastNotify = res;
+      return HttpResponse.text(JSON.stringify(mock.lastNotify ?? res));
+    }
     return HttpResponse.text(statusText());
   }),
 

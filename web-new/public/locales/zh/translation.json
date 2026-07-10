@@ -388,6 +388,31 @@
     }
   },
   "event": {
+    "mqtt": {
+      "enable": {
+        "title": "启用 MQTT",
+        "tooltip": "将事件发送到 MQTT 代理（如 Home Assistant）"
+      },
+      "host": {
+        "title": "代理地址",
+        "tooltip": "主机名或 IP"
+      },
+      "port": {
+        "title": "端口",
+        "tooltip": "默认 1883"
+      },
+      "user": {
+        "title": "用户名",
+        "tooltip": "无需认证则留空"
+      },
+      "pass": {
+        "title": "密码"
+      },
+      "topic": {
+        "title": "主题",
+        "tooltip": "留空则为 atomcam/<主机名>/event"
+      }
+    },
     "tab": "事件通知",
     "webhook": {
       "title": "WebHook",

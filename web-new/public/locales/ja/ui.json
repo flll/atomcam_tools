@@ -141,5 +141,20 @@
     "before": "変更前",
     "after": "変更後",
     "holdToCompare": "押すと変更前の見え方と切り替えて比較できます(反映まで1〜2秒)"
+  },
+  "events": {
+    "webhookDesc": "任意のサーバーへイベント発生時に JSON を POST します。",
+    "presets": "通知先の例",
+    "presetsNote": "ntfy はこの URL 形式でそのまま使えます。Discord / Slack は JSON 形式が異なるため中継サービスを介してください。",
+    "viaRelay": "中継が必要",
+    "mqttDesc": "MQTT ブローカー経由で Home Assistant 等に連携します。",
+    "mqttDiscovery": "MQTT 有効化を保存すると Home Assistant の自動検出(MQTT Discovery)設定を送信し、センサーが自動で追加されます。",
+    "eventsTitle": "通知するイベント",
+    "eventsDesc": "どのイベントで通知を送るか選びます。WebHook・MQTT の両方に送られます。",
+    "sendTest": "テスト送信",
+    "sending": "送信中…",
+    "sendOk": "送信成功",
+    "sendFail": "送信失敗",
+    "needTarget": "WebHook URL か MQTT を設定してください"
   }
 }

@@ -141,5 +141,20 @@
     "before": "Antes",
     "after": "Depois",
     "holdToCompare": "Clique para alternar entre o aspecto anterior e o atual (leva 1–2 s)"
+  },
+  "events": {
+    "webhookDesc": "Envia um JSON via POST para qualquer servidor quando ocorre um evento.",
+    "presets": "Exemplos de destino",
+    "presetsNote": "ntfy funciona com este formato de URL. Discord / Slack usam outro formato JSON; use um relay.",
+    "viaRelay": "requer relay",
+    "mqttDesc": "Integre com Home Assistant, etc. via um broker MQTT.",
+    "mqttDiscovery": "Salvar com MQTT ativado envia a config de descoberta automática do Home Assistant (MQTT Discovery) e um sensor é adicionado.",
+    "eventsTitle": "Eventos a notificar",
+    "eventsDesc": "Escolha quais eventos disparam uma notificação. Enviados a WebHook e MQTT.",
+    "sendTest": "Enviar teste",
+    "sending": "Enviando…",
+    "sendOk": "Enviado",
+    "sendFail": "Falhou",
+    "needTarget": "Configure uma URL de WebHook ou MQTT primeiro"
   }
 }

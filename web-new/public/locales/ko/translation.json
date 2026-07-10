@@ -388,6 +388,31 @@
     }
   },
   "event": {
+    "mqtt": {
+      "enable": {
+        "title": "MQTT 사용",
+        "tooltip": "이벤트를 MQTT 브로커(예: Home Assistant)로 보냅니다"
+      },
+      "host": {
+        "title": "브로커 주소",
+        "tooltip": "호스트명 또는 IP"
+      },
+      "port": {
+        "title": "포트",
+        "tooltip": "기본 1883"
+      },
+      "user": {
+        "title": "사용자 이름",
+        "tooltip": "인증이 없으면 비워 둡니다"
+      },
+      "pass": {
+        "title": "비밀번호"
+      },
+      "topic": {
+        "title": "토픽",
+        "tooltip": "비우면 atomcam/<호스트명>/event"
+      }
+    },
     "tab": "이벤트 알림",
     "webhook": {
       "title": "WebHook",
