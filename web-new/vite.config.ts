@@ -26,16 +26,20 @@ export default defineConfig(({ mode }) => {
       react(),
       dropMockWorker(isDemo),
       // lighttpd rewrite 互換: .gz と .br を事前生成（オリジナルは保持し、
-      // 実機配置時に local_build.sh 側で削除する方式を踏襲）
+      // 実機配置時に local_build.sh 側で削除する方式を踏襲）。
+      // skipIfLargerOrEqual は必ず false にする: 実機は「.js は .gz のみ配信」
+      // 規則のため、極小チャンク(例: 数百Bのアイコンチャンク)で .gz 生成が
+      // スキップされると、そのチャンクだけ 404 になりページ全体が白画面になる
+      // (chevron-right チャンクで実際に発生、lighttpd-sim E2E が検知)
       compression({
         include: /\.(js|css|html|json|svg)$/,
         algorithms: ['gzip'],
-        skipIfLargerOrEqual: true,
+        skipIfLargerOrEqual: false,
       }),
       compression({
         include: /\.(js|css|html|json|svg)$/,
         algorithms: ['brotliCompress'],
-        skipIfLargerOrEqual: true,
+        skipIfLargerOrEqual: false,
       }),
     ],
     define: {
