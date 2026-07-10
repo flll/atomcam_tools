@@ -50,7 +50,7 @@ export function LangSwitch({ placement = 'up' }: { placement?: 'up' | 'down' }) 
       <Button
         variant="ghost"
         size="sm"
-        className="gap-1.5"
+        className="gap-2"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={t('common.language')}
@@ -70,7 +70,7 @@ export function LangSwitch({ placement = 'up' }: { placement?: 'up' | 'down' }) 
             exit={{ opacity: 0, scale: 0.97, y: placement === 'up' ? 4 : -4 }}
             transition={springGentle}
             className={cn(
-              'absolute z-50 min-w-36 rounded-xl border border-border bg-surface-container-high p-1 shadow-elevation-2',
+              'absolute z-50 min-w-36 rounded-sheet border border-border bg-surface-container-high p-1 shadow-elevation-2',
               placement === 'up' ? 'bottom-full left-0 mb-2' : 'right-0 top-full mt-2',
             )}
           >
@@ -88,7 +88,7 @@ export function LangSwitch({ placement = 'up' }: { placement?: 'up' | 'down' }) 
                     runCmd(i18n.changeLanguage(lang.code), { quiet: true });
                   }}
                   className={cn(
-                    'flex w-full items-center gap-2 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-left text-sm transition-colors',
+                    'flex w-full items-center gap-2 whitespace-nowrap rounded-sheet px-3 py-1.5 text-left text-sm transition-colors',
                     active
                       ? 'bg-secondary-container text-on-secondary-container'
                       : 'text-on-surface-variant hover:bg-foreground/10 hover:text-foreground',

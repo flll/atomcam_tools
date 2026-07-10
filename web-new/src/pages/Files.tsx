@@ -60,7 +60,7 @@ export default function FilesPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <h1 className="text-xl font-semibold">{t('SDCard.tab')}</h1>
+      <h1 className="text-title-xl">{t('SDCard.tab')}</h1>
       {media && (
         <p className="text-sm text-muted-foreground">
           {t('SDCard.remainingCapacity')}:{' '}
@@ -75,7 +75,7 @@ export default function FilesPage() {
         <button
           type="button"
           onClick={() => setPath('')}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="flex items-center gap-2 rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
           <HardDrive className="size-4" /> SD
         </button>
@@ -102,7 +102,7 @@ export default function FilesPage() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border">
+      <div className="overflow-hidden rounded-card border border-border">
         {entries == null && !error && (
           <div className="p-8 text-center text-sm text-muted-foreground">{t('ui:common.loading')}</div>
         )}
@@ -118,7 +118,7 @@ export default function FilesPage() {
               key={e.href}
               type="button"
               onClick={() => setPath(`${path}${e.href}`)}
-              className="flex w-full items-center gap-3 border-b border-border/60 px-4 py-2.5 text-left text-sm transition-colors last:border-b-0 hover:bg-accent"
+              className="flex w-full items-center gap-3 border-b border-border/60 px-4 py-3 text-left text-sm transition-colors last:border-b-0 hover:bg-accent"
             >
               <Folder className="size-4 shrink-0 text-primary" />
               <span className="truncate">{e.name}</span>
@@ -129,7 +129,7 @@ export default function FilesPage() {
               href={`/sdcard/${path}${e.href}`}
               target="_blank"
               rel="noreferrer"
-              className="flex w-full items-center gap-3 border-b border-border/60 px-4 py-2.5 text-sm transition-colors last:border-b-0 hover:bg-accent"
+              className="flex w-full items-center gap-3 border-b border-border/60 px-4 py-3 text-sm transition-colors last:border-b-0 hover:bg-accent"
             >
               <File className="size-4 shrink-0 text-muted-foreground" />
               <span className="truncate">{e.name}</span>

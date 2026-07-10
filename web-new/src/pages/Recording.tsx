@@ -65,7 +65,7 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-xl font-semibold">{t('record.tab')}</h1>
+      <h1 className="text-title-xl">{t('record.tab')}</h1>
 
       {showPeriodic && (
         <Section title={t('record.periodicRec.title')}>

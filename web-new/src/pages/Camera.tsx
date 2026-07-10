@@ -146,7 +146,7 @@ export default function CameraPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <h1 className="mb-4 text-xl font-semibold">{t('CameraSettings.tab')}</h1>
+      <h1 className="mb-4 text-title-xl">{t('CameraSettings.tab')}</h1>
 
       {/* items は stretch のまま: 左カラムが右カラムと同じ高さになり sticky の可動域を確保する */}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(340px,420px)] lg:gap-8">
@@ -155,7 +155,7 @@ export default function CameraPage() {
           <div className="lg:sticky lg:top-8">
             {/* Live と同じ 16:9 レターボックス。16:9 ソースがコンテナを完全に埋めるので
                 MotionAreaOverlay のコンテナpx座標とフレーム座標が 1:1 に一致する */}
-            <div className="relative aspect-video overflow-hidden rounded-xl border border-border bg-black" data-testid="camera-preview">
+            <div className="relative aspect-video overflow-hidden rounded-card border border-border bg-black" data-testid="camera-preview">
               {!src && <div className="absolute inset-0 animate-pulse bg-white/5" />}
               {src && <img src={src} alt="" className="h-full w-full object-contain" />}
               <PreviewOsd label={comparing ? tUi('camera.before') : osd?.text ?? null} />

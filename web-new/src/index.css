@@ -41,6 +41,42 @@
     --elevation-1: 0 1px 2px 0 hsl(var(--md-shadow) / 0.3), 0 1px 3px 1px hsl(var(--md-shadow) / 0.15);
     --elevation-2: 0 1px 2px 0 hsl(var(--md-shadow) / 0.3), 0 2px 6px 2px hsl(var(--md-shadow) / 0.15);
     --elevation-3: 0 1px 3px 0 hsl(var(--md-shadow) / 0.3), 0 4px 8px 3px hsl(var(--md-shadow) / 0.15);
+
+    /* ---- LDSG 由来の Foundation 規律(designsystem.line.me/LDSG v3.5) ----
+       radius は「コンポーネントの画面占有率」で使い分ける(Object Styles):
+       badge=小物 / control=ボタン・入力 / card=画面50%未満のカード /
+       sheet=モーダル・シート・浮遊バー(50%超)。円形は rounded-full を使う */
+    --radius-badge: 3px;
+    --radius-control: 5px;
+    --radius-card: 7px;
+    --radius-sheet: 12px;
+
+    /* LDSG Role Color: 機能に固定した意味色(ブランド色=青系とは独立)。
+       success=完了/成功、warning=注意喚起(エラーではない)、info=補足情報 */
+    --success: 142 71% 29%;
+    --on-success: 0 0% 100%;
+    --warning: 32 95% 38%;
+    --on-warning: 0 0% 100%;
+    --info: 211 90% 40%;
+    --on-info: 0 0% 100%;
+
+    /* LDSG shadow(on-white 3段)。ダークでは M3 の面階層で奥行きを表現するため
+       .dark 側で none に落とす(LDSG も背景ごとに影を最適化する思想) */
+    --shadow-l100: 0 0 2px rgb(0 0 0 / 0.07), 0 1px 2px rgb(0 0 0 / 0.07);
+    --shadow-l200: 0 1px 6px rgb(0 0 0 / 0.12);
+    --shadow-l300: 0 1px 20px rgb(0 0 0 / 0.07);
+  }
+
+  .dark {
+    --success: 142 60% 60%;
+    --on-success: 145 80% 10%;
+    --warning: 38 92% 60%;
+    --on-warning: 30 80% 10%;
+    --info: 210 95% 68%;
+    --on-info: 215 80% 12%;
+    --shadow-l100: none;
+    --shadow-l200: none;
+    --shadow-l300: none;
   }
 
   * {

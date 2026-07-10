@@ -40,7 +40,7 @@ export function ConfirmDialog({
       <div
         role="alertdialog"
         aria-modal="true"
-        className="relative w-full max-w-sm rounded-xl border border-border bg-card p-5 shadow-xl"
+        className="relative w-full max-w-sm rounded-sheet border border-border bg-card p-5 shadow-xl"
       >
         <h2 className="text-base font-semibold">{title}</h2>
         <div className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{description}</div>

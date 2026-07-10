@@ -40,7 +40,7 @@ export function SettingSlider({
           {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}
           {t(`${i18nKey}.title`)}
         </label>
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-2">
           {modified && !disabled && (
             // 初期値からズレているときだけ出すワンタップリセット
             <button

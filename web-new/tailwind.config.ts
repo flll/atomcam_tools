@@ -39,6 +39,19 @@ export default {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        /* LDSG Role Color(機能固定の意味色) */
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--on-success))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--on-warning))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--on-info))',
+        },
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
@@ -87,11 +100,21 @@ export default {
         'body-md': ['0.875rem', { lineHeight: '1.25rem' }],
         'label-lg': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '500' }],
         'label-md': ['0.75rem', { lineHeight: '1rem', fontWeight: '500' }],
+        /* LDSG Typography 2系統: Title=締まった行間(見出し・行タイトル)、
+           Text(body)=読ませる行間+日本語向け letter-spacing */
+        'title-xl': ['1.375rem', { lineHeight: '1.35', fontWeight: '700', letterSpacing: '0.01em' }],
+        'title-s': ['0.875rem', { lineHeight: '1.4', fontWeight: '500' }],
+        'title-xs': ['0.8125rem', { lineHeight: '1.4', fontWeight: '600', letterSpacing: '0.02em' }],
+        'body-xs': ['0.75rem', { lineHeight: '1.6', letterSpacing: '0.01em' }],
       },
       boxShadow: {
         'elevation-1': 'var(--elevation-1)',
         'elevation-2': 'var(--elevation-2)',
         'elevation-3': 'var(--elevation-3)',
+        /* LDSG on-white shadow(ダークでは CSS 変数側で none) */
+        l100: 'var(--shadow-l100)',
+        l200: 'var(--shadow-l200)',
+        l300: 'var(--shadow-l300)',
       },
       transitionDuration: {
         'short-2': '100ms',
@@ -108,6 +131,11 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        /* LDSG Object Styles: 画面占有率で使い分ける4段(badge<control<card<sheet) */
+        badge: 'var(--radius-badge)',
+        control: 'var(--radius-control)',
+        card: 'var(--radius-card)',
+        sheet: 'var(--radius-sheet)',
       },
     },
   },

@@ -20,15 +20,15 @@ export function Section({
     <section className="space-y-3">
       <div className="flex items-end justify-between gap-4 px-1">
         <div className="min-w-0 space-y-1">
-          <h2 className="text-sm font-semibold text-muted-foreground">{title}</h2>
-          {description && <p className="text-xs leading-relaxed text-muted-foreground/80">{description}</p>}
+          <h2 className="text-title-xs text-muted-foreground">{title}</h2>
+          {description && <p className="text-body-xs text-muted-foreground/80">{description}</p>}
         </div>
         {action && <div className="shrink-0">{action}</div>}
       </div>
       <div
         className={cn(
           card
-            ? 'divide-y divide-border overflow-hidden rounded-xl border border-border bg-card'
+            ? 'divide-y divide-border overflow-hidden rounded-card border border-border bg-card shadow-l100'
             : 'space-y-2',
         )}
       >

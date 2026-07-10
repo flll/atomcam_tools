@@ -22,10 +22,10 @@ export function Disclosure({
   bodyClassName?: string;
 }) {
   return (
-    <details open={defaultOpen} className={cn('group rounded-lg border border-border', className)}>
+    <details open={defaultOpen} className={cn('group rounded-control border border-border', className)}>
       <summary
         className={cn(
-          'flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent [&::-webkit-details-marker]:hidden',
+          'flex cursor-pointer select-none items-center gap-2 rounded-control px-3 py-2 text-sm transition-colors hover:bg-accent [&::-webkit-details-marker]:hidden',
           summaryClassName,
         )}
       >

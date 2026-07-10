@@ -79,7 +79,7 @@ function EntryErrors({ errors }: { errors: string[] }) {
 function EntryFrame({ onDelete, children }: { onDelete: () => void; children: React.ReactNode }) {
   const { t } = useTranslation('ui');
   return (
-    <div className="space-y-2 rounded-lg border border-border p-3">
+    <div className="space-y-2 rounded-control border border-border p-3">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1 space-y-2">{children}</div>
         <Button variant="ghost" size="icon" aria-label={t('schedule.delete')} onClick={onDelete}>
@@ -213,7 +213,7 @@ export function RebootScheduleEditor({
 }) {
   const { t } = useTranslation('translation');
   return (
-    <div className="space-y-2 rounded-lg border border-border p-3">
+    <div className="space-y-2 rounded-control border border-border p-3">
       <DayChips value={value.dayOfWeekSelect} onChange={(v) => onChange({ ...value, dayOfWeekSelect: v })} />
       <TimeInput value={value.startTime} aria-label={t('schedule.startTime')} onChange={(v) => onChange({ ...value, startTime: v })} />
       <EntryErrors errors={value.dayOfWeekSelect.length === 0 ? ['noDays'] : []} />

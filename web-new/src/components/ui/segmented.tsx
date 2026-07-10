@@ -44,7 +44,7 @@ export function SegmentedControl<T extends string>({
             title={opt.title}
             onClick={() => onChange(opt.value)}
             className={cn(
-              'relative rounded-full px-2.5 py-1 text-xs font-medium transition-colors duration-short-2 ease-standard',
+              'relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-short-2 ease-standard',
               overlay
                 ? active
                   ? 'text-white'

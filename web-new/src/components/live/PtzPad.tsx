@@ -59,11 +59,11 @@ export function PtzPad() {
   }, [speed]);
 
   const btn =
-    'flex size-11 items-center justify-center rounded-xl bg-surface-container-highest text-on-surface transition-all duration-short-2 ease-standard hover:bg-secondary-container active:scale-95 select-none touch-none';
+    'flex size-11 items-center justify-center rounded-card bg-surface-container-highest text-on-surface transition-all duration-short-2 ease-standard hover:bg-secondary-container active:scale-95 select-none touch-none';
 
   return (
     <div className="flex items-center gap-5">
-      <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
+      <div className="grid grid-cols-3 grid-rows-3 gap-2">
         {DIRS.map(({ key, dPan, dTilt, Icon, cell }) => (
           <button
             key={key}
