@@ -21,7 +21,7 @@ export function SettingSwitch({
   const on = value === 'on';
   const desc = t(`${i18nKey}.tooltip`, { defaultValue: '' });
   return (
-    <label className={cn('flex items-center justify-between gap-4 rounded-lg border border-border px-3 py-2', disabled && 'opacity-50')}>
+    <label className={cn('flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-foreground/[0.02]', disabled && 'opacity-50')}>
       <span className="min-w-0">
         <span className="flex items-center gap-2 text-sm">
           {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}

@@ -34,7 +34,7 @@ export function SettingSlider({
   const modified = defaultValue != null && value !== defaultValue;
   const pct = defaultValue != null && max > min ? (defaultValue - min) / (max - min) : null;
   return (
-    <div className="block rounded-lg border border-border px-3 py-2">
+    <div className="block px-4 py-3">
       <div className="mb-1 flex items-center justify-between gap-4 text-sm">
         <label htmlFor={id} className="flex items-center gap-2">
           {Icon && <Icon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />}

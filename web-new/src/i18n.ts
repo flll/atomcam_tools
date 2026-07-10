@@ -23,7 +23,8 @@ i18n
     defaultNS: 'ui',
     fallbackNS: 'translation',
     interpolation: { escapeValue: false },
-    backend: { loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json` },
+    // ?v= はビルドごとに変わるキャッシュバスター(定義: vite.config.ts の __BUILD_ID__)
+    backend: { loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json?v=${__BUILD_ID__}` },
     detection: {
       order: ['localStorage', 'navigator'],
       lookupLocalStorage: 'locale',

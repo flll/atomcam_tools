@@ -219,8 +219,8 @@ export default function StreamingPage() {
         </div>
       )}
 
-      {/* 連携カード */}
-      <Section title={tUi('hub.integrations')} description={tUi('hub.integrationsDesc')}>
+      {/* 連携カード(各カードが枠を持つのでセクション自体はカード化しない) */}
+      <Section card={false} title={tUi('hub.integrations')} description={tUi('hub.integrationsDesc')}>
         <div className="grid gap-3 sm:grid-cols-2">
           <IntegrationCard
             icon={Cat}
