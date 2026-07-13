@@ -30,7 +30,7 @@ function RailItem({ item, label }: { item: NavItem; label: string }) {
   return (
     <NavLink
       to={item.to}
-      end={item.to === '/'}
+      end={item.to === '/' || item.to === '/settings/system'}
       className="group flex w-full flex-col items-center gap-0.5 py-1 text-center text-[11px] font-medium leading-tight outline-none break-keep"
     >
       {({ isActive }) => (
@@ -68,9 +68,10 @@ export function AppLayout() {
   const nav = filterNav(NAV, config?.PRODUCT_MODEL);
   const primary = nav.filter((i) => i.primary);
 
-  const current = nav.find((i) =>
-    i.to === '/' ? location.pathname === '/' : location.pathname.startsWith(i.to),
-  );
+  // 前方一致で複数マッチする場合(/settings/system と /settings/system/tailscale)は最長一致を採用
+  const current = [...nav]
+    .sort((a, b) => b.to.length - a.to.length)
+    .find((i) => (i.to === '/' ? location.pathname === '/' : location.pathname.startsWith(i.to)));
   // 現在地が primary にない場合は「その他」をアクティブ表示する
   const moreActive = current != null && !current.primary;
 
@@ -144,7 +145,7 @@ export function AppLayout() {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === '/'}
+            end={item.to === '/' || item.to === '/settings/system'}
             className="group flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] font-medium"
           >
             {({ isActive }) => (
@@ -217,7 +218,7 @@ export function AppLayout() {
                   <NavLink
                     key={item.to}
                     to={item.to}
-                    end={item.to === '/'}
+                    end={item.to === '/' || item.to === '/settings/system'}
                     onClick={() => setMoreOpen(false)}
                     className={({ isActive }) =>
                       cn(

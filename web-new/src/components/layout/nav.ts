@@ -7,6 +7,7 @@ import {
   HardDrive,
   Radio,
   Server,
+  Shield,
   Video,
   Wrench,
   type LucideIcon,
@@ -34,6 +35,7 @@ export const NAV: NavItem[] = [
   { to: '/settings/events', icon: Bell, labelKey: 'nav.events', group: 'settings' },
   { to: '/settings/cruise', icon: Compass, labelKey: 'nav.cruise', group: 'settings' },
   { to: '/settings/system', icon: Server, labelKey: 'nav.system', group: 'settings' },
+  { to: '/settings/system/tailscale', icon: Shield, labelKey: 'nav.tailscale', group: 'settings' },
   { to: '/files', icon: Folder, labelKey: 'nav.files', group: 'tools' },
   { to: '/maintenance', icon: Wrench, labelKey: 'nav.maintenance', group: 'tools' },
 ];

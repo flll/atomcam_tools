@@ -11,7 +11,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Inter Variable"', '"Noto Sans JP Variable"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"LINE Seed JP"', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Roboto', '"Hiragino Sans"', '"Noto Sans JP"', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -102,10 +102,10 @@ export default {
         'label-md': ['0.75rem', { lineHeight: '1rem', fontWeight: '500' }],
         /* LDSG Typography 2系統: Title=締まった行間(見出し・行タイトル)、
            Text(body)=読ませる行間+日本語向け letter-spacing */
-        'title-xl': ['1.375rem', { lineHeight: '1.35', fontWeight: '700', letterSpacing: '0.01em' }],
-        'title-s': ['0.875rem', { lineHeight: '1.4', fontWeight: '500' }],
-        'title-xs': ['0.8125rem', { lineHeight: '1.4', fontWeight: '600', letterSpacing: '0.02em' }],
-        'body-xs': ['0.75rem', { lineHeight: '1.6', letterSpacing: '0.01em' }],
+        'title-xl': ['24px', { lineHeight: '1.3', fontWeight: '700' }],
+        'title-s': ['15px', { lineHeight: '1.3', fontWeight: '500' }],
+        'title-xs': ['13px', { lineHeight: '1.3', fontWeight: '700' }],
+        'body-xs': ['13px', { lineHeight: '1.5' }],
       },
       boxShadow: {
         'elevation-1': 'var(--elevation-1)',

@@ -1,69 +1,70 @@
-# WebUI デザインガイドライン(LDSG 由来の規律)
+# WebUI デザインガイドライン(ldsg-design 準拠)
 
-本プロジェクトの WebUI(web-new)は M3(Material 3)のカラートークンを土台に、
-[LINE Design System for Global Family Service (LDSG) v3.5](https://designsystem.line.me/LDSG) の
-**Foundation 規律**を移植している(参照 2026-07-11)。LDSG の思想は
-「最小限の Foundation ルールで一貫性を担保し、その範囲内で自由にカスタマイズする」こと。
-色相(ブランドカラー)は本プロジェクト独自の青系を維持し、**構造の規律だけ**を取り入れる。
+**正本は flll/skills の `ldsg-design` スキル**(LDSG v1.5.0 準拠・96変数、
+`assets/ldsg-tokens.css`)。本書はその WebUI(web-new)への適用規約。
+本プロジェクトの意図的な逸脱は2点のみ(末尾)。
 
-## 1. 角丸(Object Styles) — 画面占有率で使い分ける
+## 1. 色 — LDSG Gray ランプ+Role Color
 
-LDSG の radius 思想: 小さい部品ほど小さく、画面を大きく占める部品ほど大きく。
+面・罫線・テキストは LDSG Gray ランプに固定(src/index.css が M3 変数名へマップ):
 
-| Tailwind クラス | 値 | 使う場所 | LDSG 対応 |
-|---|---|---|---|
-| `rounded-badge` | 3px | バッジ・タグなどの小物 | ldsg-radius-100 |
-| `rounded-control` | 5px | ボタン・入力・セレクト・チップ・summary | ldsg-radius-200 |
-| `rounded-card` | 7px | ページ内カード(画面の50%未満) | ldsg-radius-300 |
-| `rounded-sheet` | 12px | モーダル・シート・トースト・浮遊バー(50%超・オーバーレイ) | ldsg-radius-400 |
-| `rounded-full` | 50% | 円形(スイッチ・ピル・アイコンボタン) | ldsg-radius-circle |
-
-`rounded-sm/md/lg/xl` は新規コードで使わない(既存の残置は見つけ次第移行)。
-
-## 2. 余白 — 4px の倍数
-
-- コンポーネント**間**の余白は 4px の倍数(必須)。最小例外は 2px(`0.5`)。
-- コンポーネント**内部**も可能な限り 4px の倍数を推奨。
-- NG 例: `py-2.5`(10px)・`gap-1.5`(6px) → `py-3`・`gap-2` へ。
-- 設定行の標準は `px-4 py-3`(16/12px)。
-
-## 3. タイポグラフィ — Title / Text の2系統
-
-LDSG は「Title=締まった行間(見出し)」「Text=読ませる行間(本文)」を分ける。
-
-| クラス | 用途 |
-|---|---|
-| `text-title-xl` | ページ見出し(h1) |
-| `text-title-xs` | セクション見出し(h2) |
-| `text-title-s` | 設定行のタイトル |
-| `text-body-xs` | 説明文・tooltip(行間 1.6+日本語向け letter-spacing) |
-
-既存の M3 スケール(`text-title-lg` 等)と共存する。本文系に `leading-relaxed` を
-個別指定する代わりに `text-body-xs` を使う。
-
-## 4. Role Color — 機能に固定した意味色
-
-ブランド色(primary)を成功表示に流用しない。意味色は機能に固定する。
-
-| トークン | 意味 | 使用例 |
+| 用途 | ライト | ダーク |
 |---|---|---|
-| `success` | 完了・成功 | 送信成功・コピー完了チェック・成功トーストの縁 |
-| `warning` | 注意喚起(エラーではない) | メモリ多重有効化の警告バナー |
-| `info` | 補足情報(現状は予約) | 情報バナー等、必要になったら |
-| `destructive` | エラー・破壊的操作 | 送信失敗・削除確認 |
+| ページ背景(surface) | White | Gray900 #111111 |
+| カード(surface-container-low) | Gray150 #F5F5F5 | Gray850 #1F1F1F |
+| 罫線(border) | Gray300 #DFDFDF | Gray750 #3F3F3F |
+| 本文 | Black | White |
+| 補助テキスト | Gray650 #616161 | Gray400 #B7B7B7 |
 
-light/dark 両テーマで定義済み(`--success` 等、src/index.css)。
+Role Color(機能固定・`text-success` 等で使用):
 
-## 5. 影 — 背景ごとに最適化(ライトのみ)
+| トークン | 由来 | ライト/ダーク |
+|---|---|---|
+| success | ldsg role-positive | #06C755(共通) |
+| destructive | ldsg role-negative | #FF334B / #FF697A |
+| info | ldsg role-link | #4D73FF / #638DFF |
+| warning | Rainbow amber(策定: LDSG に warning 無し) | 濃amber / #FFC53D 系 |
 
-LDSG の shadow は背景色ごとに用意される。本プロジェクトでは:
+直値 `#hex` をコンポーネントに書かない。新しい色が要る場合は Rainbow 16色相から
+選んでトークン化する(ldsg-design の必須規則)。
 
-- **ライト**: `shadow-l100`(カード)/`shadow-l200`(ボタン等、必要時)/`shadow-l300`(モーダル・浮遊)
-- **ダーク**: 影は使わない(CSS 変数が none になる)。M3 の surface-container 面階層で奥行きを表現する。
+## 2. 角丸 — ldsg radius s/m/l
+
+| クラス | 値 | 使う場所 |
+|---|---|---|
+| `rounded-badge` / `rounded-control` | 4px (radius-s) | バッジ・ボタン・入力・summary |
+| `rounded-card` | 8px (radius-m) | ページ内カード |
+| `rounded-sheet` | 13px (radius-l) | モーダル・トースト・浮遊バー・ポップ |
+| `rounded-full` | 999px | 円形(スイッチ・ピル) |
+
+## 3. タイポグラフィ — LINE Seed JP+px 体系
+
+- フォント: **LINE Seed JP**(seed.line.me、SIL OFL 1.1)。UI 使用文字のサブセットを
+  同梱(`src/assets/fonts/`、再生成は `scripts/subset-lineseed.sh`)。
+  フォールバックは ldsg の Language Pack システムスタック
+- `text-title-xl`=24px/1.3/Bold(h1)、`text-title-xs`=13px/1.3/Bold(h2)、
+  `text-title-s`=15px/1.3/Medium(行タイトル)、`text-body-xs`=13px/1.5(説明文)
+- Title 系は行間 1.3、Text 系は 1.5(LDSG 公式方針)
+
+## 4. 状態 — 透過度で表現(公式)
+
+ボタン・リンクの hover は `opacity` 0.7、pressed は 0.5(button.tsx に実装済み)。
+背景色変化で hover を表現しない。
+
+## 5. 余白 — 4px の倍数
+
+コンポーネント間は 4px の倍数必須(最小例外 2px)。設定行の標準は `px-4 py-3`。
+
+## 意図的な逸脱(2点)
+
+1. **brand-primary は現行の青系を維持**(LINE Green にしない)。LDSG の
+   「brand はサービスごとに差替可」思想に基づく。公開 OSS のため LINE ブランド色の
+   商標懸念もゼロにする
+2. **設定行の hover は背景変化を維持**(透過度でなく)。行全体がクリック対象である
+   ことの視認性を優先
 
 ## 出典
 
-- Object Styles: https://designsystem.line.me/LDSG/foundation/object-styles-en
-- Layout(4px spacing): https://designsystem.line.me/LDSG/foundation/layout-en
-- Typography: https://designsystem.line.me/LDSG/foundation/typography-en
-- Color(Role Color): https://designsystem.line.me/LDSG/foundation/color-en
+- 正本: flll/skills `ldsg-design/`(SKILL.md・reference.md・assets/ldsg-tokens.css)
+- LDSG: https://designsystem.line.me/LDSG
+- LINE Seed: https://seed.line.me(SIL OFL 1.1)
