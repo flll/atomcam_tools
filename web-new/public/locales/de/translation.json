@@ -478,6 +478,7 @@
   },
   "cruise": {
     "tab": "Patrouille",
+    "addPoint": "Punkt hinzufügen",
     "title": "Patrouille",
     "initialPosition": {
       "title": "Swing-Position zurücksetzen",
@@ -628,8 +629,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "Aktualisiert atomcam tools"
+      "title": "Tools aktualisieren",
+      "tooltip": "Aktualisiert atomcam tools",
+      "button": "Aktualisieren"
     },
     "customZip": {
       "title": "Benutzerdefinierte Update-ZIP-Datei",

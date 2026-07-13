@@ -96,6 +96,10 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
     # 直近の送信結果(無ければ空 JSON)
     [ -f /tmp/webhook_status ] && cat /tmp/webhook_status || echo '{}'
   fi
+  if [ "$NAME" = "tailscale-status" ] ; then
+    # Tailscale 接続状態(state/ip/dnsName)を JSON で返す
+    /scripts/tailscale.sh status-json 2>/dev/null || echo '{"state":"stopped"}'
+  fi
 fi
 
 if [ "$REQUEST_METHOD" = "POST" ]; then

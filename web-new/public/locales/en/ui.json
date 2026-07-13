@@ -157,5 +157,42 @@
     "sendOk": "Sent",
     "sendFail": "Failed",
     "needTarget": "Set a WebHook URL or MQTT first"
+  },
+  "ts": {
+    "desc": "Set up a VPN (Tailscale) to reach the camera securely from other networks.",
+    "statusTitle": "Connection status",
+    "statusDesc": "State on your tailnet and where to reach it.",
+    "stateLabel": "State",
+    "state": {
+      "running": "Connected",
+      "needslogin": "Needs login",
+      "needsmachineauth": "Needs approval",
+      "starting": "Starting",
+      "stopped": "Stopped",
+      "nostate": "Not set up",
+      "unknown": "Unknown"
+    },
+    "ipLabel": "IP address",
+    "dnsLabel": "MagicDNS name",
+    "notConnected": "Not connected. Enter an auth key and save to connect.",
+    "adminTitle": "Admin console",
+    "adminDesc": "Manage devices and connections.",
+    "openAdmin": "Admin console",
+    "openDevice": "Open this device",
+    "authKeyChange": "Change",
+    "authKeyGet": "Get an auth key (admin console)",
+    "integrations": "Integrations",
+    "integrationsDesc": "Settings to use the camera securely from outside over the tailnet.",
+    "needConnected": "Shown after connecting.",
+    "frigate": {
+      "desc": "Let a Frigate on another network pull securely via RTSP over the tailnet.",
+      "hint": "Paste this example into Frigate's config.yml."
+    },
+    "acl": {
+      "title": "Access control (ACL)",
+      "desc": "Fine-grained firewall that limits ports per tag.",
+      "hint": "Paste this template into the policy editor in the admin console and adjust as needed.",
+      "openEditor": "Edit policy (admin console)"
+    }
   }
 }

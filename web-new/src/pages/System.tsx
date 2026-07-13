@@ -1,11 +1,14 @@
-import { CloudOff, Gauge, KeyRound, Lock, Server, Shield, Signal, SignalLow, Tags, Timer } from 'lucide-react';
+import { CloudOff, Gauge, Signal, SignalLow, Timer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Section, SettingInput, SettingInputNumber, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { Section, SettingInputNumber, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
+import { useHackIni } from '@/hooks/useHackIni';
 import { WatermarkEditor } from '@/components/watermark/WatermarkEditor';
+import { TailscaleSection } from '@/components/tailscale/TailscaleSection';
 
 export default function SystemPage({ section }: { section?: 'device' | 'tailscale' }) {
   const { t } = useTranslation('translation');
+  const { config } = useHackIni();
   const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
 
   const showDevice = !section || section === 'device';
@@ -32,19 +35,7 @@ export default function SystemPage({ section }: { section?: 'device' | 'tailscal
         </>
       )}
 
-      {showTailscale && (
-        <Section title={t('tailscaleSettings.title')}>
-          <SettingSwitch icon={Shield} i18nKey="tailscaleSettings.enable" value={draft.TAILSCALE_ENABLE ?? 'off'} onChange={(v) => patch({ TAILSCALE_ENABLE: v })} />
-          {draft.TAILSCALE_ENABLE === 'on' && (
-            <>
-              <SettingInput icon={KeyRound} i18nKey="tailscaleSettings.authKey" type="password" value={draft.TAILSCALE_AUTH_KEY ?? ''} onChange={(v) => patch({ TAILSCALE_AUTH_KEY: v })} />
-              <SettingInput icon={Server} i18nKey="tailscaleSettings.hostname" value={draft.TAILSCALE_HOSTNAME ?? ''} onChange={(v) => patch({ TAILSCALE_HOSTNAME: v })} />
-              <SettingInput icon={Tags} i18nKey="tailscaleSettings.tags" value={draft.TAILSCALE_TAGS ?? 'tag:cctv'} onChange={(v) => patch({ TAILSCALE_TAGS: v })} />
-              <SettingSwitch icon={Lock} i18nKey="tailscaleSettings.exitNodeOnly" value={draft.TAILSCALE_EXITNODE_ONLY ?? 'off'} onChange={(v) => patch({ TAILSCALE_EXITNODE_ONLY: v })} />
-            </>
-          )}
-        </Section>
-      )}
+      {showTailscale && <TailscaleSection draft={draft} patch={patch} config={config} />}
 
       <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => submit()} onCancel={reset} />
     </div>

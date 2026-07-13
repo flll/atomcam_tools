@@ -157,5 +157,42 @@
     "sendOk": "发送成功",
     "sendFail": "发送失败",
     "needTarget": "请先设置 WebHook URL 或 MQTT"
+  },
+  "ts": {
+    "desc": "配置 VPN(Tailscale),从其他网络也能安全访问摄像头。",
+    "statusTitle": "连接状态",
+    "statusDesc": "tailnet 上的状态与访问地址。",
+    "stateLabel": "状态",
+    "state": {
+      "running": "已连接",
+      "needslogin": "待登录",
+      "needsmachineauth": "待批准",
+      "starting": "启动中",
+      "stopped": "已停止",
+      "nostate": "未配置",
+      "unknown": "未知"
+    },
+    "ipLabel": "IP 地址",
+    "dnsLabel": "MagicDNS 名称",
+    "notConnected": "未连接。输入 auth key 并保存即可连接。",
+    "adminTitle": "管理控制台",
+    "adminDesc": "管理设备和连接。",
+    "openAdmin": "管理控制台",
+    "openDevice": "打开此设备",
+    "authKeyChange": "更改",
+    "authKeyGet": "获取 auth key(管理控制台)",
+    "integrations": "联动",
+    "integrationsDesc": "通过 tailnet 从外部安全使用摄像头的设置。",
+    "needConnected": "连接后显示。",
+    "frigate": {
+      "desc": "让外部网络的 Frigate 通过 tailnet 的 RTSP 安全拉流。",
+      "hint": "将此示例粘贴到 Frigate 的 config.yml。"
+    },
+    "acl": {
+      "title": "访问控制 (ACL)",
+      "desc": "按标签限制端口的精细防火墙。",
+      "hint": "将此模板粘贴到管理控制台的策略编辑器并按需调整。",
+      "openEditor": "编辑策略(管理控制台)"
+    }
   }
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { CalendarClock, FileArchive, HeartPulse, Link2, Wifi } from 'lucide-react';
+import { CalendarClock, DownloadCloud, FileArchive, HeartPulse, Link2, Power, Wifi } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { RebootScheduleEditor, Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { RebootScheduleEditor, Section, SettingAction, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { Button } from '@/components/ui/button';
 import { api } from '@/api';
@@ -32,23 +32,28 @@ export default function MaintenancePage() {
         {draft.HEALTHCHECK === 'on' && <SettingInput icon={Link2} i18nKey="monitoring.URL" value={draft.HEALTHCHECK_PING_URL ?? ''} onChange={(v) => patch({ HEALTHCHECK_PING_URL: v })} />}
       </Section>
       <Section title={t('update.title')}>
-        <Button
-          variant="destructive"
-          disabled={!!busy}
-          onClick={() => {
-            setBusy('update');
-            runCmd(api.exec('update'), { onFinally: () => setBusy('') });
-          }}
-        >
-          {t('update.toolsUpdate.title')}
-        </Button>
+        <SettingAction i18nKey="update.toolsUpdate" icon={DownloadCloud}>
+          <Button
+            variant="destructive"
+            size="sm"
+            disabled={!!busy}
+            onClick={() => {
+              setBusy('update');
+              runCmd(api.exec('update'), { onFinally: () => setBusy('') });
+            }}
+          >
+            {t('update.toolsUpdate.button')}
+          </Button>
+        </SettingAction>
         <SettingSwitch icon={FileArchive} i18nKey="update.customZip" value={draft.CUSTOM_ZIP ?? 'off'} onChange={(v) => patch({ CUSTOM_ZIP: v })} />
         {draft.CUSTOM_ZIP === 'on' && <SettingInput icon={Link2} i18nKey="update.customZip.URL" value={draft.CUSTOM_ZIP_URL ?? ''} onChange={(v) => patch({ CUSTOM_ZIP_URL: v })} />}
       </Section>
       <Section title={t('reboot.title')}>
         <SettingSwitch icon={CalendarClock} i18nKey="reboot.periodicRestart" value={draft.REBOOT ?? 'off'} onChange={(v) => patch({ REBOOT: v })} />
         {draft.REBOOT === 'on' && <RebootScheduleEditor value={reboot} onChange={setRebootEdit} />}
-        <Button variant="destructive" onClick={() => runCmd(api.exec('reboot'))}>{t('reboot.reboot.button')}</Button>
+        <SettingAction i18nKey="reboot.reboot" icon={Power}>
+          <Button variant="destructive" size="sm" onClick={() => runCmd(api.exec('reboot'))}>{t('reboot.reboot.button')}</Button>
+        </SettingAction>
       </Section>
       <UnsavedBar
         dirty={dirty || rebootEdit !== null}

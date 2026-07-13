@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { frigateSnippet, homeAssistantSnippet, rtspUrl, webrtcPageUrl } from './integration-snippets';
+import { frigateSnippet, homeAssistantSnippet, maskAuthKey, rtspUrl, tailscaleAclSnippet, webrtcPageUrl } from './integration-snippets';
 
 const noAuth = { on: false, user: '', pass: '' };
 const auth = { on: true, user: 'cam', pass: 'secret' };
@@ -48,5 +48,31 @@ describe('homeAssistantSnippet / webrtcPageUrl', () => {
 
   it('WebRTC ページ URL は go2rtc の 1984 番', () => {
     expect(webrtcPageUrl('h')).toBe('http://h:1984/webrtc.html?src=video0');
+  });
+});
+
+describe('maskAuthKey', () => {
+  it('接頭辞と末尾4桁だけ残す', () => {
+    expect(maskAuthKey('tskey-auth-abcdef12345-ZZZZ1a2b')).toBe('tskey-auth-••••1a2b');
+  });
+  it('空なら空', () => {
+    expect(maskAuthKey('')).toBe('');
+  });
+  it('短すぎる文字列は全マスク', () => {
+    expect(maskAuthKey('abc')).toBe('••••');
+  });
+});
+
+describe('tailscaleAclSnippet', () => {
+  it('指定タグに 80/8554 を許可する grants を生成', () => {
+    const s = tailscaleAclSnippet('tag:cctv');
+    expect(s).toContain('"tag:cctv"');
+    expect(s).toContain('"80"');
+    expect(s).toContain('"8554"');
+    expect(s).toContain('grants');
+    expect(s).toContain('tagOwners');
+  });
+  it('tag: が付いていない入力は tag:cctv に既定化', () => {
+    expect(tailscaleAclSnippet('foo')).toContain('"tag:cctv"');
   });
 });

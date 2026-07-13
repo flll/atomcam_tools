@@ -484,6 +484,7 @@
   },
   "cruise": {
     "tab": "Cruise",
+    "addPoint": "Add point",
     "title": "Cruise",
     "initialPosition": {
       "title": "Swing Return to Original Position",
@@ -634,8 +635,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "Update the atomcam tools"
+      "title": "Update firmware tools",
+      "tooltip": "Update the atomcam tools",
+      "button": "Update"
     },
     "customZip": {
       "title": "Custom File URL",

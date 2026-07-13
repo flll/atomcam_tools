@@ -379,6 +379,7 @@ event:
 
 cruise:
   tab: Cruise
+  addPoint: Add point
   title: Cruise
   initialPosition:
     title: Swing Return to Original Position
@@ -499,8 +500,9 @@ monitoring:
 update:
   title: Update
   toolsUpdate:
-    title: Update
+    title: Update firmware tools
     tooltip: Update the atomcam tools
+    button: Update
   customZip:
     title: Custom File URL
     tooltip: use a custom zip to update the atomcam tool

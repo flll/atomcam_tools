@@ -157,5 +157,42 @@
     "sendOk": "Gesendet",
     "sendFail": "Fehlgeschlagen",
     "needTarget": "Zuerst WebHook-URL oder MQTT einrichten"
+  },
+  "ts": {
+    "desc": "Richten Sie ein VPN (Tailscale) ein, um die Kamera sicher aus anderen Netzwerken zu erreichen.",
+    "statusTitle": "Verbindungsstatus",
+    "statusDesc": "Status im Tailnet und Zugriffsadresse.",
+    "stateLabel": "Status",
+    "state": {
+      "running": "Verbunden",
+      "needslogin": "Anmeldung nötig",
+      "needsmachineauth": "Freigabe nötig",
+      "starting": "Startet",
+      "stopped": "Gestoppt",
+      "nostate": "Nicht eingerichtet",
+      "unknown": "Unbekannt"
+    },
+    "ipLabel": "IP-Adresse",
+    "dnsLabel": "MagicDNS-Name",
+    "notConnected": "Nicht verbunden. Auth-Key eingeben und speichern zum Verbinden.",
+    "adminTitle": "Admin-Konsole",
+    "adminDesc": "Geräte und Verbindungen verwalten.",
+    "openAdmin": "Admin-Konsole",
+    "openDevice": "Dieses Gerät öffnen",
+    "authKeyChange": "Ändern",
+    "authKeyGet": "Auth-Key holen (Konsole)",
+    "integrations": "Integrationen",
+    "integrationsDesc": "Einstellungen, um die Kamera sicher von außen über das Tailnet zu nutzen.",
+    "needConnected": "Wird nach dem Verbinden angezeigt.",
+    "frigate": {
+      "desc": "Lässt ein Frigate in einem anderen Netzwerk sie sicher per RTSP über das Tailnet abrufen.",
+      "hint": "Fügen Sie dieses Beispiel in Frigates config.yml ein."
+    },
+    "acl": {
+      "title": "Zugriffssteuerung (ACL)",
+      "desc": "Feingranulare Firewall, die Ports pro Tag begrenzt.",
+      "hint": "Fügen Sie diese Vorlage in den Richtlinieneditor der Konsole ein und passen Sie sie an.",
+      "openEditor": "Richtlinie bearbeiten (Konsole)"
+    }
   }
 }

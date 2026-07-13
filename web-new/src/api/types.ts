@@ -121,6 +121,14 @@ export interface NotifyStatus {
   at?: string;
 }
 
+// cmd.cgi name=tailscale-status(tailscale.sh status-json)。
+// state は BackendState(Running/NeedsLogin/Starting/Stopped 等)または stopped。
+export interface TailscaleStatus {
+  state?: string;
+  ip?: string;
+  dnsName?: string;
+}
+
 // cmd.cgi POST の宛先。socket は go2rtc 制御ポート(localhost:4000)直、
 // 既定は /var/run/webcmd 経由。
 

@@ -157,5 +157,42 @@
     "sendOk": "Enviado",
     "sendFail": "Falhou",
     "needTarget": "Configure uma URL de WebHook ou MQTT primeiro"
+  },
+  "ts": {
+    "desc": "Configure uma VPN (Tailscale) para acessar a câmera com segurança de outras redes.",
+    "statusTitle": "Estado da conexão",
+    "statusDesc": "Estado na sua tailnet e onde acessar.",
+    "stateLabel": "Estado",
+    "state": {
+      "running": "Conectado",
+      "needslogin": "Requer login",
+      "needsmachineauth": "Requer aprovação",
+      "starting": "Iniciando",
+      "stopped": "Parado",
+      "nostate": "Não configurado",
+      "unknown": "Desconhecido"
+    },
+    "ipLabel": "Endereço IP",
+    "dnsLabel": "Nome MagicDNS",
+    "notConnected": "Não conectado. Insira uma auth key e salve para conectar.",
+    "adminTitle": "Console de administração",
+    "adminDesc": "Gerencie dispositivos e conexões.",
+    "openAdmin": "Console de admin.",
+    "openDevice": "Abrir este dispositivo",
+    "authKeyChange": "Alterar",
+    "authKeyGet": "Obter auth key (console)",
+    "integrations": "Integrações",
+    "integrationsDesc": "Ajustes para usar a câmera com segurança de fora pela tailnet.",
+    "needConnected": "Exibido após conectar.",
+    "frigate": {
+      "desc": "Permite que um Frigate em outra rede a receba com segurança via RTSP pela tailnet.",
+      "hint": "Cole este exemplo no config.yml do Frigate."
+    },
+    "acl": {
+      "title": "Controle de acesso (ACL)",
+      "desc": "Firewall detalhado que limita portas por tag.",
+      "hint": "Cole este modelo no editor de políticas do console e ajuste conforme necessário.",
+      "openEditor": "Editar política (console)"
+    }
   }
 }

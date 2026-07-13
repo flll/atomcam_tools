@@ -286,6 +286,21 @@ status() {
     fi
 }
 
+# WebUI 向け: 接続状態を JSON 1行で返す(state/ip/dnsName)。jq は無いので grep 抽出。
+status_json() {
+    ts_env
+    if ! pgrep -f tailscaled > /dev/null 2>&1; then
+        printf '{"state":"stopped"}''' + BS + '''n'
+        return 0
+    fi
+    json=$(/usr/bin/tailscale status --json 2>/dev/null)
+    ip=$(/usr/bin/tailscale ip -4 2>/dev/null | head -1)
+    backend=$(printf '%s' "$json" | grep -o '"BackendState":"[^"]*"' | head -1 | sed 's/.*:"//;s/"//')
+    dnsname=$(printf '%s' "$json" | grep -o '"DNSName":"[^"]*"' | head -1 | sed 's/.*:"//;s/"$//;s/[.]$//')
+    [ -n "$backend" ] || backend="unknown"
+    printf '{"state":"%s","ip":"%s","dnsName":"%s"}''' + BS + '''n' "$backend" "$ip" "$dnsname"
+}
+
 start() {
     if ! load_config; then
         local exit_code=$?
@@ -321,8 +336,11 @@ case "${1:-start}" in
     status)
         status
         ;;
+    status-json)
+        status_json
+        ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status}"
+        echo "Usage: $0 {start|stop|restart|status|status-json}"
         exit 1
         ;;
 esac

@@ -478,6 +478,7 @@
   },
   "cruise": {
     "tab": "Patrouille",
+    "addPoint": "Ajouter un point",
     "title": "Patrouille",
     "initialPosition": {
       "title": "Réinitialiser la position du Swing",
@@ -628,8 +629,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "Met à jour atomcam tools"
+      "title": "Mettre à jour les outils",
+      "tooltip": "Met à jour atomcam tools",
+      "button": "Mettre à jour"
     },
     "customZip": {
       "title": "Fichier ZIP de mise à jour personnalisé",

@@ -58,6 +58,33 @@ cameras:
       height: 360`;
 }
 
+// auth key を識別できる範囲だけ見せる: 接頭辞(tskey-auth-)+末尾4桁。全文は再表示しない。
+export function maskAuthKey(k: string): string {
+  if (!k) return '';
+  if (k.length <= 8) return '••••';
+  const m = k.match(/^(tskey-[a-z]*-?)/);
+  const prefix = m ? m[1] : k.slice(0, 6);
+  return `${prefix}••••${k.slice(-4)}`;
+}
+
+// Tailscale ACL(grants): 指定タグのデバイスに WebUI(80)と RTSP(8554)だけ許可する雛形。
+// 適用は管理コンソール(login.tailscale.com/admin/acls)側。tag は advertise-tags と揃える。
+export function tailscaleAclSnippet(tag: string): string {
+  const t = tag && tag.startsWith('tag:') ? tag : 'tag:cctv';
+  return `{
+  "tagOwners": {
+    "${t}": ["autogroup:admin"]
+  },
+  "grants": [
+    {
+      "src": ["autogroup:member"],
+      "dst": ["${t}"],
+      "ip": ["80", "8554"]
+    }
+  ]
+}`;
+}
+
 // Home Assistant: go2rtc アドオン/WebRTC カード向けと generic camera 向け
 export function homeAssistantSnippet(host: string, name: string, auth: RtspAuth): string {
   const main = rtspUrl(host, 'video0', auth);

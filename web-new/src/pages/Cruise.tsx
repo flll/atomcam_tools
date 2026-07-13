@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Route } from 'lucide-react';
+import { Crosshair, ListPlus, Route } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Section, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { Section, SettingAction, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
 import { Button } from '@/components/ui/button';
@@ -55,16 +55,21 @@ export default function CruisePage() {
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-title-xl">{t('cruise.title')}</h1>
       <Section title={t('cruise.title')}>
-        <Button variant="outline" onClick={() => runCmd(api.exec('moveinit'))}>{t('cruise.initialPosition.title')}</Button>
         <SettingSwitch icon={Route} i18nKey="cruise.cameraMotion" value={draft.CRUISE ?? 'off'} onChange={(v) => patch({ CRUISE: v })} />
-        <ul className="space-y-1 text-sm font-mono">
-          {points.map((p, i) => (
-            <li key={i}>#{i + 1} pan {p.pan} tilt {p.tilt} wait {p.wait}s</li>
-          ))}
-        </ul>
-        <Button variant="secondary" onClick={() => setPointsEdit([...points, { pan: 177, tilt: 90, speed: 5, wait: 10, detect: false }])}>
-          + point
-        </Button>
+        <SettingAction i18nKey="cruise.initialPosition" icon={Crosshair}>
+          <Button variant="outline" size="sm" onClick={() => runCmd(api.exec('moveinit'))}>{t('cruise.initialPosition.button')}</Button>
+        </SettingAction>
+        <div className="space-y-2 px-4 py-3">
+          <ul className="space-y-1 font-mono text-body-xs text-muted-foreground">
+            {points.map((p, i) => (
+              <li key={i}>#{i + 1} pan {p.pan} tilt {p.tilt} wait {p.wait}s</li>
+            ))}
+          </ul>
+          <Button variant="outline" size="sm" onClick={() => setPointsEdit([...points, { pan: 177, tilt: 90, speed: 5, wait: 10, detect: false }])}>
+            <ListPlus className="size-4" />
+            {t('cruise.addPoint', { defaultValue: 'point' })}
+          </Button>
+        </div>
       </Section>
       <UnsavedBar
         dirty={dirty || pointsEdit !== null}

@@ -4,6 +4,7 @@ import {
   parseProperty,
   parseStatus,
   parseNotifyStatus,
+  parseTailscaleStatus,
   parseStorageDu,
   parseStorageInfo,
   rgbaToBgra,
@@ -18,6 +19,7 @@ import type {
   NotifyStatus,
   StorageDu,
   StorageInfo,
+  TailscaleStatus,
 } from './types';
 
 const CGI_BASE = './cgi-bin';
@@ -92,6 +94,11 @@ export const api = {
   // 直近の送信結果(未送信なら空)
   async getNotifyStatus(): Promise<NotifyStatus> {
     return parseNotifyStatus(await getText(`${CGI_BASE}/cmd.cgi?name=notify-status`));
+  },
+
+  // Tailscale 接続状態(state/ip/dnsName)
+  async getTailscaleStatus(): Promise<TailscaleStatus> {
+    return parseTailscaleStatus(await getText(`${CGI_BASE}/cmd.cgi?name=tailscale-status`));
   },
 
   // du はフォルダサイズ次第で数秒かかるため、ボタン押下時のみ呼ぶ

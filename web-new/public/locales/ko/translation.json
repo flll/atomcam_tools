@@ -478,6 +478,7 @@
   },
   "cruise": {
     "tab": "크루즈 설정",
+    "addPoint": "포인트 추가",
     "title": "크루즈",
     "initialPosition": {
       "title": "Swing 좌표 초기화",
@@ -628,8 +629,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "atomcam tools를 업데이트합니다"
+      "title": "본체 업데이트",
+      "tooltip": "atomcam tools를 업데이트합니다",
+      "button": "업데이트"
     },
     "customZip": {
       "title": "커스텀 업데이트 ZIP 파일",

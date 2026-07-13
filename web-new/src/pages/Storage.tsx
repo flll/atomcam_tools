@@ -9,11 +9,12 @@ import {
   MemoryStick,
   Network,
   Share2,
+  Trash2,
   User,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
-import { Section, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { Section, SettingAction, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useCameraStatus } from '@/hooks/useCameraStatus';
 import { Button } from '@/components/ui/button';
@@ -192,17 +193,11 @@ export default function StoragePage() {
       <Section title={t('SDCardSettings.title')} description={tUi('storage.sdSectionDesc')}>
         <SettingSwitch icon={Share2} i18nKey="SDCardSettings.smbAccess" value={draft.STORAGE_SDCARD_PUBLISH ?? 'off'} onChange={(v) => patch({ STORAGE_SDCARD_PUBLISH: v })} />
         <SettingSwitch icon={HardDriveDownload} i18nKey="SDCardSettings.directWrite" value={draft.STORAGE_SDCARD_DIRECT_WRITE ?? 'off'} onChange={(v) => patch({ STORAGE_SDCARD_DIRECT_WRITE: v })} />
-        <div className="flex items-center justify-between gap-4 rounded-control border border-destructive/40 px-3 py-2">
-          <span className="min-w-0">
-            <span className="block text-sm">{t('SDCardSettings.eraseSDCard.title')}</span>
-            <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-              {t('SDCardSettings.eraseSDCard.tooltip')}
-            </span>
-          </span>
-          <Button variant="destructive" className="shrink-0" onClick={() => setConfirmErase(true)}>
-            {t('SDCardSettings.eraseSDCard.title')}
+        <SettingAction i18nKey="SDCardSettings.eraseSDCard" icon={Trash2} danger>
+          <Button variant="destructive" size="sm" onClick={() => setConfirmErase(true)}>
+            {t('SDCardSettings.eraseSDCard.button')}
           </Button>
-        </div>
+        </SettingAction>
       </Section>
 
       <Section title={t('NASSettings.title')} description={tUi('storage.nasSectionDesc')}>
