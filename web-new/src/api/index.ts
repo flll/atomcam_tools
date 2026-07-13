@@ -12,6 +12,7 @@ export {
   parseStorageInfo,
   parseStorageDu,
   parseNotifyStatus,
+  parseTailscaleStatus,
   serializeIspSettings,
   parseProperty,
   parseWatermarkDimensions,

@@ -157,5 +157,42 @@
     "sendOk": "전송 성공",
     "sendFail": "전송 실패",
     "needTarget": "먼저 WebHook URL 또는 MQTT를 설정하세요"
+  },
+  "ts": {
+    "desc": "다른 네트워크에서도 카메라에 안전하게 접속할 수 있는 VPN(Tailscale)을 설정합니다.",
+    "statusTitle": "연결 상태",
+    "statusDesc": "tailnet 상의 상태와 접속 주소입니다.",
+    "stateLabel": "상태",
+    "state": {
+      "running": "연결됨",
+      "needslogin": "로그인 대기",
+      "needsmachineauth": "승인 대기",
+      "starting": "시작 중",
+      "stopped": "중지",
+      "nostate": "미설정",
+      "unknown": "알 수 없음"
+    },
+    "ipLabel": "IP 주소",
+    "dnsLabel": "MagicDNS 이름",
+    "notConnected": "연결되지 않았습니다. auth key를 입력하고 저장하면 연결됩니다.",
+    "adminTitle": "관리 콘솔",
+    "adminDesc": "기기와 연결을 관리합니다.",
+    "openAdmin": "관리 콘솔",
+    "openDevice": "이 기기 열기",
+    "authKeyChange": "변경",
+    "authKeyGet": "auth key 발급(관리 콘솔)",
+    "integrations": "연동",
+    "integrationsDesc": "tailnet을 통해 외부에서 카메라를 안전하게 사용하는 설정입니다.",
+    "needConnected": "연결 후 표시됩니다.",
+    "frigate": {
+      "desc": "외부 네트워크의 Frigate가 tailnet의 RTSP로 안전하게 가져오게 합니다.",
+      "hint": "이 예시를 Frigate의 config.yml에 붙여넣으세요."
+    },
+    "acl": {
+      "title": "접근 제어 (ACL)",
+      "desc": "태그별로 포트를 제한하는 세밀한 방화벽입니다.",
+      "hint": "이 템플릿을 관리 콘솔의 정책 편집기에 붙여넣고 필요에 맞게 조정하세요.",
+      "openEditor": "정책 편집(관리 콘솔)"
+    }
   }
 }

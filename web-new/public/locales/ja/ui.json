@@ -157,5 +157,42 @@
     "sendOk": "送信成功",
     "sendFail": "送信失敗",
     "needTarget": "WebHook URL か MQTT を設定してください"
+  },
+  "ts": {
+    "desc": "別ネットワークからも安全にカメラへアクセスできる VPN(Tailscale)を設定します。",
+    "statusTitle": "接続状態",
+    "statusDesc": "tailnet 上の状態とアクセス先です。",
+    "stateLabel": "状態",
+    "state": {
+      "running": "接続済み",
+      "needslogin": "ログイン待ち",
+      "needsmachineauth": "承認待ち",
+      "starting": "起動中",
+      "stopped": "停止",
+      "nostate": "未設定",
+      "unknown": "不明"
+    },
+    "ipLabel": "IPアドレス",
+    "dnsLabel": "MagicDNS名",
+    "notConnected": "未接続です。auth key を入力して保存すると接続します。",
+    "adminTitle": "管理コンソール",
+    "adminDesc": "デバイスや接続を管理します。",
+    "openAdmin": "管理コンソール",
+    "openDevice": "このデバイスを開く",
+    "authKeyChange": "変更",
+    "authKeyGet": "auth key を取得(管理コンソール)",
+    "integrations": "連携",
+    "integrationsDesc": "tailnet 経由で外部から安全に使うための設定です。",
+    "needConnected": "接続後に表示されます。",
+    "frigate": {
+      "desc": "tailnet 経由の RTSP で外部網の Frigate から安全に取り込みます。",
+      "hint": "この設定例を Frigate の config.yml に貼り付けてください。"
+    },
+    "acl": {
+      "title": "アクセス制御 (ACL)",
+      "desc": "タグ単位でポートを絞る細かいファイアウォールです。",
+      "hint": "この雛形を管理コンソールのポリシーエディタに貼り、必要に応じて調整してください。",
+      "openEditor": "ポリシーを編集(管理コンソール)"
+    }
   }
 }

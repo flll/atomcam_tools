@@ -374,6 +374,7 @@ event:
 
 cruise:
   tab: Patrouille
+  addPoint: Punkt hinzufügen
   title: Patrouille
   initialPosition:
     title: Swing-Position zurücksetzen
@@ -494,8 +495,9 @@ monitoring:
 update:
   title: Update
   toolsUpdate:
-    title: Update
+    title: Tools aktualisieren
     tooltip: Aktualisiert atomcam tools
+    button: Aktualisieren
   customZip:
     title: Benutzerdefinierte Update-ZIP-Datei
     tooltip: Sie können lokal ein eigenes Update-ZIP erstellen und verwenden

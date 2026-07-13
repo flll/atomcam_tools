@@ -478,6 +478,7 @@
   },
   "cruise": {
     "tab": "クルーズ設定",
+    "addPoint": "ポイントを追加",
     "title": "クルーズ",
     "initialPosition": {
       "title": "Swing座標初期化",
@@ -628,8 +629,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "このtoolのupdateをします"
+      "title": "本体を更新",
+      "tooltip": "このtoolのupdateをします",
+      "button": "更新"
     },
     "customZip": {
       "title": "カスタム更新ZIPファイル",

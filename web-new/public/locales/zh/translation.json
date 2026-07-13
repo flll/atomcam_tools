@@ -478,6 +478,7 @@
   },
   "cruise": {
     "tab": "巡航设置",
+    "addPoint": "添加点位",
     "title": "巡航",
     "initialPosition": {
       "title": "Swing坐标初始化",
@@ -628,8 +629,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "更新 atomcam tools"
+      "title": "更新本体",
+      "tooltip": "更新 atomcam tools",
+      "button": "更新"
     },
     "customZip": {
       "title": "自定义更新ZIP文件",

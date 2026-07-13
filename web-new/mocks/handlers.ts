@@ -66,6 +66,13 @@ export const handlers = [
       if (name === 'notify-test') mock.lastNotify = res;
       return HttpResponse.text(JSON.stringify(mock.lastNotify ?? res));
     }
+    // Tailscale 接続状態: デモでは常に接続済みサンプル(実機は tailscale.sh が実状態を返す)
+    if (name === 'tailscale-status') {
+      const host = (mock.hackIni.HOSTNAME || 'atomcam').toLowerCase();
+      return HttpResponse.text(
+        JSON.stringify({ state: 'Running', ip: '100.101.102.103', dnsName: `${host}.tailnet-demo.ts.net` }),
+      );
+    }
     return HttpResponse.text(statusText());
   }),
 

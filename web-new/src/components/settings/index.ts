@@ -5,6 +5,7 @@ export { SettingSlider } from './SettingSlider';
 export { SettingInput } from './SettingInput';
 export { SettingInputNumber } from './SettingInputNumber';
 export { SettingComment } from './SettingComment';
+export { SettingAction } from './SettingAction';
 export { UnsavedBar } from './UnsavedBar';
 export { ScheduleListEditor, TimelapseScheduleEditor, RebootScheduleEditor } from './ScheduleEditor';
 export { SubSettings } from './SubSettings';

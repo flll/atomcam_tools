@@ -374,6 +374,7 @@ event:
 
 cruise:
   tab: Crucero
+  addPoint: Añadir punto
   title: Crucero
   initialPosition:
     title: Restablecer posición del Swing
@@ -494,8 +495,9 @@ monitoring:
 update:
   title: Update
   toolsUpdate:
-    title: Update
+    title: Actualizar herramientas
     tooltip: Actualiza atomcam tools
+    button: Actualizar
   customZip:
     title: Archivo ZIP de actualización personalizado
     tooltip: Puede crear y usar un ZIP de actualización personalizado en local

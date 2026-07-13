@@ -7,6 +7,7 @@ import type {
   NotifyStatus,
   StorageDu,
   StorageInfo,
+  TailscaleStatus,
 } from './types';
 
 const ISP_NUMERIC_KEYS = [
@@ -98,6 +99,15 @@ export function parseStorageInfo(text: string): StorageInfo {
 export function parseNotifyStatus(text: string): NotifyStatus {
   try {
     const o = JSON.parse(text.trim()) as NotifyStatus;
+    return o && typeof o === 'object' ? o : {};
+  } catch {
+    return {};
+  }
+}
+
+export function parseTailscaleStatus(text: string): TailscaleStatus {
+  try {
+    const o = JSON.parse(text.trim()) as TailscaleStatus;
     return o && typeof o === 'object' ? o : {};
   } catch {
     return {};

@@ -478,6 +478,7 @@
   },
   "cruise": {
     "tab": "Crucero",
+    "addPoint": "Añadir punto",
     "title": "Crucero",
     "initialPosition": {
       "title": "Restablecer posición del Swing",
@@ -628,8 +629,9 @@
   "update": {
     "title": "Update",
     "toolsUpdate": {
-      "title": "Update",
-      "tooltip": "Actualiza atomcam tools"
+      "title": "Actualizar herramientas",
+      "tooltip": "Actualiza atomcam tools",
+      "button": "Actualizar"
     },
     "customZip": {
       "title": "Archivo ZIP de actualización personalizado",
