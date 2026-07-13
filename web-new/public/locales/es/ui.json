@@ -15,7 +15,8 @@
     "files": "Tarjeta SD",
     "maintenance": "Mantenimiento",
     "tools": "Herramientas",
-    "more": "Más"
+    "more": "Más",
+    "tailscale": "Tailscale"
   },
   "common": {
     "theme": "Tema",
