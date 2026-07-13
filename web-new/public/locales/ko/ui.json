@@ -15,7 +15,8 @@
     "files": "SD 카드",
     "maintenance": "유지 보수",
     "tools": "도구",
-    "more": "더보기"
+    "more": "더보기",
+    "tailscale": "Tailscale"
   },
   "common": {
     "theme": "테마",

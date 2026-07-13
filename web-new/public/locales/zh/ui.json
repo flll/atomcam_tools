@@ -15,7 +15,8 @@
     "files": "SD卡",
     "maintenance": "维护",
     "tools": "工具",
-    "more": "更多"
+    "more": "更多",
+    "tailscale": "Tailscale"
   },
   "common": {
     "theme": "主题",
