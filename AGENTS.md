@@ -96,3 +96,29 @@ clone も不要(lll-legacy の `~/atomcam_tools` が正本)。
 - [docs/development/hil-bootstrap.md](docs/development/hil-bootstrap.md)
 - [docs/development/repo-map.md](docs/development/repo-map.md)
 - 作業経緯/未解決: [docs/development/refactor-notes.md](docs/development/refactor-notes.md)
+
+## Cursor Cloud specific instructions
+
+クラウド VM(ハードウェア無し)で実際に開発・実行できるのは **`web-new/`(React 19 + Vite + TypeScript の WebUI)** のみ。
+ファーム本体ビルド(`make build` = Docker + Buildroot で MIPS クロスコンパイル)と
+デプロイ/HIL(`make deploy` / `scripts/hil/*` / `deploy_remote.sh`)は **重いビルドや実機カメラが前提**で
+クラウド VM では完結しない(コマンドの正本は本ファイル上部と `docs/development/`)。
+
+### web-new(主開発対象)
+
+- パッケージマネージャは **npm**(`web-new/package-lock.json`)。CI は **Node 22**(`.github/workflows/webui.yml`)。
+- コマンドは `web-new/package.json` の scripts が正本。要点:
+  - `npm run dev` — Vite dev server(**port 5173**)。`npm run test` — vitest。
+  - `npm run lint` / `npm run typecheck` / `npm run build`(+ `npm run budget` = gzip バンドル上限チェック)。
+  - `npm run e2e` は Playwright ブラウザが別途必要(`npx playwright install chromium`。update script には含めない)。
+- **バックエンドは MSW が自動モック**する(`import.meta.env.DEV` または demo ビルド時)。
+  実機の CGI(`overlay_rootfs/var/www/cgi-bin`)は起動せず、`.env` やバックエンド常駐も不要で dev/test/build が完結する。
+
+### 非自明な落とし穴(要記憶)
+
+- **MSW の Service Worker は初回ロードで登録された後にページを制御し始める**。
+  データ取得を伴うルートへ**直接 URL でハードリロード**すると、SW が制御を握る前の fetch が失敗し
+  白画面 + `Failed to fetch`(`mockServiceWorker`)になることがある。**サイドバー内の SPA 遷移**を使うか、一度リロードする。
+- **ナビ項目は端末モデルで出し分け**(`web-new/src/components/layout/AppLayout.tsx` の `filterNav`)。
+  既定モックは Swing モデルのため **`/settings/camera`(ATOM 専用)はサイドバーに出ず、直接開くと空表示**になる(仕様。バグではない)。
+  Swing では代わりに `/settings/cruise` が出る。動作確認は `/settings/system` 等の共通ページが確実。
