@@ -6,6 +6,29 @@ MONITORING_REBOOT=$(awk -F "=" '/^MONITORING_REBOOT *=/ {print $2}' $HACK_INI)
 HEALTHCHECK=$(awk -F "=" '/^HEALTHCHECK *=/ {print $2}' $HACK_INI)
 HEALTHCHECK_PING_URL=$(awk -F "=" '/^HEALTHCHECK_PING_URL *=/ {print $2}' $HACK_INI)
 
+# ---- no-IP 最終救済ガード(MONITORING 設定に依存しない) ----
+NOIP_LIMIT=$(awk -F "=" '/^NOIP_REBOOT_MINUTES *=/ {print $2}' $HACK_INI)
+[ -n "$NOIP_LIMIT" ] || NOIP_LIMIT=55
+HAS_IP=0
+for ifc in wlan0 eth0 ; do
+  ifconfig $ifc 2>/dev/null | grep 'inet addr' | grep -qv 'inet addr:169\.254\.' && HAS_IP=1
+done
+if [ "$HAS_IP" = "1" ] ; then
+  rm -f /tmp/noip_since
+elif [ "$NOIP_LIMIT" != "0" ] && [ ! -f /media/mmc/atom-debug ] ; then
+  NOW=$(awk '{print int($1)}' /proc/uptime)
+  if [ ! -f /tmp/noip_since ] ; then
+    echo $NOW > /tmp/noip_since
+  elif [ $((NOW - $(cat /tmp/noip_since))) -ge $((NOIP_LIMIT * 60)) ] ; then
+    echo $(date +"%Y/%m/%d %H:%M:%S : no-IP ${NOIP_LIMIT}min -> reboot") >> /media/mmc/healthcheck.log
+    ifconfig >> /media/mmc/healthcheck.log 2>&1
+    /scripts/cmd timelapse stop
+    sleep 3
+    sync
+    reboot
+  fi
+fi
+
 for retry in 0 1 2 3 4 5; do
   # Boot: only lo may exist; old "|| break" skipped retries and triggered reboot ~1min.
   if ! ifconfig 2>/dev/null | grep -E '^(wlan0|eth0)' >/dev/null 2>&1 ; then
