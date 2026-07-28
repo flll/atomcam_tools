@@ -46,6 +46,10 @@ emit_ndjson() {
   # emit_ndjson ACTION FROM TO RESULT
   printf '{"action":"%s","host":"%s","from":"%s","to":"%s","elapsed_s":%d,"result":"%s"}\n' \
     "$1" "$HOST" "$2" "$3" "$((SECONDS - START_TS))" "$4"
+  # 1実行=1行を履歴へ追記(集計は make hil-report)
+  mkdir -p "$ROOT/sim-results"
+  printf '{"run":"deploy","timestamp":%s,"action":"%s","host":"%s","from":"%s","to":"%s","elapsed_s":%d,"result":"%s"}\n' \
+    "$(date +%s)" "$1" "$HOST" "$2" "$3" "$((SECONDS - START_TS))" "$4" >> "$ROOT/sim-results/history.ndjson"
 }
 
 finish() {

@@ -19,6 +19,22 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 HOST="${1:-${ATOMCAM_HOST:-atomcam.local}}"
 EXPECTED="${2:-}"
 FAILED=0
+PASS_N=0; FAIL_N=0; SKIP_N=0
+
+# 実行結果の永続化: ケース別 NDJSON は smoke-<ts>/result.ndjson、
+# 1実行=1行のサマリは history.ndjson へ追記(集計は make hil-report)
+RUN_TS="$(date +%Y%m%d_%H%M%S)"
+RUN_DIR="${SMOKE_RUN_DIR:-$ROOT/sim-results/smoke-${RUN_TS}}"
+mkdir -p "$RUN_DIR"
+RESULT_FILE="$RUN_DIR/result.ndjson"
+HISTORY_FILE="$ROOT/sim-results/history.ndjson"
+
+finish_history() {
+  local result_str="ok"
+  [ "$FAILED" -ne 0 ] && result_str="fail"
+  printf '{"run":"smoke","timestamp":%s,"host":"%s","pass":%d,"fail":%d,"skip":%d,"result":"%s","dir":"%s"}\n' \
+    "$(date +%s)" "$HOST" "$PASS_N" "$FAIL_N" "$SKIP_N" "$result_str" "$(basename "$RUN_DIR")" >> "$HISTORY_FILE"
+}
 
 remote() {
   ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${HOST}" "$@"
@@ -31,13 +47,18 @@ json_escape() {
 report() {
   # report CASE RESULT DATA_JSON
   printf '{"case":"%s","result":"%s","host":"%s","timestamp":%s,"data":%s}\n' \
-    "$1" "$2" "$HOST" "$(date +%s)" "$3"
-  [ "$2" = "fail" ] && FAILED=1
+    "$1" "$2" "$HOST" "$(date +%s)" "$3" | tee -a "$RESULT_FILE"
+  case "$2" in
+    pass) PASS_N=$((PASS_N + 1)) ;;
+    fail) FAIL_N=$((FAIL_N + 1)); FAILED=1 ;;
+    skip) SKIP_N=$((SKIP_N + 1)) ;;
+  esac
 }
 
 # --- connectivity precondition -------------------------------------------
 if ! remote 'echo ok' >/dev/null 2>&1; then
   report "ssh" "fail" "{\"error\":\"ssh unreachable\"}"
+  finish_history
   exit 1
 fi
 
@@ -220,14 +241,14 @@ report "perf" "pass" "{\"boot_total_sec\":${TL_BOOT:-null},\"icamera_ready_sec\"
 
 # --- failure: collect debug material ----------------------------------------------
 if [ "$FAILED" -ne 0 ]; then
-  OUTDIR="$ROOT/sim-results/deploy-$(date +%Y%m%d_%H%M%S)"
-  mkdir -p "$OUTDIR"
-  remote 'tail -100 /media/mmc/atomhack.log 2>/dev/null || tail -100 /tmp/atomhack.log 2>/dev/null' > "$OUTDIR/atomhack.log.tail" 2>/dev/null || true
-  remote 'dmesg | tail -100' > "$OUTDIR/dmesg.tail" 2>/dev/null || true
-  remote 'ps' > "$OUTDIR/ps.txt" 2>/dev/null || true
-  remote 'cat /tmp/hack.ini 2>/dev/null' > "$OUTDIR/hack.ini" 2>/dev/null || true
-  echo "debug material collected: ${OUTDIR}" >&2
+  remote 'tail -100 /media/mmc/atomhack.log 2>/dev/null || tail -100 /tmp/atomhack.log 2>/dev/null' > "$RUN_DIR/atomhack.log.tail" 2>/dev/null || true
+  remote 'dmesg | tail -100' > "$RUN_DIR/dmesg.tail" 2>/dev/null || true
+  remote 'ps' > "$RUN_DIR/ps.txt" 2>/dev/null || true
+  remote 'cat /tmp/hack.ini 2>/dev/null' > "$RUN_DIR/hack.ini" 2>/dev/null || true
+  echo "debug material collected: ${RUN_DIR}" >&2
+  finish_history
   exit 1
 fi
 
+finish_history
 exit 0

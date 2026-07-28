@@ -33,7 +33,7 @@ DOCKER_COMPOSE=$(shell \
 	docker-build menuconfig linux-menuconfig busybox-menuconfig linux-rebuild \
 	savedefconfig login lima deploy deploy-test sim-swing sim-swing-92m \
 	clean distclean sd-package sd-package-verify hil-status hil-deploy-test \
-	hil-debug-loop agent-hint
+	hil-debug-loop hil-report agent-hint
 
 help:
 	echo "atomcam_tools make — ビルドプロファイル対応"
@@ -71,6 +71,7 @@ help:
 	echo "  hil-status         実機 status（ATOMCAM_HOST）"
 	echo "  hil-deploy-test    deploy-test ループ"
 	echo "  hil-debug-loop     probe → recover → deploy-test"
+	echo "  hil-report         deploy/smoke 履歴の集計レポート(N=件数)"
 	echo ""
 	echo "Cursor エージェントあり: チャットで「PROFILE=harness で build」と依頼可"
 	echo "エージェントなし:        make configure → make build"
@@ -225,3 +226,7 @@ artifacts:
 hil-debug-loop:
 	chmod +x ./scripts/hil/debug-hil-loop.sh
 	ATOMCAM_HOST=$(or $(ATOMCAM_HOST),10.0.0.228) ./scripts/hil/debug-hil-loop.sh loop
+
+hil-report:
+	chmod +x ./scripts/hil_report.sh
+	./scripts/hil_report.sh $(N)
