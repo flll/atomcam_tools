@@ -8,21 +8,17 @@ MODE="${1:-deploy-test}"
 
 cd "$ROOT"
 . "$ROOT/scripts/hil/agent-debug-log.sh"
+. "$ROOT/scripts/lib/remote.sh"
+. "$ROOT/scripts/lib/wait.sh"
 
 wait_icamera_preflight() {
-  local host="$1" tries=0
-  ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${host}" 'rm -f /media/mmc/atom-debug' 2>/dev/null || true
-  while [ "$tries" -lt 24 ]; do
-    local pid
-    pid="$(ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${host}" 'pidof iCamera_app 2>/dev/null' 2>/dev/null | tr -d '\r')"
-    if [ -n "$pid" ]; then
-      agent_debug_log "B" "true-hil.sh:wait_icamera_preflight" "icamera_up" "{\"pid\":\"$pid\",\"tries\":$tries}" "post-fix"
-      return 0
-    fi
-    tries=$((tries + 1))
-    sleep 5
-  done
-  agent_debug_log "B" "true-hil.sh:wait_icamera_preflight" "icamera_timeout" "{\"tries\":$tries}" "post-fix"
+  local host="$1" pid
+  remote_ssh "$host" 'rm -f /media/mmc/atom-debug' 2>/dev/null || true
+  if pid="$(wait_for_icamera "$host" 24 5)"; then
+    agent_debug_log "B" "true-hil.sh:wait_icamera_preflight" "icamera_up" "{\"pid\":\"$pid\"}" "post-fix"
+    return 0
+  fi
+  agent_debug_log "B" "true-hil.sh:wait_icamera_preflight" "icamera_timeout" "{}" "post-fix"
   return 1
 }
 
@@ -32,7 +28,9 @@ case "$MODE" in
     ;;
   deploy-test)
     agent_debug_log "E" "true-hil.sh:deploy-test" "preflight_start"
-    wait_icamera_preflight "$HOST" || true "{\"host\":\"$HOST\"}" "pre-fix"
+    # 旧: `|| true "{...}" "pre-fix"` — 引数が true コマンドに食われてログされない既存バグを修正
+    wait_icamera_preflight "$HOST" || \
+      agent_debug_log "E" "true-hil.sh:deploy-test" "preflight_timeout" "{\"host\":\"$HOST\"}" "pre-fix"
     ./scripts/deploy_remote.sh "$HOST" --status || {
       agent_debug_log "B" "true-hil.sh:deploy-test" "status_gate_failed" "{\"host\":\"$HOST\"}" "pre-fix"
       echo "true-hil: SSH unreachable at $HOST — bootstrap フェーズへ (SD 抜きは例外パス)" >&2

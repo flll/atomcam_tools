@@ -13,6 +13,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../../" && pwd)"
 cd "$ROOT"
 . "$ROOT/scripts/hil/agent-debug-log.sh"
+. "$ROOT/scripts/lib/remote.sh"
 
 MODE="${1:-probe}"
 HOST="${ATOMCAM_HOST:-}"
@@ -25,15 +26,13 @@ else
   CANDIDATES+=(atomcam33 10.0.0.228 atomcam.local)
 fi
 
-remote() {
-  ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${HOST}" "$@"
-}
+remote() { remote_ssh "$HOST" "$@"; }
 
 resolve_host() {
   local h
   for h in "$@"; do
   [ -z "$h" ] && continue
-    if ssh -o BatchMode=yes -o ConnectTimeout=5 "root@${h}" 'echo ok' >/dev/null 2>&1; then
+    if (REMOTE_CONNECT_TIMEOUT=5; remote_alive "$h"); then
       HOST="$h"
       agent_debug_log "R" "debug-hil-loop.sh:resolve" "host_ok" "{\"host\":\"$HOST\"}" "harness"
       echo "$HOST"
