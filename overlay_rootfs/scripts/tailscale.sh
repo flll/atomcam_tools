@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Tailscale management script for ATOMCam
 # This script manages Tailscale daemon and connection
@@ -72,7 +72,8 @@ check_binary_health() {
 
 validate_auth_key() {
     local key="$1"
-    if [[ ! "$key" =~ ^tskey-(auth|client)-[a-zA-Z0-9-]{20,}$ ]]; then
+    # busybox ash に [[ =~ ]] は無い(bash-compat でも構文エラー)→ grep -E で検査
+    if ! printf %s "$key" | grep -qE "^tskey-(auth|client)-[a-zA-Z0-9-]{20,}$"; then
         return 1
     fi
     return 0
@@ -80,7 +81,7 @@ validate_auth_key() {
 
 validate_hostname() {
     local hostname="$1"
-    if [[ ! "$hostname" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$ ]]; then
+    if ! printf %s "$hostname" | grep -qE "^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$"; then
         return 1
     fi
     return 0

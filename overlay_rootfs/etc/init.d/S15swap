@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # swap 構成: zram(圧縮RAM)を主、SD 上の swap ファイルを低優先 fallback にする。
 # 旧構成(SD 128MB のみ)は swap レイテンシが大きく SD 磨耗も進むため zram を優先。

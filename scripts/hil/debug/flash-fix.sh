@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Deploy full mmc stabilizer bundle when SSH window opens
 CAM=root@10.0.0.228
 ROOT=/home/lll/atomcam_tools
