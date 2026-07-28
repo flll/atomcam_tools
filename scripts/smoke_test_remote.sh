@@ -39,12 +39,27 @@ finish_history() {
     "$(date +%s)" "$HOST" "$PASS_N" "$FAIL_N" "$SKIP_N" "$((SECONDS - START_TS))" "$result_str" "$(basename "$RUN_DIR")")"
 }
 
-SSH_OK=1
+# SSH 生死は「変数」ではなくマーカーファイルで持つ。
+# 各ケースは $(remote ...) のサブシェル内で ssh を呼ぶため、変数への代入は
+# 親シェルに伝わらない(= 実行中に sshd が落ちても検知できなかった)。
+# 2026-07-29 の実機で「初回 SSH 成功 → 途中でメモリ枯渇により sshd 応答不能」が発生し、
+# preload/tailscale/resources の3ケースが偽陰性になったため、ファイル方式に変更。
+SSH_DOWN_FLAG="$RUN_DIR/.ssh_down"
+rm -f "$SSH_DOWN_FLAG"
+
+ssh_ok() { [ ! -f "$SSH_DOWN_FLAG" ]; }
 
 remote() {
-  # SSH 不通確定後は即 return(各ケースの余計な10秒待ちを防ぐ)
-  [ "$SSH_OK" = "1" ] || return 255
-  remote_ssh "$HOST" "$@"
+  # SSH 不通確定後は即 return(各ケースの余計な待ちを防ぐ)
+  ssh_ok || return 255
+  local rc=0
+  remote_ssh "$HOST" "$@" || rc=$?
+  # ssh(1) は接続・認証レベルの失敗を 255 で返す。リモートコマンド自身の
+  # 非ゼロ終了(grep の 1 等)と区別できるので、255 のときだけ SSH 死と判定する
+  if [ "$rc" -eq 255 ]; then
+    touch "$SSH_DOWN_FLAG"
+  fi
+  return "$rc"
 }
 
 report() {
@@ -64,7 +79,7 @@ report() {
 # 観測済み。SSH 必須ケースは skip し、HTTP で判定できるケースは続行する。
 # HTTP まで不通なら完全死なので従来どおり即終了する。
 if ! remote 'echo ok' >/dev/null 2>&1; then
-  SSH_OK=0
+  touch "$SSH_DOWN_FLAG"
   report "ssh" "fail" "{\"error\":\"ssh unreachable\",\"hint\":\"HTTP 層のみで継続(sshd だけ死ぬ MEMFREE 枯渇パターンの切り分け)\"}"
   HTTP_FIRST="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null || true)"
   if [ "$HTTP_FIRST" != "200" ]; then
@@ -78,13 +93,13 @@ fi
 # 起動直後は lighttpd / /tmp/hack.ini の生成が ssh より遅れる。
 # WebUI 系ケースが誤って fail しないよう、最大 120 秒まで起動完了を待つ。
 # (SSH 不通時は上で HTTP 200 を確認済みなので待たない)
-if [ "$SSH_OK" = "1" ]; then
+if ssh_ok; then
   wait_for_webui "$HOST" 120
 fi
 
 # --- case: version ---------------------------------------------------------
 VER="$(remote 'cat /etc/atomhack.ver 2>/dev/null' | tr -d '\r' | head -1)"
-if [ "$SSH_OK" = "0" ]; then
+if ! ssh_ok; then
   report "version" "skip" "{\"reason\":\"ssh down\"}"
 elif [ -z "$VER" ]; then
   report "version" "fail" "{\"version\":\"\",\"expected\":\"$(json_escape "$EXPECTED")\"}"
@@ -97,7 +112,7 @@ fi
 # --- case: icamera ----------------------------------------------------------
 # SSH 不通時は get_jpeg.cgi(iCamera が実フレームを返せるか)で代替判定する。
 # get_jpeg「.cgi」が正(拡張子なしは 404 — 2026-07-06 実測)
-if [ "$SSH_OK" = "0" ]; then
+if ! ssh_ok; then
   JPEG_CODE="$(curl -sf -m 15 -o /dev/null -w '%{http_code}' "http://${HOST}/cgi-bin/get_jpeg.cgi" 2>/dev/null || true)"
   if [ "$JPEG_CODE" = "200" ]; then
     report "icamera" "pass" "{\"method\":\"http_jpeg\",\"http\":200}"
@@ -117,7 +132,7 @@ fi
 # --- case: preload (libcallback が iCamera_app に注入されているか: F-3 検知) ---
 ICAM_PID_P="$(printf '%s' "${ICAM_PID:-}" | awk '{print $1}')"
 ATOM_DEBUG="$(remote 'test -f /media/mmc/atom-debug && echo yes || echo no' | tr -d '\r')"
-if [ "$SSH_OK" = "0" ]; then
+if ! ssh_ok; then
   report "preload" "skip" "{\"reason\":\"ssh down (/proc maps 不可)\"}"
 elif [ -z "$ICAM_PID_P" ]; then
   report "preload" "fail" "{\"error\":\"iCamera_app not running\"}"
@@ -227,7 +242,7 @@ fi
 
 # --- case: go2rtc (WebRTC 有効時のみ :1984 API の応答を確認) -------------------
 WEBRTC_ENABLE="$(remote "awk -F= '/^WEBRTC_ENABLE *=/ {print \$2}' /tmp/hack.ini 2>/dev/null" | tr -d '\r')"
-if [ "$SSH_OK" = "0" ]; then
+if ! ssh_ok; then
   # 設定が読めないので直接プローブ: 応答あり=pass、なし=判定不能(無効かもしれない)で skip
   GO2RTC_CODE="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}:1984/api/streams" 2>/dev/null)" || GO2RTC_CODE="000"
   if [ "$GO2RTC_CODE" = "200" ]; then
@@ -247,7 +262,7 @@ else
 fi
 
 # --- case: resources -------------------------------------------------------------
-if [ "$SSH_OK" = "0" ]; then
+if ! ssh_ok; then
   report "resources" "skip" "{\"reason\":\"ssh down (free/uptime 不可)\"}"
 else
   FREE_KB="$(remote 'free | awk "/Mem:/ {print \$4 + \$6}"' | tr -d '\r')"
@@ -263,7 +278,7 @@ else
 fi
 
 # --- case: perf (情報記録のみ・常に pass。しきい値はベースライン確定後に導入) ----
-if [ "$SSH_OK" = "0" ]; then
+if ! ssh_ok; then
   report "perf" "skip" "{\"reason\":\"ssh down\"}"
 else
   TL_BOOT="$(remote 'grep -o "\"boot_total\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
@@ -281,7 +296,7 @@ fi
 
 # --- failure: collect debug material ----------------------------------------------
 if [ "$FAILED" -ne 0 ]; then
-  if [ "$SSH_OK" = "1" ]; then
+  if ssh_ok; then
     remote 'tail -100 /media/mmc/atomhack.log 2>/dev/null || tail -100 /tmp/atomhack.log 2>/dev/null' > "$RUN_DIR/atomhack.log.tail" 2>/dev/null || true
     remote 'dmesg | tail -100' > "$RUN_DIR/dmesg.tail" 2>/dev/null || true
     remote 'ps' > "$RUN_DIR/ps.txt" 2>/dev/null || true
