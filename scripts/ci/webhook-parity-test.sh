@@ -55,8 +55,10 @@ rewrite() {
       -e "s|/media/mmc/|$SB/media/mmc/|g"
 }
 
-# 旧: HEAD の webhook.sh から awk プログラム部を抽出
-git show HEAD:overlay_rootfs/scripts/webhook.sh \
+# 旧: 分離(f6ca2d4)直前の webhook.sh から awk プログラム部を抽出
+# (コミット後も移行検証を再現できるよう参照を固定)
+OLD_REF="${WEBHOOK_OLD_REF:-f6ca2d4~1}"
+git show "$OLD_REF:overlay_rootfs/scripts/webhook.sh" \
   | sed -n "/^awk -v/,/^' \/var\/run\/atomapp/p" | sed '1d;$d' \
   | rewrite > "$SB/prog.old.awk"
 [ -s "$SB/prog.old.awk" ] || { echo "旧 awk プログラムの抽出に失敗" >&2; exit 2; }

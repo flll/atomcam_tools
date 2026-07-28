@@ -76,7 +76,9 @@ EOF
 chmod +x "$SB/bin/"* "$SB/scripts/"*
 
 # --- 旧新スクリプトの取り出しとパス書き換え -----------------------------------
-git show "HEAD:$CGI" > "$SB/old.cgi.orig"
+# 旧版 = case 化+POST バグ修正(bf5b71f)の直前に固定。コミット後も移行検証を再現できる
+OLD_REF="${CMD_CGI_OLD_REF:-bf5b71f~1}"
+git show "$OLD_REF:$CGI" > "$SB/old.cgi.orig"
 cp "$CGI" "$SB/new.cgi.orig"
 for v in old new; do
   sed -e "s|/tmp/|$SB/tmp/|g" \
