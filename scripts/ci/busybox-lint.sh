@@ -28,7 +28,7 @@ fi
 # ビルドホスト(bash)で走る scripts/ 直下・buildscripts/ は対象外。
 TARGETS="$(
   find overlay_rootfs/scripts overlay_rootfs/etc/init.d overlay_rootfs/atom_patch \
-       scripts/hil/debug initramfs_skeleton \
+       overlay_rootfs/var/www/cgi-bin scripts/hil/debug initramfs_skeleton \
        -type f 2>/dev/null \
     | while IFS= read -r f; do
         # shebang が sh 系、または実行可能でシェルスクリプトと判定できるものだけ
@@ -90,7 +90,7 @@ check '^[[:space:]]*(declare|typeset|local -[aA])[[:space:]]' 'declare/typeset (
 # (bash shebang のファイルは TARGETS の sh 判定から漏れるため別途スキャン)
 BASH_SHEBANGS="$(
   find overlay_rootfs/scripts overlay_rootfs/etc/init.d overlay_rootfs/atom_patch \
-       scripts/hil/debug initramfs_skeleton -type f 2>/dev/null \
+       overlay_rootfs/var/www/cgi-bin scripts/hil/debug initramfs_skeleton -type f 2>/dev/null \
     | while IFS= read -r f; do
         head -1 "$f" 2>/dev/null | grep -qE '^#!.*\bbash\b' && printf '%s\n' "$f"
       done
