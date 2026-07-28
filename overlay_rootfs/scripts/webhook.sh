@@ -1,101 +1,26 @@
 #!/bin/sh
+# FIFO(/var/run/atomapp) reader の respawn ラッパー。イベント解析本体は /scripts/webhook.awk。
+#
+# awk を -f 外部ファイル化したことで cmdline が短くなり、`pkill -f webhook.awk` が
+# 確実に効く(旧: 約2.5KB のインライン awk プログラムを busybox ps が切り詰め、
+# killall webhook.sh も pkill -f も空振りして CPU 暴走時に停止不能だった)。
+#
+# dispatcher(下の while read)は awk の stdout「event<TAB>data」を notify.sh へ
+# argv で渡す。notify.sh 実行中も awk は pipe バッファで先行でき、FIFO を塞がない。
+# dispatcher が死ねば awk が次の出力で SIGPIPE 死し、respawn ループが両方回収する。
 
 HACK_INI=/tmp/hack.ini
 mkdir -p /tmp/log
 [ -f /media/mmc/atom-log ] && ATOM_LOG="on"
 [ -f /media/mmc/timelapse_hook.sh ] && TIMELAPSE_HOOK="on"
 /scripts/notify.sh --discovery >/dev/null 2>&1
+TAB="$(printf '\t')"
+
 while : ; do
-awk -v HACK_INI="$HACK_INI" -v ATOM_LOG="$ATOM_LOG" -v TIMELAPSE_HOOK="$TIMELAPSE_HOOK" '
-BEGIN {
-  FS = "=";
-  while((getline < HACK_INI) == 1) {
-    ENV[$1]=$2;
-  }
-  FS = " ";
-  "hostname" | getline HOSTNAME;
-  logDisable = 1;
-  lastTimestamp = 0;
-  logPause = 0;
-  if(ATOM_LOG == "on") logDisable = 0;
-  if(ENV["WEBHOOK_INSECURE"] == "on") INSECURE_FLAG = "-k ";
-}
-
-/\[webhook\] time_lapse_event/ {
-  if(TIMELAPSE_HOOK == "on") {
-    split($4, count, "/");
-    system("/media/mmc/timelapse_hook.sh " $3 " " count[1] " " count[2] " " $5 " >/dev/null 2>&1 &");
-  }
-}
-
-/\[webhook\] time_lapse_finish/ {
-  split($0, str, / \t*/);
-  system("/scripts/timelapse.sh finish " str[3]);
-}
-
-/motor reset done./ {
-  system("/scripts/motor_init reboot");
-  if(!logDisable) print "motor reset done !!!" >> "/tmp/log/atom.log";
-  print "motor reset done !!!" >> "/dev/console";
-  print > "/tmp/motor_initialize_done";
-}
-
-{
-  if(!logDisable) {
-    timestamp = systime();
-    logLength += length($0);
-    if(timestamp != lastTimestamp) {
-      if(logLength / (timestamp - lastTimestamp) < 1024) {
-        logPause = 0;
-      } else {
-        logPause = 1;
-        time = strftime("%Y/%m/%d %H:%M:%S", timestamp);
-        printf("%s : --- Logging is suspended ---\n", time) >> "/tmp/log/atom.log";
-      }
-      logLength = 0;
-      lastTimestamp = timestamp;
-    }
-    if(!logPause) print >> "/tmp/log/atom.log";
-  }
-  if(ENV["WEBHOOK_URL"] == "" && ENV["MQTT_ENABLE"] != "on") next;
-}
-
-/\[aiAlgo\] start/ {
-  if(ENV["WEBHOOK_ALARM_EVENT"] == "on") Post("alarmEvent");
-}
-
-/alarm_event_handle.*timestamp/ {
-  if(ENV["WEBHOOK_ALARM_EVENT"] == "on") Post("alarmEvent");
-}
-
-/(alarm_event_handle).*== readly to alarm ==/ {
-  if(ENV["WEBHOOK_ALARM_EVENT"] == "on") Post("alarmEvent");
-}
-
-/\[aiAlgo\] call_TD_Human_Pet_Predict/ {
-  gsub(/^.*Predict \[off:[0-9]*\] /, "");
-  gsub(/tm:/, "");
-  gsub(/\|/, ",");
-  gsub(/res:/, ",");
-  gsub(/\[/, "");
-  gsub(/\]/, "");
-  if(ENV["WEBHOOK_ALARM_INFO"] == "on") Post("recognitionNotify", "\"" $0 "\"");
-}
-
-/alarm_event_handle.*alarmType/ {
-  gsub(/^.*alarmType:/, "");
-  if(ENV["WEBHOOK_ALARM_INFO"] == "on") Post("recognitionNotify", "\"" $0 "\"");
-}
-
-/\[webhook\] time_lapse_event/ {
-  gsub(/^.*time_lapse_event /, "");
-  if(ENV["WEBHOOK_TIMELAPSE_EVENT"] == "on") Post("timelapseEvent", "\"" $0 "\"");
-}
-
-function Post(event, data) {
-  # 送信口は notify.sh に集約(WebHook + MQTT + 結果記録)。data は JSON 値。
-  system("/scripts/notify.sh \x27" event "\x27 \x27" data "\x27");
-}
-' /var/run/atomapp
-sleep 2
+  awk -v HACK_INI="$HACK_INI" -v ATOM_LOG="$ATOM_LOG" -v TIMELAPSE_HOOK="$TIMELAPSE_HOOK" \
+      -f /scripts/webhook.awk /var/run/atomapp \
+  | while IFS="$TAB" read -r event data; do
+      /scripts/notify.sh "$event" "$data"
+    done
+  sleep 2
 done

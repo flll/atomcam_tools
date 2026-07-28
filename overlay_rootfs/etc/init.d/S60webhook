@@ -5,11 +5,15 @@
 
 case "$1" in
   start)
-    mkfifo /var/run/atomapp
+    # restart 時に mkfifo の File exists エラーを出さない
+    [ -p /var/run/atomapp ] || mkfifo /var/run/atomapp
     /scripts/webhook.sh &
   ;;
   stop)
     killall webhook.sh > /dev/null 2>&1
+    # awk 本体も名前で止める(旧実装は comm=awk + 長大 cmdline で kill 不能だった)。
+    # パターンは webhook.awk 限定 — wdkeep や他の awk を巻き込まない
+    pkill -f 'webhook\.awk' > /dev/null 2>&1
   ;;
   restart|reload)
     $0 stop
