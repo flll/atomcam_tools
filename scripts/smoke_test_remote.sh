@@ -20,6 +20,7 @@ HOST="${1:-${ATOMCAM_HOST:-atomcam.local}}"
 EXPECTED="${2:-}"
 FAILED=0
 PASS_N=0; FAIL_N=0; SKIP_N=0
+START_TS=$SECONDS
 
 # 実行結果の永続化: ケース別 NDJSON は smoke-<ts>/result.ndjson、
 # 1実行=1行のサマリは history.ndjson へ追記(集計は make hil-report)
@@ -32,11 +33,15 @@ HISTORY_FILE="$ROOT/sim-results/history.ndjson"
 finish_history() {
   local result_str="ok"
   [ "$FAILED" -ne 0 ] && result_str="fail"
-  printf '{"run":"smoke","timestamp":%s,"host":"%s","pass":%d,"fail":%d,"skip":%d,"result":"%s","dir":"%s"}\n' \
-    "$(date +%s)" "$HOST" "$PASS_N" "$FAIL_N" "$SKIP_N" "$result_str" "$(basename "$RUN_DIR")" >> "$HISTORY_FILE"
+  printf '{"run":"smoke","timestamp":%s,"host":"%s","pass":%d,"fail":%d,"skip":%d,"elapsed_s":%d,"result":"%s","dir":"%s"}\n' \
+    "$(date +%s)" "$HOST" "$PASS_N" "$FAIL_N" "$SKIP_N" "$((SECONDS - START_TS))" "$result_str" "$(basename "$RUN_DIR")" >> "$HISTORY_FILE"
 }
 
+SSH_OK=1
+
 remote() {
+  # SSH 不通確定後は即 return(各ケースの余計な10秒待ちを防ぐ)
+  [ "$SSH_OK" = "1" ] || return 255
   ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${HOST}" "$@"
 }
 
@@ -56,16 +61,27 @@ report() {
 }
 
 # --- connectivity precondition -------------------------------------------
+# SSH 不通でも即死しない(HTTP フォールバック層):
+# 2026-07-24 に「メモリ枯渇で sshd だけ死に、lighttpd(HTTP) は生存」する実機状態を
+# 観測済み。SSH 必須ケースは skip し、HTTP で判定できるケースは続行する。
+# HTTP まで不通なら完全死なので従来どおり即終了する。
 if ! remote 'echo ok' >/dev/null 2>&1; then
-  report "ssh" "fail" "{\"error\":\"ssh unreachable\"}"
-  finish_history
-  exit 1
+  SSH_OK=0
+  report "ssh" "fail" "{\"error\":\"ssh unreachable\",\"hint\":\"HTTP 層のみで継続(sshd だけ死ぬ MEMFREE 枯渇パターンの切り分け)\"}"
+  HTTP_FIRST="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null || true)"
+  if [ "$HTTP_FIRST" != "200" ]; then
+    report "http" "fail" "{\"index_http\":\"$(json_escape "$HTTP_FIRST")\",\"error\":\"http unreachable too (device down?)\"}"
+    finish_history
+    exit 1
+  fi
+  report "http" "pass" "{\"index_http\":200,\"note\":\"ssh down but http alive\"}"
 fi
 
 # 起動直後は lighttpd / /tmp/hack.ini の生成が ssh より遅れる。
 # WebUI 系ケースが誤って fail しないよう、最大 120 秒まで起動完了を待つ。
+# (SSH 不通時は上で HTTP 200 を確認済みなので待たない)
 BOOT_WAIT=0
-while [ "$BOOT_WAIT" -lt 120 ]; do
+while [ "$SSH_OK" = "1" ] && [ "$BOOT_WAIT" -lt 120 ]; do
   HTTP_UP="$(curl -sf -m 5 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null || true)"
   INI_UP="$(remote 'test -s /tmp/hack.ini && echo yes || echo no' 2>/dev/null | tr -d '\r')"
   [ "$HTTP_UP" = "200" ] && [ "$INI_UP" = "yes" ] && break
@@ -75,7 +91,9 @@ done
 
 # --- case: version ---------------------------------------------------------
 VER="$(remote 'cat /etc/atomhack.ver 2>/dev/null' | tr -d '\r' | head -1)"
-if [ -z "$VER" ]; then
+if [ "$SSH_OK" = "0" ]; then
+  report "version" "skip" "{\"reason\":\"ssh down\"}"
+elif [ -z "$VER" ]; then
   report "version" "fail" "{\"version\":\"\",\"expected\":\"$(json_escape "$EXPECTED")\"}"
 elif [ -n "$EXPECTED" ] && [ "$VER" != "$EXPECTED" ]; then
   report "version" "fail" "{\"version\":\"$(json_escape "$VER")\",\"expected\":\"$(json_escape "$EXPECTED")\"}"
@@ -84,18 +102,31 @@ else
 fi
 
 # --- case: icamera ----------------------------------------------------------
-ICAM_PID="$(remote 'pidof iCamera_app 2>/dev/null' | tr -d '\r')"
-LOG_ERRORS="$(remote 'tail -50 /media/mmc/atomhack.log 2>/dev/null | grep -ciE "error|fail|segfault" || true' | tr -d '\r')"
-if [ -n "$ICAM_PID" ]; then
-  report "icamera" "pass" "{\"pid\":\"$(json_escape "$ICAM_PID")\",\"recent_log_errors\":${LOG_ERRORS:-0}}"
+# SSH 不通時は get_jpeg.cgi(iCamera が実フレームを返せるか)で代替判定する。
+# get_jpeg「.cgi」が正(拡張子なしは 404 — 2026-07-06 実測)
+if [ "$SSH_OK" = "0" ]; then
+  JPEG_CODE="$(curl -sf -m 15 -o /dev/null -w '%{http_code}' "http://${HOST}/cgi-bin/get_jpeg.cgi" 2>/dev/null || true)"
+  if [ "$JPEG_CODE" = "200" ]; then
+    report "icamera" "pass" "{\"method\":\"http_jpeg\",\"http\":200}"
+  else
+    report "icamera" "fail" "{\"method\":\"http_jpeg\",\"http\":\"$(json_escape "$JPEG_CODE")\"}"
+  fi
 else
-  report "icamera" "fail" "{\"pid\":\"\",\"recent_log_errors\":${LOG_ERRORS:-0}}"
+  ICAM_PID="$(remote 'pidof iCamera_app 2>/dev/null' | tr -d '\r')"
+  LOG_ERRORS="$(remote 'tail -50 /media/mmc/atomhack.log 2>/dev/null | grep -ciE "error|fail|segfault" || true' | tr -d '\r')"
+  if [ -n "$ICAM_PID" ]; then
+    report "icamera" "pass" "{\"pid\":\"$(json_escape "$ICAM_PID")\",\"recent_log_errors\":${LOG_ERRORS:-0}}"
+  else
+    report "icamera" "fail" "{\"pid\":\"\",\"recent_log_errors\":${LOG_ERRORS:-0}}"
+  fi
 fi
 
 # --- case: preload (libcallback が iCamera_app に注入されているか: F-3 検知) ---
-ICAM_PID_P="$(printf '%s' "$ICAM_PID" | awk '{print $1}')"
+ICAM_PID_P="$(printf '%s' "${ICAM_PID:-}" | awk '{print $1}')"
 ATOM_DEBUG="$(remote 'test -f /media/mmc/atom-debug && echo yes || echo no' | tr -d '\r')"
-if [ -z "$ICAM_PID_P" ]; then
+if [ "$SSH_OK" = "0" ]; then
+  report "preload" "skip" "{\"reason\":\"ssh down (/proc maps 不可)\"}"
+elif [ -z "$ICAM_PID_P" ]; then
   report "preload" "fail" "{\"error\":\"iCamera_app not running\"}"
 elif [ "$ATOM_DEBUG" = "yes" ]; then
   report "preload" "skip" "{\"reason\":\"atom-debug marker present\"}"
@@ -203,7 +234,15 @@ fi
 
 # --- case: go2rtc (WebRTC 有効時のみ :1984 API の応答を確認) -------------------
 WEBRTC_ENABLE="$(remote "awk -F= '/^WEBRTC_ENABLE *=/ {print \$2}' /tmp/hack.ini 2>/dev/null" | tr -d '\r')"
-if [ "$WEBRTC_ENABLE" != "on" ]; then
+if [ "$SSH_OK" = "0" ]; then
+  # 設定が読めないので直接プローブ: 応答あり=pass、なし=判定不能(無効かもしれない)で skip
+  GO2RTC_CODE="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}:1984/api/streams" 2>/dev/null)" || GO2RTC_CODE="000"
+  if [ "$GO2RTC_CODE" = "200" ]; then
+    report "go2rtc" "pass" "{\"api_streams_http\":200,\"note\":\"config unknown (ssh down), probed directly\"}"
+  else
+    report "go2rtc" "skip" "{\"reason\":\"ssh down and no api answer (disabled or dead: 判定不能)\"}"
+  fi
+elif [ "$WEBRTC_ENABLE" != "on" ]; then
   report "go2rtc" "skip" "{\"webrtc_enable\":\"$(json_escape "$WEBRTC_ENABLE")\"}"
 else
   GO2RTC_CODE="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}:1984/api/streams" 2>/dev/null)" || GO2RTC_CODE="000"
@@ -215,36 +254,51 @@ else
 fi
 
 # --- case: resources -------------------------------------------------------------
-FREE_KB="$(remote 'free | awk "/Mem:/ {print \$4 + \$6}"' | tr -d '\r')"
-UPTIME="$(remote 'uptime' | tr -d '\r')"
-case "$FREE_KB" in
-  ''|*[!0-9]*) FREE_KB=0 ;;
-esac
-if [ "$FREE_KB" -ge 2048 ]; then
-  report "resources" "pass" "{\"free_kb\":${FREE_KB},\"uptime\":\"$(json_escape "$UPTIME")\"}"
+if [ "$SSH_OK" = "0" ]; then
+  report "resources" "skip" "{\"reason\":\"ssh down (free/uptime 不可)\"}"
 else
-  report "resources" "fail" "{\"free_kb\":${FREE_KB},\"uptime\":\"$(json_escape "$UPTIME")\"}"
+  FREE_KB="$(remote 'free | awk "/Mem:/ {print \$4 + \$6}"' | tr -d '\r')"
+  UPTIME="$(remote 'uptime' | tr -d '\r')"
+  case "$FREE_KB" in
+    ''|*[!0-9]*) FREE_KB=0 ;;
+  esac
+  if [ "$FREE_KB" -ge 2048 ]; then
+    report "resources" "pass" "{\"free_kb\":${FREE_KB},\"uptime\":\"$(json_escape "$UPTIME")\"}"
+  else
+    report "resources" "fail" "{\"free_kb\":${FREE_KB},\"uptime\":\"$(json_escape "$UPTIME")\"}"
+  fi
 fi
 
 # --- case: perf (情報記録のみ・常に pass。しきい値はベースライン確定後に導入) ----
-TL_BOOT="$(remote 'grep -o "\"boot_total\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
-TL_ICAM="$(remote 'grep -o "\"icamera_ready\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
-LOAD1="$(remote 'awk "{print \$1}" /proc/loadavg' | tr -d '\r')"
-SD_A="$(remote 'awk "\$3==\"mmcblk0\" {print \$10}" /proc/diskstats' | tr -d '\r')"
-sleep 5
-SD_B="$(remote 'awk "\$3==\"mmcblk0\" {print \$10}" /proc/diskstats' | tr -d '\r')"
-case "$SD_A" in ''|*[!0-9]*) SD_A="" ;; esac
-case "$SD_B" in ''|*[!0-9]*) SD_B="" ;; esac
-SD_W5=""
-[ -n "$SD_A" ] && [ -n "$SD_B" ] && SD_W5=$((SD_B - SD_A))
-report "perf" "pass" "{\"boot_total_sec\":${TL_BOOT:-null},\"icamera_ready_sec\":${TL_ICAM:-null},\"load_1min\":${LOAD1:-null},\"sd_write_sectors_5s\":${SD_W5:-null}}"
+if [ "$SSH_OK" = "0" ]; then
+  report "perf" "skip" "{\"reason\":\"ssh down\"}"
+else
+  TL_BOOT="$(remote 'grep -o "\"boot_total\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
+  TL_ICAM="$(remote 'grep -o "\"icamera_ready\",\"uptime\":[0-9.]*" /tmp/boot_timeline.ndjson 2>/dev/null | tail -1' | tr -d '\r' | grep -o '[0-9.]*$' || true)"
+  LOAD1="$(remote 'awk "{print \$1}" /proc/loadavg' | tr -d '\r')"
+  SD_A="$(remote 'awk "\$3==\"mmcblk0\" {print \$10}" /proc/diskstats' | tr -d '\r')"
+  sleep 5
+  SD_B="$(remote 'awk "\$3==\"mmcblk0\" {print \$10}" /proc/diskstats' | tr -d '\r')"
+  case "$SD_A" in ''|*[!0-9]*) SD_A="" ;; esac
+  case "$SD_B" in ''|*[!0-9]*) SD_B="" ;; esac
+  SD_W5=""
+  [ -n "$SD_A" ] && [ -n "$SD_B" ] && SD_W5=$((SD_B - SD_A))
+  report "perf" "pass" "{\"boot_total_sec\":${TL_BOOT:-null},\"icamera_ready_sec\":${TL_ICAM:-null},\"load_1min\":${LOAD1:-null},\"sd_write_sectors_5s\":${SD_W5:-null}}"
+fi
 
 # --- failure: collect debug material ----------------------------------------------
 if [ "$FAILED" -ne 0 ]; then
-  remote 'tail -100 /media/mmc/atomhack.log 2>/dev/null || tail -100 /tmp/atomhack.log 2>/dev/null' > "$RUN_DIR/atomhack.log.tail" 2>/dev/null || true
-  remote 'dmesg | tail -100' > "$RUN_DIR/dmesg.tail" 2>/dev/null || true
-  remote 'ps' > "$RUN_DIR/ps.txt" 2>/dev/null || true
-  remote 'cat /tmp/hack.ini 2>/dev/null' > "$RUN_DIR/hack.ini" 2>/dev/null || true
+  if [ "$SSH_OK" = "1" ]; then
+    remote 'tail -100 /media/mmc/atomhack.log 2>/dev/null || tail -100 /tmp/atomhack.log 2>/dev/null' > "$RUN_DIR/atomhack.log.tail" 2>/dev/null || true
+    remote 'dmesg | tail -100' > "$RUN_DIR/dmesg.tail" 2>/dev/null || true
+    remote 'ps' > "$RUN_DIR/ps.txt" 2>/dev/null || true
+    remote 'cat /tmp/hack.ini 2>/dev/null' > "$RUN_DIR/hack.ini" 2>/dev/null || true
+  else
+    # SSH 不通: せめて HTTP 側の証拠を残す
+    curl -sI -m 10 "http://${HOST}/" > "$RUN_DIR/http-index-headers.txt" 2>&1 || true
+    curl -s -m 10 -o /dev/null -w 'get_jpeg.cgi http_code=%{http_code} time_total=%{time_total}\n' \
+      "http://${HOST}/cgi-bin/get_jpeg.cgi" > "$RUN_DIR/http-probes.txt" 2>&1 || true
+  fi
   echo "debug material collected: ${RUN_DIR}" >&2
   finish_history
   exit 1
