@@ -28,10 +28,15 @@
 - **なぜ**: `/dev/watchdog` を open した後に給餌が止まると**ハードリセット**がかかる。
 - **どうする**: ファイルの mv は可(実行中プロセスは inode を掴む)。kill は reboot で置き換える。
 
-## 4. iCamera の stdout を FIFO に繋がない
+## 4. iCamera の stdout→FIFO は「管理された reader」とセット以外禁止
 
-- **ルール**: `iCamera_app` の stdout は `/dev/null` へ。`>> /var/run/atomapp` 等の FIFO 接続禁止。
-- **なぜ**: FIFO 詰まりで awk が暴走し CPU を食い潰した(F-3 調査を混乱させた「awk storm」)。
+- **ルール**: `iCamera_app` の stdout を `/var/run/atomapp`(FIFO)へ繋いでよいのは、
+  S60webhook 管理下の respawn 付き reader(webhook.sh)が生きている正規経路のみ。
+  **reader 無し・respawn 管理外で FIFO へ繋ぐこと(デバッグ時の一時配線等)は禁止**。
+  reader を殺すなら writer 側も `/dev/null` に戻すこと。
+- **なぜ**: writer 無し FIFO を busybox awk が空読みして CPU 40-60% 暴走した実害
+  (「awk storm」— 真の根因は awk -v 後置バグで d26ee24 修正済み。busybox-lint が再発を検出する)。
+  正規経路は 2026-07-11(4302bac)に FIFO 復元済みで、本ルールは「配線の片側だけ触るな」の意。
 
 ## 5. シェルの方言と改行
 

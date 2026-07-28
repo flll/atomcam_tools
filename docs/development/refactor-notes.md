@@ -25,7 +25,7 @@
   `S20mountfs` が mmc から bind する**ランタイム上書き**として使う(ビルドには焼かない)。
   この分離なら「通常ビルド=hack 有効」「SD に .fixed あり=デバッグで起動優先」が両立する。
 
-### F-3 (未解決): iCamera_app + libcallback.so で SIGSEGV
+### F-3 (未解決 → **2026-06-30 解決**。後段「F-3 (解決 2026-06-30)」「F-3 見かけ再発の根因とクローズ (2026-07-04)」参照): iCamera_app + libcallback.so で SIGSEGV
 - LD_PRELOAD=libcallback.so 付き起動で SIGSEGV。preload 無しなら起動成功(デバッグで確認済)。
 - これが reboot ループ(S61 が libcallback 判定失敗→reboot)の根。
 - 現状は「libcallback を無効化して起動」という**回避**にとどまる。恒久対策は別途(libcallback のどの
@@ -39,18 +39,21 @@
 
 ## 衛生・構造の発見
 
-### F-5: 生成物・状態ファイルの混在
+### F-5 (解決済: Phase1-A): 生成物・状態ファイルの混在
 - `configs/active_build_profile.env` / `configs/active_profile.name` は**実行時状態** → 追跡対象 configs/ に置くと誤コミットの恐れ。`target/` へ移し gitignore。
 - `.gitignore` 漏れ: `target/BUILD_MANIFEST.json` `target/LATEST.txt` `target/releases/` `target/mmc_templates/` `target/hil-bootstrap/`。
 
-### F-6: リポジトリ root のゴミ
+### F-6 (再発性・恒久策未実施): リポジトリ root のゴミ
 - `rebuild_*.log` / `docker-build_*.log` が 17 個物理残存(gitignore 済だが散乱)。
 - `atomcam_tools.zip` が root 所有(他は lll 所有)で権限不整合。
+- 状態: Phase2 で 17 個削除 → 2026-07 に 27 個(15MB)再堆積 → 2026-07-29 再削除。
+  所有者は lll に解消済み・777 表示は symlink の仕様で問題なし。
+  **恒久策(make build のログ出力先を target/ 配下へ変更)は未実施** — ビルドの度に再発する。
 
-### F-7: 権限不整合
+### F-7 (解決済: Phase2): 権限不整合
 - `scripts/hil`(700) と `scripts/hil/debug`(700) のみ 700、他は 755。scp 由来。755 へ統一。
 
-### F-8: sd-package.sh の配列検査バグ(既存)
+### F-8 (解決済: Phase1): sd-package.sh の配列検査バグ(既存)
 - `for f in "$required"; do` は配列の**先頭要素しか**検査しない(`"${required[@]}"` が正)。
 - 影響: factory_t31 以外の必須ファイル欠落を検出できなかった。Phase1 で `"${required[@]}"` に修正済。
 
@@ -76,11 +79,16 @@
 
 ## 未解決 / 申し送り
 
-- F-3 iCamera+libcallback SIGSEGV は**未解決**(現状はランタイムで libcallback 無効化して回避)。恒久対策要。
+- F-3 iCamera+libcallback SIGSEGV は~~未解決~~ → **2026-06-30 解決済み**(property.c 走査スキップ等。
+  07-04 の見かけ再発は DebugBoot 残置が根因、後段のクローズ記録参照)。
 - F-4 S61atomcam の reboot ループ安全化(reboot→break, 20→200)を **overlay に適用済**
   (ユーザー了承)。libcallback(LD_PRELOAD)は維持。失敗時は reboot せず起動継続。
 - tailnet: カメラ Tailscale が uname パースで落ちる。`atomcam33` 未登録。LAN 経路のみ有効。
+  (→ その後 F-9 で真因確定・1.92.3 固定で解決)
 - commit/push 未実施(ユーザー明示時のみ)。13 commits ahead + 今回の変更。
+  (2026-06 時点の記述・陳腐化。現在は main 直コミット運用で解消)
+- **wdkeep の inittab respawn 化は未実施**(boot 直後に一瞬落ち cron 60秒以内復帰で凌ぐ運用のまま。
+  正規ビルド=libcallback 有効時は libcallback が給餌するため実害は debug 運用時のみ)。
 
 ### F-9 (解決): tailscale が起動しない真因 = Go 1.26 回帰
 - 症状: `failed to parse kernel version from uname` / `panic before malloc heap initialized`。
@@ -219,6 +227,9 @@
 - 10.0.0.228 LAN 喪失 (Destination Host Unreachable)
 - F-3 f3-preload-test 再実行未了
 - overlay OTA 未実施
+
+(追記 2026-07-29: 上記3点はいずれも後日クローズ — LAN 復旧済み、F-3 は 2026-06-30 の
+tier 検証で解決、overlay は 2026-07 の正規ビルド OTA で反映済み)
 
 ### 次
 1. カメラ電源/LAN 確認
