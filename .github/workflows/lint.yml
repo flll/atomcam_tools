@@ -28,6 +28,21 @@ jobs:
             -print0 | xargs -0 shellcheck -S warning \
             --exclude=SC1091,SC2034,SC2038,SC2046,SC2154,SC2155,SC2164,SC2166,SC2242,SC3014,SC3018,SC3037,SC3039,SC3060
 
+  # デバイス(busybox 1.37 ash)行きスクリプトの互換ゲート。
+  # 実バグ由来: awk storm(d26ee24)・find -delete 全滅(8a39f6a)。
+  # ubuntu の busybox-static は 1.37 より古い場合があるが、ash -n 構文検査と
+  # 静的パターン検査には十分(機能有無の判定はパターン側に固定してある)。
+  busybox-compat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install busybox
+        run: sudo apt-get update && sudo apt-get install -y busybox-static
+      - name: busybox compatibility gate
+        run: |
+          chmod +x scripts/ci/busybox-lint.sh
+          BUSYBOX=busybox scripts/ci/busybox-lint.sh
+
   markdown-links:
     runs-on: ubuntu-latest
     steps:
