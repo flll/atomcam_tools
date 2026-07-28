@@ -16,6 +16,9 @@ set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 . "$ROOT/scripts/hil/agent-debug-log.sh"
+. "$ROOT/scripts/lib/remote.sh"
+. "$ROOT/scripts/lib/wait.sh"
+. "$ROOT/scripts/lib/ndjson.sh"
 HOST="${1:-${ATOMCAM_HOST:-atomcam.local}}"
 EXPECTED="${2:-}"
 FAILED=0
@@ -28,13 +31,12 @@ RUN_TS="$(date +%Y%m%d_%H%M%S)"
 RUN_DIR="${SMOKE_RUN_DIR:-$ROOT/sim-results/smoke-${RUN_TS}}"
 mkdir -p "$RUN_DIR"
 RESULT_FILE="$RUN_DIR/result.ndjson"
-HISTORY_FILE="$ROOT/sim-results/history.ndjson"
 
 finish_history() {
   local result_str="ok"
   [ "$FAILED" -ne 0 ] && result_str="fail"
-  printf '{"run":"smoke","timestamp":%s,"host":"%s","pass":%d,"fail":%d,"skip":%d,"elapsed_s":%d,"result":"%s","dir":"%s"}\n' \
-    "$(date +%s)" "$HOST" "$PASS_N" "$FAIL_N" "$SKIP_N" "$((SECONDS - START_TS))" "$result_str" "$(basename "$RUN_DIR")" >> "$HISTORY_FILE"
+  hil_history_append "$(printf '{"run":"smoke","timestamp":%s,"host":"%s","pass":%d,"fail":%d,"skip":%d,"elapsed_s":%d,"result":"%s","dir":"%s"}' \
+    "$(date +%s)" "$HOST" "$PASS_N" "$FAIL_N" "$SKIP_N" "$((SECONDS - START_TS))" "$result_str" "$(basename "$RUN_DIR")")"
 }
 
 SSH_OK=1
@@ -42,11 +44,7 @@ SSH_OK=1
 remote() {
   # SSH 不通確定後は即 return(各ケースの余計な10秒待ちを防ぐ)
   [ "$SSH_OK" = "1" ] || return 255
-  ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${HOST}" "$@"
-}
-
-json_escape() {
-  printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g' | tr -d '\r' | tr '\n' ' '
+  remote_ssh "$HOST" "$@"
 }
 
 report() {
@@ -80,14 +78,9 @@ fi
 # 起動直後は lighttpd / /tmp/hack.ini の生成が ssh より遅れる。
 # WebUI 系ケースが誤って fail しないよう、最大 120 秒まで起動完了を待つ。
 # (SSH 不通時は上で HTTP 200 を確認済みなので待たない)
-BOOT_WAIT=0
-while [ "$SSH_OK" = "1" ] && [ "$BOOT_WAIT" -lt 120 ]; do
-  HTTP_UP="$(curl -sf -m 5 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null || true)"
-  INI_UP="$(remote 'test -s /tmp/hack.ini && echo yes || echo no' 2>/dev/null | tr -d '\r')"
-  [ "$HTTP_UP" = "200" ] && [ "$INI_UP" = "yes" ] && break
-  sleep 10
-  BOOT_WAIT=$((BOOT_WAIT + 10))
-done
+if [ "$SSH_OK" = "1" ]; then
+  wait_for_webui "$HOST" 120
+fi
 
 # --- case: version ---------------------------------------------------------
 VER="$(remote 'cat /etc/atomhack.ver 2>/dev/null' | tr -d '\r' | head -1)"

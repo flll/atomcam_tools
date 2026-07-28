@@ -16,6 +16,9 @@ set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 . "$ROOT/scripts/hil/agent-debug-log.sh"
+. "$ROOT/scripts/lib/remote.sh"
+. "$ROOT/scripts/lib/wait.sh"
+. "$ROOT/scripts/lib/ndjson.sh"
 HOST="${ATOMCAM_HOST:-atomcam.local}"
 MODE="deploy"
 START_TS=$SECONDS
@@ -34,9 +37,7 @@ for arg in "$@"; do
   esac
 done
 
-remote() {
-  ssh -o BatchMode=yes -o ConnectTimeout=10 "root@${HOST}" "$@"
-}
+remote() { remote_ssh "$HOST" "$@"; }
 
 remote_version() {
   remote 'cat /etc/atomhack.ver 2>/dev/null' 2>/dev/null | tr -d '\r' | head -1
@@ -44,48 +45,19 @@ remote_version() {
 
 emit_ndjson() {
   # emit_ndjson ACTION FROM TO RESULT
+  local h f t
+  h="$(json_escape "$HOST")"; f="$(json_escape "$2")"; t="$(json_escape "$3")"
   printf '{"action":"%s","host":"%s","from":"%s","to":"%s","elapsed_s":%d,"result":"%s"}\n' \
-    "$1" "$HOST" "$2" "$3" "$((SECONDS - START_TS))" "$4"
+    "$1" "$h" "$f" "$t" "$((SECONDS - START_TS))" "$4"
   # 1実行=1行を履歴へ追記(集計は make hil-report)
-  mkdir -p "$ROOT/sim-results"
-  printf '{"run":"deploy","timestamp":%s,"action":"%s","host":"%s","from":"%s","to":"%s","elapsed_s":%d,"result":"%s"}\n' \
-    "$(date +%s)" "$1" "$HOST" "$2" "$3" "$((SECONDS - START_TS))" "$4" >> "$ROOT/sim-results/history.ndjson"
+  hil_history_append "$(printf '{"run":"deploy","timestamp":%s,"action":"%s","host":"%s","from":"%s","to":"%s","elapsed_s":%d,"result":"%s"}' \
+    "$(date +%s)" "$1" "$h" "$f" "$t" "$((SECONDS - START_TS))" "$4")"
 }
 
 finish() {
   # finish ACTION FROM TO RESULT EXIT_CODE
   emit_ndjson "$1" "$2" "$3" "$4"
   exit "$5"
-}
-
-wait_for_boot() {
-  # wait_for_boot TIMEOUT_S -> 0 when iCamera_app is up, 1 on timeout
-  local timeout="$1" deadline=$((SECONDS + $1)) ping_deadline=$((SECONDS + 70))
-  echo "waiting for reboot (timeout ${timeout}s) ..."
-  sleep 15  # let the reboot actually start before probing
-
-  while ((SECONDS < deadline)); do
-    local ping_ok=0 icam_pid=""
-    if ping -c 1 -W 2 "$HOST" >/dev/null 2>&1; then ping_ok=1; fi
-    if [ "$ping_ok" -eq 1 ]; then
-      icam_pid="$(remote 'pidof iCamera_app 2>/dev/null' 2>/dev/null | tr -d '\r')"
-    fi
-    agent_debug_log "A" "deploy_remote.sh:wait_for_boot" "boot_probe" "{\"ping_ok\":$ping_ok,\"icam_pid\":\"$icam_pid\",\"elapsed\":$((SECONDS-START_TS))}" "pre-fix"
-    if [ "$ping_ok" -eq 0 ]; then
-      if ((SECONDS > ping_deadline)); then
-        echo "still no ping response from ${HOST} ..."
-        ping_deadline=$((SECONDS + 60))
-      fi
-      sleep 3
-      continue
-    fi
-    if remote 'pidof iCamera_app >/dev/null 2>&1' 2>/dev/null; then
-      echo "iCamera_app is running"
-      return 0
-    fi
-    sleep 5
-  done
-  return 1
 }
 
 if [ "$MODE" = "status" ]; then
@@ -172,7 +144,7 @@ else
   remote '[ -f /media/mmc/rootfs_hack.squashfs ] && cp /media/mmc/rootfs_hack.squashfs /media/mmc/rootfs_hack.squashfs.bak; mkdir -p /media/mmc/update' \
     || { echo "device-side backup failed" >&2; finish "$MODE" "$FROM_VER" "$EXPECTED" "transfer-fail" 10; }
   echo "transferring $(basename "$SRC") -> ${HOST}:${DST} ..."
-  if ! scp -O -o BatchMode=yes -o ConnectTimeout=10 "$SRC" "root@${HOST}:${DST}"; then
+  if ! remote_scp "$SRC" "root@${HOST}:${DST}"; then
     echo "scp failed" >&2
     finish "$MODE" "$FROM_VER" "$EXPECTED" "transfer-fail" 10
   fi
@@ -182,7 +154,7 @@ fi
 echo "rebooting ${HOST} ..."
 remote 'sync; reboot' 2>/dev/null || true
 
-if ! wait_for_boot "$TIMEOUT"; then
+if ! wait_for_boot "$HOST" "$TIMEOUT"; then
   echo "boot timeout after ${TIMEOUT}s" >&2
   finish "$MODE" "$FROM_VER" "" "timeout" 20
 fi
