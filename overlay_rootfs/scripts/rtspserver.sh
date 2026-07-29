@@ -16,6 +16,7 @@ if [ "$1" = "off" -o "$1" = "restart" ]; then
     sleep 0.5
   done
   echo `date +"%Y/%m/%d %H:%M:%S"` ": v4l2rtspserver stop"
+  rm -f /tmp/rtsp_started_at
   [ "$1" = "off" ] && exit 0
 fi
 
@@ -40,6 +41,13 @@ AUDIO2="on"
 [ "$RTSP_AUDIO2" = "off" -o "$RTSP_AUDIO2" = "" ] && AUDIO2="off"
 RTSP_OVER_HTTP=$(awk -F "=" '/^RTSP_OVER_HTTP *=/ {print $2}' $HACK_INI)
 RTSP_AUTH=$(awk -F "=" '/^RTSP_AUTH *=/ {print $2}' $HACK_INI)
+# 配信の自動停止(既定 0=無効)。この機は RAM 88MB しかなく、RTSP/WebRTC を
+# 常時配信すると MEMFREE が 3MB 前後まで落ちて sshd が新規セッションを
+# 確保できなくなる(2026-07-24/29 に実測)。「見たいときだけ on」を安全にするため、
+# 配信開始から N 分でランタイム設定(/tmp/hack.ini)のみ off に戻す。
+# /media/mmc は触らないので、恒久設定は利用者の意図どおり保たれる。
+RTSP_AUTO_OFF_MINUTES=$(awk -F "=" '/^RTSP_AUTO_OFF_MINUTES *=/ {print $2}' $HACK_INI)
+RTSP_STARTED_AT=/tmp/rtsp_started_at
 RTSP_USER=$(awk -F "=" '/^RTSP_USER *=/ {print $2}' $HACK_INI)
 RTSP_PASSWD=$(awk -F "=" '/^RTSP_PASSWD *=/ {print $2}' $HACK_INI)
 
@@ -53,6 +61,29 @@ fi
 
 if [ "$1" = "watchdog" ]; then
   [ "$RTSP_VIDEO0" = "on" -o "$RTSP_VIDEO1" = "on" -o "$RTSP_VIDEO2" = "on" ] || exit 0
+
+  # --- 自動停止(RTSP_AUTO_OFF_MINUTES) ---
+  # 起点が無いまま配信中のケース(watchdog より前に起動していた・起点を消した等)は
+  # 「今」を起点として採番する。これが無いと自動停止が永久に効かない
+  if [ -n "$RTSP_AUTO_OFF_MINUTES" ] && [ "$RTSP_AUTO_OFF_MINUTES" != "0" ] \
+     && [ ! -f "$RTSP_STARTED_AT" ] && pidof v4l2rtspserver > /dev/null ; then
+    awk '{print int($1)}' /proc/uptime > "$RTSP_STARTED_AT"
+  fi
+  if [ -n "$RTSP_AUTO_OFF_MINUTES" ] && [ "$RTSP_AUTO_OFF_MINUTES" != "0" ] && [ -f "$RTSP_STARTED_AT" ] ; then
+    NOW_UP=$(awk '{print int($1)}' /proc/uptime)
+    STARTED=$(cat "$RTSP_STARTED_AT" 2>/dev/null)
+    case "$STARTED" in ''|*[!0-9]*) STARTED="" ;; esac
+    if [ -n "$STARTED" ] && [ $((NOW_UP - STARTED)) -ge $((RTSP_AUTO_OFF_MINUTES * 60)) ] ; then
+      echo `date +"%Y/%m/%d %H:%M:%S"` ": rtsp auto-off after ${RTSP_AUTO_OFF_MINUTES}min (RAM 保護)"
+      # ランタイム設定のみ off(/media/mmc は無変更 = 再起動で利用者の設定に戻る)
+      sed -i 's/^RTSP_VIDEO0=on$/RTSP_VIDEO0=off/' $HACK_INI
+      sed -i 's/^RTSP_VIDEO1=on$/RTSP_VIDEO1=off/' $HACK_INI
+      sed -i 's/^RTSP_VIDEO2=on$/RTSP_VIDEO2=off/' $HACK_INI
+      sed -i 's/^WEBRTC_ENABLE=on$/WEBRTC_ENABLE=off/' $HACK_INI
+      rm -f "$RTSP_STARTED_AT"
+      exec /scripts/rtspserver.sh off
+    fi
+  fi
   # 「プロセスは生きているが映像が出ていない」状態の自己修復。
   # boot 時、S75rtspserver は iCamera_app 起動の約1秒後に走るが、libcallback の
   # コマンド IF(port 4000)が応答できるようになるのは約37秒後。この窓で
@@ -104,6 +135,8 @@ if ! pidof v4l2rtspserver > /dev/null ; then
     [ "$RTSP_VIDEO1" = "on" ] && path="$path /dev/video1,hw:2,0@$RTSP_AUDIO1 "
     [ "$RTSP_VIDEO2" = "on" ] && path="$path /dev/video2,hw:4,0@$RTSP_AUDIO2 "
     /usr/bin/v4l2rtspserver $option -C 1 -a S16_LE $path >> /tmp/log/rtspserver.log 2>&1 &
+    # 自動停止の起点(uptime 秒)。再起動で /tmp ごと消えるので前回の残骸は残らない
+    awk '{print int($1)}' /proc/uptime > "$RTSP_STARTED_AT"
   fi
   while [ "`pidof v4l2rtspserver`" = "" ]; do
     sleep 0.5
