@@ -13,6 +13,7 @@
        直接使ってよい。ダークは tokens.css 側で --md-* が切り替わるため再定義不要 */
     --background: var(--md-surface);
     --foreground: var(--md-on-surface);
+    /* カード面 [ATL]: ライトは surface と同じ白+影、ダークは1段明るい面 */
     --card: var(--md-surface-container-low);
     --card-foreground: var(--md-on-surface);
     --primary: var(--md-primary);
@@ -67,21 +68,12 @@
     --info: 227 100% 65%;      /* ldsg role-link #4D73FF */
     --on-info: 0 0% 100%;
 
-    /* LDSG shadow(on-white 3段)。ダークでは M3 の面階層で奥行きを表現するため
-       .dark 側で none に落とす(LDSG も背景ごとに影を最適化する思想) */
-    --shadow-l100: 0 0 2px rgb(0 0 0 / 0.07), 0 1px 2px rgb(0 0 0 / 0.07);
-    --shadow-l200: 0 1px 6px rgb(0 0 0 / 0.12);
-    --shadow-l300: 0 1px 20px rgb(0 0 0 / 0.07);
-    /* LDSG Gray ランプ(ライト): 面・罫線・テキストを正本値へ */
-    --md-surface: 0 0% 100%;
-    --md-surface-container-lowest: 0 0% 99%;
-    --md-surface-container-low: 0 0% 96%;
-    --md-surface-container: 0 0% 94%;
-    --md-surface-container-high: 0 0% 91%;
-    --md-surface-container-highest: 0 0% 87%;
-    --md-outline-variant: 0 0% 87%;
-    --md-on-surface: 0 0% 0%;
-    --md-on-surface-variant: 0 0% 38%;
+    /* elevation [ATL]: ライトは白面+影、ダークは明るい面+濃い影で高さを表す。
+       l100=raised(カード)、l200/l300=overlay(モーダル・ポップオーバー) */
+    --shadow-l100: 0 1px 1px rgb(0 0 0 / 0.10), 0 0 1px rgb(0 0 0 / 0.13);
+    --shadow-l200: 0 4px 8px rgb(0 0 0 / 0.10), 0 0 1px rgb(0 0 0 / 0.13);
+    --shadow-l300: 0 8px 12px rgb(0 0 0 / 0.10), 0 0 1px rgb(0 0 0 / 0.13);
+    /* 面の値は生成物(styles/tokens.css)が正本。ここで再定義しない */
   }
 
   .dark {
@@ -91,19 +83,10 @@
     --on-warning: 30 80% 10%;
     --info: 226 100% 69%;      /* ldsg role-link dark #638DFF */
     --on-info: 215 80% 12%;
-    --shadow-l100: none;
-    --shadow-l200: none;
-    --shadow-l300: none;
-    /* LDSG Gray ランプ(ダーク) */
-    --md-surface: 0 0% 7%;
-    --md-surface-container-lowest: 0 0% 10%;
-    --md-surface-container-low: 0 0% 12%;
-    --md-surface-container: 0 0% 16%;
-    --md-surface-container-high: 0 0% 22%;
-    --md-surface-container-highest: 0 0% 25%;
-    --md-outline-variant: 0 0% 25%;
-    --md-on-surface: 0 0% 100%;
-    --md-on-surface-variant: 0 0% 72%;
+    /* ダークは面の明るさが主、影は輪郭の補助として濃いものを重ねる [ATL] */
+    --shadow-l100: 0 1px 1px rgb(0 0 0 / 0.50), 0 0 1px rgb(0 0 0 / 0.60);
+    --shadow-l200: 0 4px 8px rgb(0 0 0 / 0.50), 0 0 1px rgb(0 0 0 / 0.60);
+    --shadow-l300: 0 8px 12px rgb(0 0 0 / 0.50), 0 0 1px rgb(0 0 0 / 0.60);
     --destructive: 353 100% 71%;   /* negative dark #FF697A */
   }
 
