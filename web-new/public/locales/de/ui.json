@@ -162,6 +162,11 @@
       "choose": "Ziel auswählen",
       "howto": "Verbindung zu {{name}}",
       "onAir": "Live"
+    },
+    "vlc": {
+      "title": "In VLC / am Handy ansehen",
+      "desc": "Kamera direkt in VLC oder einem Handy-Player ansehen.",
+      "hint": "QR mit VLC am Handy scannen oder die URL öffnen."
     }
   },
   "settings": {
@@ -255,7 +260,8 @@
       "revertedNotice": "Keine Bestätigung — Einstellungen automatisch wiederhergestellt"
     },
     "checkingHint": "Status wird geprüft. Direkt nach der Übernahme kann es 1–2 Minuten dauern.",
-    "stoppedHint": "Nicht verbunden. Siehe „Letzter Fehler“ unten oder tailscaled neu starten."
+    "stoppedHint": "Nicht verbunden. Siehe „Letzter Fehler“ unten oder tailscaled neu starten.",
+    "exitNodeNeedTailnet": "Beim Einschalten wird der LAN-Zugriff geschlossen. Öffnen Sie diese WebUI zuerst über das Tailnet (http://<Host>.ts.net/ oder 100.x.x.x) neu, bevor Sie es ändern"
   },
   "auth": {
     "title": "WebUI-Anmeldung",

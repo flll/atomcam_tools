@@ -162,6 +162,11 @@
       "choose": "Choose a destination",
       "howto": "How to connect to {{name}}",
       "onAir": "On air"
+    },
+    "vlc": {
+      "title": "Watch in VLC / phone",
+      "desc": "Watch the camera directly in VLC or a phone video player.",
+      "hint": "Scan the QR with VLC on your phone, or open the URL."
     }
   },
   "settings": {
@@ -255,7 +260,8 @@
       "revertedNotice": "No confirmation received — settings were restored automatically"
     },
     "checkingHint": "Checking the status. Right after applying, it can take 1–2 minutes to settle.",
-    "stoppedHint": "Not connected. Check \"Last error\" below or restart tailscaled."
+    "stoppedHint": "Not connected. Check \"Last error\" below or restart tailscaled.",
+    "exitNodeNeedTailnet": "Turning this on closes LAN-side access. To avoid locking yourself out, reopen this WebUI via the tailnet (http://<host>.ts.net/ or 100.x.x.x) first, then change it"
   },
   "auth": {
     "title": "WebUI login",

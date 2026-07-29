@@ -162,6 +162,11 @@
       "choose": "방송 대상 선택",
       "howto": "{{name}} 연결 절차",
       "onAir": "방송 중"
+    },
+    "vlc": {
+      "title": "VLC·스마트폰으로 보기",
+      "desc": "VLC나 스마트폰 플레이어에서 카메라 영상을 직접 시청합니다.",
+      "hint": "스마트폰 VLC로 QR을 스캔하거나 URL을 여세요."
     }
   },
   "settings": {
@@ -255,7 +260,8 @@
       "revertedNotice": "확인이 없어 설정을 자동 복원했습니다"
     },
     "checkingHint": "상태를 확인하고 있습니다. 적용 직후에는 반영까지 1〜2분 걸릴 수 있습니다.",
-    "stoppedHint": "연결되어 있지 않습니다. 아래 '최근 오류'나 tailscaled 재시작으로 확인하세요."
+    "stoppedHint": "연결되어 있지 않습니다. 아래 '최근 오류'나 tailscaled 재시작으로 확인하세요.",
+    "exitNodeNeedTailnet": "이 설정을 켜면 LAN 측 연결이 닫힙니다. 잠금을 방지하기 위해 먼저 tailnet(http://<호스트명>.ts.net/ 또는 100.x.x.x)으로 이 WebUI를 다시 연 후 변경하세요"
   },
   "auth": {
     "title": "WebUI 로그인",

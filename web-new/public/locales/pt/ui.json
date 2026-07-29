@@ -162,6 +162,11 @@
       "choose": "Escolher destino",
       "howto": "Como conectar ao {{name}}",
       "onAir": "No ar"
+    },
+    "vlc": {
+      "title": "Assistir no VLC / celular",
+      "desc": "Assista à câmera diretamente no VLC ou em um player de celular.",
+      "hint": "Escaneie o QR com o VLC no celular ou abra a URL."
     }
   },
   "settings": {
@@ -255,7 +260,8 @@
       "revertedNotice": "Sem confirmação — configurações restauradas automaticamente"
     },
     "checkingHint": "Verificando o estado. Logo após aplicar, pode levar 1–2 minutos.",
-    "stoppedHint": "Não conectado. Veja \"Último erro\" abaixo ou reinicie o tailscaled."
+    "stoppedHint": "Não conectado. Veja \"Último erro\" abaixo ou reinicie o tailscaled.",
+    "exitNodeNeedTailnet": "Ativar isso fecha o acesso pela LAN. Para não se trancar fora, reabra esta WebUI via tailnet (http://<host>.ts.net/ ou 100.x.x.x) antes de alterar"
   },
   "auth": {
     "title": "Login da WebUI",

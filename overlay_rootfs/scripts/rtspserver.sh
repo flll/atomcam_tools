@@ -131,6 +131,10 @@ if ! pidof v4l2rtspserver > /dev/null ; then
     echo `date +"%Y/%m/%d %H:%M:%S"` ": v4l2rtspserever start"
     [ "$RTSP_OVER_HTTP" = "on" ] && option="-p 8080"
     [ "$RTSP_AUTH" = "on" -a "$RTSP_USER" != "" -a "$RTSP_PASSWD" != "" ] && option="$option -U $RTSP_USER:$RTSP_PASSWD"
+    # Tailscale専用通信: loopback のみにバインドし LAN からの 8554/8080 を閉じる
+    # (tailnet 経由は tailscaled が loopback へ差し込むので届く)
+    TAILSCALE_EXITNODE_ONLY=$(awk -F "=" '/^TAILSCALE_EXITNODE_ONLY *=/ {print $2}' $HACK_INI | tr -d '\r')
+    [ "$TAILSCALE_EXITNODE_ONLY" = "on" ] && option="$option -I 127.0.0.1"
     [ "$RTSP_VIDEO0" = "on" ] && path="/dev/video0,hw:0,0@$RTSP_AUDIO0 "
     [ "$RTSP_VIDEO1" = "on" ] && path="$path /dev/video1,hw:2,0@$RTSP_AUDIO1 "
     [ "$RTSP_VIDEO2" = "on" ] && path="$path /dev/video2,hw:4,0@$RTSP_AUDIO2 "

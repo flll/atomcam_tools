@@ -80,3 +80,40 @@ test('ライブ配信: 配信先タイルを選ぶとURL雛形が入り手順が
   );
   await expect(page.getByText('Twitch へつなぐ手順')).toBeVisible();
 });
+
+// ニコ生タイルも選択状態になる(URL雛形を持たないため state で選択を保持)
+test('ニコ生タイルを選ぶと選択表示になり手順が出る', async ({ page }) => {
+  await page.goto('/#/settings/streaming');
+  const nico = page.getByRole('button', { name: /ニコニコ生放送/ });
+  await nico.click();
+  await expect(nico).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText('ニコニコ生放送 へつなぐ手順')).toBeVisible();
+});
+
+// ライブ配信セクションは連携セクションより上に出る
+test('ライブ配信が連携より先に並ぶ', async ({ page }) => {
+  await page.goto('/#/settings/streaming');
+  // 描画完了を待ってから並び順を取る(即時取得だと空配列になる)
+  await expect(page.getByRole('heading', { name: '連携', exact: true })).toBeVisible();
+  const headings = await page.locator('h1, h2').allTextContents();
+  const live = headings.findIndex((h) => h.trim() === 'ライブ配信');
+  const integ = headings.findIndex((h) => h.trim() === '連携');
+  expect(live).toBeGreaterThanOrEqual(0);
+  expect(integ).toBeGreaterThan(live);
+});
+
+// 連携カードにVLCが追加され4枚になる
+test('連携カードが4枚(VLC追加)', async ({ page }) => {
+  await page.goto('/#/settings/streaming');
+  await expect(page.getByRole('heading', { name: 'VLC・スマホで見る' })).toBeVisible();
+});
+
+// 専用通信はLANアクセス中(localhost含む)にはONにできない
+test('Tailscale専用通信はtailnet経由でないとONにできない', async ({ page }) => {
+  await page.goto('/#/settings/system/tailscale');
+  await page.getByRole('switch', { name: /^Tailscale有効化 / }).click();
+  const sw = page.getByRole('switch', { name: /^Tailscale専用通信 / });
+  await sw.click();
+  await expect(sw).toHaveAttribute('aria-checked', 'false');
+  await expect(page.getByText('先に tailnet', { exact: false })).toBeVisible();
+});

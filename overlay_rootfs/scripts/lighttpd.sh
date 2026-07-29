@@ -11,6 +11,19 @@ if [ "$1" = "watchdog" ]; then
 fi
 
 HACK_INI=/tmp/hack.ini
+
+# Tailscale専用通信: on なら loopback のみにバインドし、LAN からの 80 番を閉じる
+# (tailnet 経由は tailscaled が loopback へ差し込むので届く)。
+# /tmp/portguard.state は tailscale.sh との申し合わせ(不要な再起動の抑止)
+EXITNODE_ONLY=$(awk -F "=" '/^TAILSCALE_EXITNODE_ONLY *=/ {print $2}' $HACK_INI | tr -d '\r')
+if [ "$EXITNODE_ONLY" = "on" ]; then
+  echo 'server.bind = "127.0.0.1"' > /tmp/lighttpd-bind.conf
+  echo on > /tmp/portguard.state
+else
+  echo '# bind: all interfaces' > /tmp/lighttpd-bind.conf
+  echo off > /tmp/portguard.state
+fi
+
 DIGEST=$(awk -F "=" '/^DIGEST *=/ {print $2}' $HACK_INI | tr -d '\r')
 if [ "$DIGEST" != "" ]; then
   echo $DIGEST > /etc/lighttpd/user.digest

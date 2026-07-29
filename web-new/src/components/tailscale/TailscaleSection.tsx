@@ -9,6 +9,7 @@ import { api } from '@/api';
 import type { HackIni, TailscaleStatus } from '@/api';
 import { frigateSnippet, maskAuthKey, tailscaleAclSnippet } from '@/lib/integration-snippets';
 import { isTailnetAccess, tailscaleRisks } from '@/lib/tailscale-changes';
+import { toast } from '@/lib/toast';
 import { runCmd } from '@/lib/runCmd';
 import { cn } from '@/lib/utils';
 
@@ -148,6 +149,11 @@ export function TailscaleSection({
   // 未保存の編集に締め出しリスクがあれば保存前に警告する
   const risks = tailscaleRisks(config, draft);
   const viaTailnet = isTailnetAccess(window.location.hostname, ts.dnsName);
+  // 専用通信の ON 許可には厳密判定を使う: 短縮 MagicDNS 名(atomcam 等)は LAN の
+  // mDNS と区別できず、誤許可すると締め出しになるため *.ts.net / CGNAT IP のみ認める
+  const strictTailnet =
+    /\.ts\.net$/i.test(window.location.hostname) ||
+    /^100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\./.test(window.location.hostname);
   const auth = { on: draft.RTSP_AUTH === 'on', user: draft.RTSP_USER ?? '', pass: draft.RTSP_PASSWD ?? '' };
   const camName = (config?.HOSTNAME || 'atomcam').toLowerCase().replace(/[^a-z0-9_]/g, '_');
   const tag = draft.TAILSCALE_TAGS || 'tag:cctv';
@@ -161,7 +167,22 @@ export function TailscaleSection({
             <AuthKeyField value={draft.TAILSCALE_AUTH_KEY ?? ''} saved={config?.TAILSCALE_AUTH_KEY ?? ''} onChange={(v) => patch({ TAILSCALE_AUTH_KEY: v })} />
             <SettingInput icon={Server} i18nKey="tailscaleSettings.hostname" value={draft.TAILSCALE_HOSTNAME ?? ''} onChange={(v) => patch({ TAILSCALE_HOSTNAME: v })} />
             <SettingInput icon={Tags} i18nKey="tailscaleSettings.tags" value={draft.TAILSCALE_TAGS ?? 'tag:cctv'} onChange={(v) => patch({ TAILSCALE_TAGS: v })} />
-            <SettingSwitch icon={Lock} i18nKey="tailscaleSettings.exitNodeOnly" value={draft.TAILSCALE_EXITNODE_ONLY ?? 'off'} onChange={(v) => patch({ TAILSCALE_EXITNODE_ONLY: v })} />
+            <SettingSwitch
+              icon={Lock}
+              i18nKey="tailscaleSettings.exitNodeOnly"
+              value={draft.TAILSCALE_EXITNODE_ONLY ?? 'off'}
+              onChange={(v) => {
+                // ON にすると LAN 側ポートが閉じる。LAN(10.x 等)からこの画面を
+                // 開いたまま適用すると自分が締め出されるため、tailnet 経由
+                // (*.ts.net または 100.64〜127.x)で開いている時だけ許可する。
+                // OFF に戻す操作は常に許可
+                if (v === 'on' && !strictTailnet) {
+                  toast.error(tUi('ts.exitNodeNeedTailnet'));
+                  return;
+                }
+                patch({ TAILSCALE_EXITNODE_ONLY: v });
+              }}
+            />
           </>
         )}
       </Section>

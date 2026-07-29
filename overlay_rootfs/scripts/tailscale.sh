@@ -117,26 +117,36 @@ read_config_value() {
     ' "$file" | tr -d '\r'
 }
 
+# Tailscale専用通信(LAN 側ポート 80/8080/8554 を閉じる)。
+# 旧実装は iptables 前提だったが、このファームに iptables は存在せず
+# 「command -v で無ければ成功扱い」= 一度も機能していなかった(実機で確認)。
+# kernel 3.10 に netfilter を足すのは起動不能リスクが高いため、
+# 各サービスを 127.0.0.1 にバインドし直す方式に変更した。tailscaled は
+# userspace-networking で受けた接続を loopback へ差し込むので tailnet 経由は生き、
+# LAN からは TCP レベルで拒否される。バインドの実処理は lighttpd.sh /
+# rtspserver.sh が hack.ini の TAILSCALE_EXITNODE_ONLY を読んで行う。
+PORTGUARD_STATE=/tmp/portguard.state
+
+sync_port_guard() {
+    want="$1"
+    cur=$(cat "$PORTGUARD_STATE" 2>/dev/null)
+    [ "$cur" = "$want" ] && return 0
+    echo "$want" > "$PORTGUARD_STATE"
+    echo "port guard: rebinding services (exitnode-only=$want)"
+    /scripts/lighttpd.sh restart >> /tmp/tailscale_action.log 2>&1
+    # v4l2rtspserver が動いていれば webcmd 経由で再起動(バインド反映)
+    if pidof v4l2rtspserver > /dev/null 2>&1 && [ -p /var/run/webcmd ]; then
+        # FIFO 書込は読み手不在だとブロックするため上限を掛ける
+        timeout 5 sh -c 'echo "rtspserver restart" > /var/run/webcmd' 2>/dev/null
+    fi
+}
+
 apply_port_guard() {
-    command -v iptables >/dev/null 2>&1 || return 0
-    for port in 80 8080 8554; do
-        iptables -C INPUT -i tailscale0 -p tcp --dport "$port" -j ACCEPT >/dev/null 2>&1 || \
-            iptables -I INPUT 1 -i tailscale0 -p tcp --dport "$port" -j ACCEPT
-        iptables -C INPUT -i wlan0 -p tcp --dport "$port" -j DROP >/dev/null 2>&1 || \
-            iptables -I INPUT 1 -i wlan0 -p tcp --dport "$port" -j DROP
-    done
+    sync_port_guard on
 }
 
 clear_port_guard() {
-    command -v iptables >/dev/null 2>&1 || return 0
-    for port in 80 8080 8554; do
-        while iptables -C INPUT -i wlan0 -p tcp --dport "$port" -j DROP >/dev/null 2>&1; do
-            iptables -D INPUT -i wlan0 -p tcp --dport "$port" -j DROP
-        done
-        while iptables -C INPUT -i tailscale0 -p tcp --dport "$port" -j ACCEPT >/dev/null 2>&1; do
-            iptables -D INPUT -i tailscale0 -p tcp --dport "$port" -j ACCEPT
-        done
-    done
+    sync_port_guard off
 }
 
 load_config() {

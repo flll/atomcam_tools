@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ExternalLink, Link2, Radio, TimerReset } from 'lucide-react';
 import {
@@ -86,9 +87,14 @@ export function LiveGuides({
   const url = draft.RTMP_URL ?? '';
   const enabled = draft.RTMP_ENABLE === 'on';
   const live = config?.RTMP_ENABLE === 'on' && (config.RTMP_URL ?? '') !== '';
-  const selected = detectProvider(url);
+  // 選択状態: 基本は URL からの推定だが、ニコ生は雛形を持たず URL から判定できない
+  // (空にするため)ので、明示的に選んだタイルを state でも覚える
+  const [chosenKey, setChosenKey] = useState<string | null>(null);
+  const selected =
+    detectProvider(url) ?? PROVIDERS.find((p) => p.key === chosenKey && p.tmpl === null) ?? null;
 
   const choose = (p: (typeof PROVIDERS)[number]) => {
+    setChosenKey(p.key);
     // 雛形を持つ配信先はURLごと差し替える。ニコ生は放送ごとにURLが変わるので空にして促す
     patch({ RTMP_URL: p.tmpl ?? '', RTMP_ENABLE: 'on' });
   };

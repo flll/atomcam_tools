@@ -162,6 +162,11 @@
       "choose": "选择推流目标",
       "howto": "连接到 {{name}} 的步骤",
       "onAir": "直播中"
+    },
+    "vlc": {
+      "title": "用 VLC/手机观看",
+      "desc": "在 VLC 或手机播放器中直接观看摄像头画面。",
+      "hint": "用手机上的 VLC 扫描二维码,或直接打开该 URL。"
     }
   },
   "settings": {
@@ -255,7 +260,8 @@
       "revertedNotice": "未收到确认,设置已自动恢复"
     },
     "checkingHint": "正在确认状态。应用后可能需要1〜2分钟生效。",
-    "stoppedHint": "未连接。可通过下方“最近的错误”或重启 tailscaled 排查。"
+    "stoppedHint": "未连接。可通过下方“最近的错误”或重启 tailscaled 排查。",
+    "exitNodeNeedTailnet": "开启后将关闭局域网侧的连接。为避免被锁在外面,请先通过 tailnet(http://<主机名>.ts.net/ 或 100.x.x.x)重新打开本界面后再更改"
   },
   "auth": {
     "title": "WebUI 登录",

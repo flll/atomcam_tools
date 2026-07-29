@@ -217,6 +217,8 @@ export default function StreamingPage() {
         </div>
       )}
 
+      <LiveGuides draft={draft} patch={patch} config={config} />
+
       {/* 連携カード(各カードが枠を持つのでセクション自体はカード化しない) */}
       <Section card={false} title={tUi('hub.integrations')} description={tUi('hub.integrationsDesc')}>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -273,10 +275,27 @@ export default function StreamingPage() {
               </SubSettings>
             )}
           </IntegrationCard>
+
+          <IntegrationCard
+            icon={Smartphone}
+            title={tUi('hub.vlc.title')}
+            desc={tUi('hub.vlc.desc')}
+            badge={mainOn ? tUi('hub.ready') : null}
+          >
+            {!mainOn && (
+              <Button variant="secondary" size="sm" onClick={() => patch({ RTSP_VIDEO0: 'on' })}>
+                {tUi('hub.ha.enable')}
+              </Button>
+            )}
+            {mainOn && (
+              <>
+                <p className="text-xs leading-relaxed text-muted-foreground">{tUi('hub.vlc.hint')}</p>
+                <UrlRow url={rtspUrl(host, 'video0', auth)} qrLabel={tUi('hub.qr')} />
+              </>
+            )}
+          </IntegrationCard>
         </div>
       </Section>
-
-      <LiveGuides draft={draft} patch={patch} config={config} />
 
       {/* 基盤ストリーム */}
       <Section title={tUi('hub.streams')} description={tUi('hub.streamsDesc')}>

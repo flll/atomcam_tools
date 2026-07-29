@@ -162,6 +162,11 @@
       "choose": "配信先を選ぶ",
       "howto": "{{name}} へつなぐ手順",
       "onAir": "配信中"
+    },
+    "vlc": {
+      "title": "VLC・スマホで見る",
+      "desc": "VLC や スマホの動画プレーヤーでカメラ映像を直接視聴します。",
+      "hint": "QR をスマホの VLC(メディアプレーヤー)で読み取るか、URL を開いてください。"
     }
   },
   "settings": {
@@ -255,7 +260,8 @@
       "revertedNotice": "確認が取れなかったため設定を自動復元しました"
     },
     "checkingHint": "状態を確認しています。適用直後は反映まで最大1〜2分かかります。",
-    "stoppedHint": "接続していません。下の「直近のエラー」や tailscaled 再起動で状況を確認できます。"
+    "stoppedHint": "接続していません。下の「直近のエラー」や tailscaled 再起動で状況を確認できます。",
+    "exitNodeNeedTailnet": "この設定を ON にすると LAN 側の接続が閉じます。締め出しを防ぐため、先に tailnet(http://<ホスト名>.ts.net/ または 100.x.x.x)からこの WebUI を開き直してから変更してください"
   },
   "auth": {
     "title": "WebUIログイン",
