@@ -151,10 +151,17 @@ fi
 # WebUI 認証(digest)が有効だと HTTP チェックは 401 になる。これは
 # 「lighttpd が生きていて認証が守っている」証拠なので、3ケースとも理由付き skip にする
 WEBUI_AUTH_CODE="$(curl -s -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null)"
+# 000 = LAN から TCP 接続できない。Tailscale専用通信(loopback バインド)が
+# 効いている状態で、これも「設定どおりに守られている」証拠なので skip 扱いにする
+WEBUI_EXITNODE_ONLY="$(remote 'awk -F= "/^TAILSCALE_EXITNODE_ONLY *=/ {print \$2}" /tmp/hack.ini' 2>/dev/null | tr -d '\r')"
 if [ "$WEBUI_AUTH_CODE" = "401" ]; then
   report "webui_spa" "skip" "{\"reason\":\"auth enabled (401)\"}"
   report "webui_css" "skip" "{\"reason\":\"auth enabled (401)\"}"
   report "webui" "skip" "{\"reason\":\"auth enabled (401)\"}"
+elif [ "$WEBUI_AUTH_CODE" = "000" ] && [ "$WEBUI_EXITNODE_ONLY" = "on" ]; then
+  report "webui_spa" "skip" "{\"reason\":\"tailscale exit-node-only (LAN closed)\"}"
+  report "webui_css" "skip" "{\"reason\":\"tailscale exit-node-only (LAN closed)\"}"
+  report "webui" "skip" "{\"reason\":\"tailscale exit-node-only (LAN closed)\"}"
 else
 
 # --- case: webui-spa (web-new index + gzip assets) ---------------------------
