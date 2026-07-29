@@ -27,6 +27,7 @@ import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
 import type { HackIni } from '@/api';
 import { frigateSnippet, homeAssistantSnippet, rtspUrl, webrtcPageUrl } from '@/lib/integration-snippets';
+import { LiveGuides } from '@/components/streaming/LiveGuides';
 import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
 
@@ -293,6 +294,8 @@ export default function StreamingPage() {
           </IntegrationCard>
         </div>
       </Section>
+
+      <LiveGuides patch={patch} />
 
       {/* 基盤ストリーム */}
       <Section title={tUi('hub.streams')} description={tUi('hub.streamsDesc')}>

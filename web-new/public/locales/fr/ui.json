@@ -132,7 +132,35 @@
     "subHint": "Basse résolution (360p). Idéal pour la détection IA (rôle detect de Frigate) et le visionnage mobile.",
     "memWarn": "Activer plusieurs flux avec WebRTC/diffusion en direct approche la limite mémoire (mesuré : 61/87MB avec RTSP+WebRTC). Désactivez ce qui ne sert pas.",
     "advanced": "Avancé",
-    "hevcNote": "Le HEVC (H.265) économise la bande passante mais reste peu compatible et consomme plus de mémoire. Le flux principal (H.264) est recommandé."
+    "hevcNote": "Le HEVC (H.265) économise la bande passante mais reste peu compatible et consomme plus de mémoire. Le flux principal (H.264) est recommandé.",
+    "guide": {
+      "title": "Guides de diffusion en direct",
+      "desc": "Comment se connecter aux principaux sites de streaming. Toujours les 3 mêmes étapes : obtenir la clé → coller l'URL → enregistrer.",
+      "open": "Voir les étapes",
+      "getKey": "Obtenir la clé de stream",
+      "useThis": "Utiliser cette destination",
+      "applied": "Un modèle a été placé dans l'URL RTMP ci-dessus. Remplacez YOUR_STREAM_KEY par votre clé réelle puis enregistrez",
+      "step1": "Ouvrez le tableau de bord du site via « Obtenir la clé de stream » et copiez votre clé",
+      "step2": "Appuyez sur « Utiliser cette destination » pour remplir l'URL de la carte RTMP, puis remplacez YOUR_STREAM_KEY par la clé copiée",
+      "step3": "Après l'enregistrement, la diffusion démarre en moins d'une minute. Vérifiez l'aperçu sur le site",
+      "youtube": {
+        "desc": "Le plus grand site de vidéo au monde. Les directs non répertoriés conviennent à la surveillance familiale",
+        "note": "Les chaînes activant le direct pour la première fois peuvent attendre jusqu'à 24 h côté YouTube"
+      },
+      "twitch": {
+        "desc": "Plateforme populaire pour le streaming de jeux",
+        "note": "Le transcodage (options de qualité) n'est pas toujours disponible"
+      },
+      "niconico": {
+        "desc": "Service japonais de diffusion en direct",
+        "step2": "Assemblez l'URL (rtmp://…) et la clé affichées sur la page de diffusion avec « / » et collez-les dans l'URL de la carte RTMP",
+        "note": "L'URL et la clé changent à chaque diffusion ; recollez-les à chaque fois. Un compte premium peut être requis"
+      },
+      "facebook": {
+        "desc": "Facebook Live. L'audience peut être limitée aux amis",
+        "note": "Attention : l'URL est en rtmps:// (chiffrée). Une nouvelle clé est émise à chaque diffusion"
+      }
+    }
   },
   "settings": {
     "defaultValue": "Par défaut : {{value}}",

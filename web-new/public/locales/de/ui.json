@@ -132,7 +132,35 @@
     "subHint": "Niedrige Auflösung (360p). Ideal für KI-Erkennung (Frigates detect-Rolle) und mobiles Ansehen.",
     "memWarn": "Mehrere Streams zusammen mit WebRTC/Livestreaming nähern sich der Speichergrenze (gemessen: 61/87MB mit RTSP+WebRTC). Nicht Genutztes ausschalten.",
     "advanced": "Erweitert",
-    "hevcNote": "HEVC (H.265) spart Bandbreite, hat aber begrenzte Player-Unterstützung und braucht mehr Speicher. Meist ist der Hauptstream (H.264) die bessere Wahl."
+    "hevcNote": "HEVC (H.265) spart Bandbreite, hat aber begrenzte Player-Unterstützung und braucht mehr Speicher. Meist ist der Hauptstream (H.264) die bessere Wahl.",
+    "guide": {
+      "title": "Livestream-Anleitungen",
+      "desc": "Verbindung zu den großen Streaming-Seiten. Überall dieselben 3 Schritte: Stream-Key holen → URL einfügen → speichern.",
+      "open": "Schritte anzeigen",
+      "getKey": "Stream-Key holen",
+      "useThis": "Dieses Ziel verwenden",
+      "applied": "Eine Vorlage wurde in die RTMP-URL oben eingetragen. Ersetzen Sie YOUR_STREAM_KEY durch Ihren Key und speichern Sie",
+      "step1": "Öffnen Sie über „Stream-Key holen“ das Dashboard der Seite und kopieren Sie den Key",
+      "step2": "Mit „Dieses Ziel verwenden“ wird die URL der RTMP-Karte mit einer Vorlage gefüllt; ersetzen Sie YOUR_STREAM_KEY durch den kopierten Key",
+      "step3": "Nach dem Speichern startet der Stream innerhalb einer Minute. Prüfen Sie die Vorschau auf der Seite",
+      "youtube": {
+        "desc": "Die größte Videoplattform der Welt. Nicht gelistete Streams eignen sich für die Familienüberwachung",
+        "note": "Kanäle, die Livestreaming erstmals aktivieren, brauchen auf YouTube-Seite bis zu 24 Stunden"
+      },
+      "twitch": {
+        "desc": "Beliebte Plattform für Gaming-Streams",
+        "note": "Transcoding (Qualitätsoptionen) ist nicht immer verfügbar"
+      },
+      "niconico": {
+        "desc": "Japanischer Livestream-Dienst",
+        "step2": "Verbinden Sie die auf der Sendungsseite angezeigte URL (rtmp://…) und den Key mit „/“ und fügen Sie beides in die RTMP-URL ein",
+        "note": "URL und Key ändern sich pro Sendung — jedes Mal neu einfügen. Premium-Konto ggf. erforderlich"
+      },
+      "facebook": {
+        "desc": "Facebook Live. Publikum kann auf Freunde beschränkt werden",
+        "note": "Achtung: URL ist rtmps:// (verschlüsselt). Pro Sendung wird ein neuer Key ausgestellt"
+      }
+    }
   },
   "settings": {
     "defaultValue": "Standard: {{value}}",

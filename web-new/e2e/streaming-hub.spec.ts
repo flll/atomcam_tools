@@ -51,3 +51,17 @@ test.describe('配信・連携ハブ', () => {
     await expect(page.getByTestId('qr-popover').locator('svg')).toBeVisible();
   });
 });
+
+test("配信ガイド: 4サイトのカードがあり、YouTube 雛形を適用できる", async ({ page }) => {
+  await page.goto("/#/settings/streaming");
+  await expect(page.getByRole("heading", { name: "ライブ配信ガイド" })).toBeVisible();
+  for (const name of ["YouTube Live", "Twitch", "ニコニコ生放送", "Facebook Live"]) {
+    await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+  }
+  await page.getByText("手順を見る").first().click();
+  await page.getByRole("button", { name: "この配信先を使う" }).first().click();
+  await expect(page.getByRole("textbox", { name: /^URL / })).toHaveValue(
+    "rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY",
+  );
+  await expect(page.getByText("未保存の変更があります")).toBeVisible();
+});

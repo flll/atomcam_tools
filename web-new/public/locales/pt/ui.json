@@ -132,7 +132,35 @@
     "subHint": "Baixa resolução (360p). Ideal para detecção por IA (papel detect do Frigate) e visualização móvel.",
     "memWarn": "Ativar vários streams junto com WebRTC/transmissão ao vivo aproxima o equipamento do limite de memória (medido: 61/87MB com RTSP+WebRTC). Desligue o que não usa.",
     "advanced": "Avançado",
-    "hevcNote": "O HEVC (H.265) economiza banda, mas tem suporte limitado nos players e usa mais memória. Em geral, recomenda-se o stream principal (H.264)."
+    "hevcNote": "O HEVC (H.265) economiza banda, mas tem suporte limitado nos players e usa mais memória. Em geral, recomenda-se o stream principal (H.264).",
+    "guide": {
+      "title": "Guias de transmissão ao vivo",
+      "desc": "Como conectar aos principais sites de streaming. Todos seguem os mesmos 3 passos: obter a chave → colar a URL → salvar.",
+      "open": "Ver passos",
+      "getKey": "Obter chave de stream",
+      "useThis": "Usar este destino",
+      "applied": "Um modelo foi colocado na URL RTMP acima. Substitua YOUR_STREAM_KEY pela sua chave real e salve",
+      "step1": "Abra o painel do site em \"Obter chave de stream\" e copie sua chave",
+      "step2": "Pressione \"Usar este destino\" para preencher a URL do cartão RTMP com um modelo e substitua YOUR_STREAM_KEY pela chave copiada",
+      "step3": "Após salvar, a transmissão começa em menos de um minuto. Verifique a prévia no site",
+      "youtube": {
+        "desc": "O maior site de vídeos do mundo. Transmissões não listadas servem para monitoramento familiar",
+        "note": "Canais ativando transmissões pela primeira vez podem levar até 24 horas para habilitar no YouTube"
+      },
+      "twitch": {
+        "desc": "Plataforma popular para transmissões de jogos",
+        "note": "A transcodificação (opções de qualidade) nem sempre está disponível"
+      },
+      "niconico": {
+        "desc": "Serviço japonês de transmissões ao vivo",
+        "step2": "Una a URL (rtmp://…) e a chave mostradas na página da transmissão com \"/\" e cole na URL do cartão RTMP",
+        "note": "A URL e a chave mudam a cada transmissão; cole novamente sempre. Pode exigir conta premium"
+      },
+      "facebook": {
+        "desc": "Facebook Live. O público pode ser limitado a amigos",
+        "note": "Atenção: a URL é rtmps:// (criptografada). Uma nova chave é emitida a cada transmissão"
+      }
+    }
   },
   "settings": {
     "defaultValue": "Padrão: {{value}}",
