@@ -134,14 +134,8 @@
     "advanced": "Advanced",
     "hevcNote": "HEVC (H.265) saves bandwidth but has limited player support and uses more memory. The main H.264 stream is recommended for most setups.",
     "guide": {
-      "title": "Live streaming guides",
-      "desc": "How to connect to major streaming sites. Every site takes the same 3 steps: get a stream key → paste the URL → save.",
-      "open": "Show steps",
       "getKey": "Get stream key",
-      "useThis": "Use this destination",
-      "applied": "A template was placed in the RTMP URL above. Replace YOUR_STREAM_KEY with your actual key and save",
       "step1": "Open the site's dashboard via \"Get stream key\" below and copy your stream key",
-      "step2": "Press \"Use this destination\" to fill the RTMP card's URL with a template, then replace YOUR_STREAM_KEY with the copied key",
       "step3": "After saving, streaming starts within a minute. Check the preview on the streaming site",
       "youtube": {
         "desc": "The world's largest video site. Unlisted streams work well for family monitoring",
@@ -159,7 +153,15 @@
       "facebook": {
         "desc": "Facebook Live. You can limit the audience to friends",
         "note": "Note the rtmps:// (encrypted) URL. A new stream key is issued for each broadcast"
-      }
+      },
+      "step2b": "A template is already in the \"Stream URL\" field below. Replace YOUR_STREAM_KEY with the key you copied"
+    },
+    "live": {
+      "title": "Live streaming",
+      "desc": "Stream the camera to YouTube, Twitch and others. Pick a destination to see its steps.",
+      "choose": "Choose a destination",
+      "howto": "How to connect to {{name}}",
+      "onAir": "On air"
     }
   },
   "settings": {

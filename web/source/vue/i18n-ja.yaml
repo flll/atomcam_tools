@@ -285,7 +285,7 @@ HomeKit:
       音声を出すには「メイン配信」の音声を OPUS に設定してください。
 
 RTMP:
-  title: RTMP
+  title: ライブ配信を有効にする
   tooltip: 「メイン配信」を on にして音声を AAC か off にする必要があります
   URL:
     title: URL

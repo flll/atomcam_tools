@@ -285,7 +285,7 @@ HomeKit:
       Pour la sortie audio, réglez l'audio du « Flux principal » sur OPUS.
 
 RTMP:
-  title: RTMP
+  title: Activer la diffusion en direct
   tooltip: Activez le « Flux principal » et réglez l'audio sur AAC ou off
   URL:
     title: URL

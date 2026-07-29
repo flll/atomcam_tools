@@ -134,14 +134,8 @@
     "advanced": "Erweitert",
     "hevcNote": "HEVC (H.265) spart Bandbreite, hat aber begrenzte Player-Unterstützung und braucht mehr Speicher. Meist ist der Hauptstream (H.264) die bessere Wahl.",
     "guide": {
-      "title": "Livestream-Anleitungen",
-      "desc": "Verbindung zu den großen Streaming-Seiten. Überall dieselben 3 Schritte: Stream-Key holen → URL einfügen → speichern.",
-      "open": "Schritte anzeigen",
       "getKey": "Stream-Key holen",
-      "useThis": "Dieses Ziel verwenden",
-      "applied": "Eine Vorlage wurde in die RTMP-URL oben eingetragen. Ersetzen Sie YOUR_STREAM_KEY durch Ihren Key und speichern Sie",
       "step1": "Öffnen Sie über „Stream-Key holen“ das Dashboard der Seite und kopieren Sie den Key",
-      "step2": "Mit „Dieses Ziel verwenden“ wird die URL der RTMP-Karte mit einer Vorlage gefüllt; ersetzen Sie YOUR_STREAM_KEY durch den kopierten Key",
       "step3": "Nach dem Speichern startet der Stream innerhalb einer Minute. Prüfen Sie die Vorschau auf der Seite",
       "youtube": {
         "desc": "Die größte Videoplattform der Welt. Nicht gelistete Streams eignen sich für die Familienüberwachung",
@@ -159,7 +153,15 @@
       "facebook": {
         "desc": "Facebook Live. Publikum kann auf Freunde beschränkt werden",
         "note": "Achtung: URL ist rtmps:// (verschlüsselt). Pro Sendung wird ein neuer Key ausgestellt"
-      }
+      },
+      "step2b": "Unten steht bereits eine Vorlage im Feld „URL“. Ersetzen Sie YOUR_STREAM_KEY durch den kopierten Key"
+    },
+    "live": {
+      "title": "Livestream",
+      "desc": "Übertragen Sie die Kamera zu YouTube, Twitch und anderen. Wählen Sie ein Ziel für die Schritte.",
+      "choose": "Ziel auswählen",
+      "howto": "Verbindung zu {{name}}",
+      "onAir": "Live"
     }
   },
   "settings": {

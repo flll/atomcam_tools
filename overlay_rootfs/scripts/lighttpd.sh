@@ -65,6 +65,24 @@ gen_error_page() {
 </table>
 <p class="en">Sign-in required. The username is <strong>admin</strong>.
 Forgot the password? Power off, remove the DIGEST= line from hack.ini on the SD card, and boot again.</p>
+<script>
+/* WebUI 本体(SPA)に入る前なので i18n は使えない。ブラウザの言語が日本語でなければ
+   英語を主、日本語を副として並べ替える(静的ページで賄える最小限の多言語対応) */
+(function () {
+  if ((navigator.language || '').toLowerCase().indexOf('ja') === 0) return;
+  var card = document.querySelector('.card');
+  var en = document.querySelector('.en');
+  if (!card || !en) return;
+  en.classList.remove('en');
+  en.style.fontSize = '15px';
+  en.style.color = '#fff';
+  card.insertBefore(en, card.firstChild);
+  var ja = document.createElement('div');
+  ja.style.cssText = 'margin-top:20px;border-top:1px solid #3f3f3f;padding-top:14px;font-size:12px;color:#949494';
+  while (card.children.length > 2) { ja.appendChild(card.children[2]); }
+  card.appendChild(ja);
+})();
+</script>
 </div></body></html>
 HTML
 }

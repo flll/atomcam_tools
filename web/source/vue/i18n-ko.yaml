@@ -285,7 +285,7 @@ HomeKit:
       오디오를 출력하려면 「메인 스트림」의 오디오를 OPUS로 설정하세요.
 
 RTMP:
-  title: RTMP
+  title: 라이브 방송 사용
   tooltip: 「메인 스트림」을 켜고 오디오를 AAC 또는 off로 설정해야 합니다
   URL:
     title: URL

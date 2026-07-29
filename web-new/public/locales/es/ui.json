@@ -134,14 +134,8 @@
     "advanced": "Avanzado",
     "hevcNote": "HEVC (H.265) ahorra ancho de banda pero tiene soporte limitado y usa más memoria. En general se recomienda el stream principal (H.264).",
     "guide": {
-      "title": "Guías de transmisión en vivo",
-      "desc": "Cómo conectar con los principales sitios de streaming. Todos usan los mismos 3 pasos: obtener la clave → pegar la URL → guardar.",
-      "open": "Ver pasos",
       "getKey": "Obtener clave de stream",
-      "useThis": "Usar este destino",
-      "applied": "Se colocó una plantilla en la URL RTMP de arriba. Reemplace YOUR_STREAM_KEY por su clave real y guarde",
       "step1": "Abra el panel del sitio con \"Obtener clave de stream\" y copie su clave",
-      "step2": "Pulse \"Usar este destino\" para rellenar la URL de la tarjeta RTMP con una plantilla y reemplace YOUR_STREAM_KEY por la clave copiada",
       "step3": "Tras guardar, la transmisión comienza en menos de un minuto. Compruebe la vista previa en el sitio",
       "youtube": {
         "desc": "El mayor sitio de video del mundo. Los directos ocultos sirven para vigilancia familiar",
@@ -159,7 +153,15 @@
       "facebook": {
         "desc": "Facebook Live. Puede limitar la audiencia a amigos",
         "note": "Atención: la URL es rtmps:// (cifrada). Se emite una clave nueva por transmisión"
-      }
+      },
+      "step2b": "Ya hay una plantilla en el campo \"URL\" de abajo. Reemplace YOUR_STREAM_KEY por la clave copiada"
+    },
+    "live": {
+      "title": "Transmisión en vivo",
+      "desc": "Transmita la cámara a YouTube, Twitch y otros. Elija un destino para ver sus pasos.",
+      "choose": "Elegir destino",
+      "howto": "Cómo conectar con {{name}}",
+      "onAir": "En directo"
     }
   },
   "settings": {

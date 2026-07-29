@@ -134,14 +134,8 @@
     "advanced": "Avançado",
     "hevcNote": "O HEVC (H.265) economiza banda, mas tem suporte limitado nos players e usa mais memória. Em geral, recomenda-se o stream principal (H.264).",
     "guide": {
-      "title": "Guias de transmissão ao vivo",
-      "desc": "Como conectar aos principais sites de streaming. Todos seguem os mesmos 3 passos: obter a chave → colar a URL → salvar.",
-      "open": "Ver passos",
       "getKey": "Obter chave de stream",
-      "useThis": "Usar este destino",
-      "applied": "Um modelo foi colocado na URL RTMP acima. Substitua YOUR_STREAM_KEY pela sua chave real e salve",
       "step1": "Abra o painel do site em \"Obter chave de stream\" e copie sua chave",
-      "step2": "Pressione \"Usar este destino\" para preencher a URL do cartão RTMP com um modelo e substitua YOUR_STREAM_KEY pela chave copiada",
       "step3": "Após salvar, a transmissão começa em menos de um minuto. Verifique a prévia no site",
       "youtube": {
         "desc": "O maior site de vídeos do mundo. Transmissões não listadas servem para monitoramento familiar",
@@ -159,7 +153,15 @@
       "facebook": {
         "desc": "Facebook Live. O público pode ser limitado a amigos",
         "note": "Atenção: a URL é rtmps:// (criptografada). Uma nova chave é emitida a cada transmissão"
-      }
+      },
+      "step2b": "Um modelo já está no campo \"URL\" abaixo. Substitua YOUR_STREAM_KEY pela chave copiada"
+    },
+    "live": {
+      "title": "Transmissão ao vivo",
+      "desc": "Transmita a câmera para YouTube, Twitch e outros. Escolha um destino para ver os passos.",
+      "choose": "Escolher destino",
+      "howto": "Como conectar ao {{name}}",
+      "onAir": "No ar"
     }
   },
   "settings": {

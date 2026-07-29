@@ -168,7 +168,12 @@ WEBRTC_ENABLE=$(awk -F "=" '/^WEBRTC_ENABLE *=/ {print $2}' $HACK_INI)
 # HOMEKIT_SOURCE 未設定でも go2rtc(RTMP/WebRTC/HomeKit)を使えるように既定値へ
 # フォールバックする。このキーは旧 Vue UI だけが保存時に書いており、新 WebUI や
 # 手書きの hack.ini では空のまま RTMP/WebRTC を on にしても go2rtc が起動しなかった
-[ "$HOMEKIT_SOURCE" = "" ] && export HOMEKIT_SOURCE="rtsp://localhost:8554/video0_unicast"
+# RTSP 認証が有効なら go2rtc 用の URL にも資格情報を載せる。
+# これが無いと「RTSP にパスワードを付けた瞬間 go2rtc が自分のカメラに繋げず、
+# RTMP(YouTube 等)・WebRTC・HomeKit が黙って止まる」状態になる
+RTSP_CRED=""
+[ "$RTSP_AUTH" = "on" ] && [ "$RTSP_USER" != "" ] && [ "$RTSP_PASSWD" != "" ] && RTSP_CRED="$RTSP_USER:$RTSP_PASSWD@"
+[ "$HOMEKIT_SOURCE" = "" ] && export HOMEKIT_SOURCE="rtsp://${RTSP_CRED}localhost:8554/video0_unicast"
 [ "$HOMEKIT_ENABLE" = "on" -o "$RTMP_ENABLE" = "on" -o "$WEBRTC_ENABLE" = "on" ] || exit 0
 
 # go2rtc config

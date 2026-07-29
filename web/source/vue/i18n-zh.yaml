@@ -285,7 +285,7 @@ HomeKit:
       要输出音频，请将“主码流”的音频设为 OPUS。
 
 RTMP:
-  title: RTMP
+  title: 启用直播
   tooltip: 需要开启“主码流”并将音频设为 AAC 或 off
   URL:
     title: URL

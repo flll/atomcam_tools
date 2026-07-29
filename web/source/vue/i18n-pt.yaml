@@ -285,7 +285,7 @@ HomeKit:
       Para saída de áudio, defina o áudio do «Stream principal» como OPUS.
 
 RTMP:
-  title: RTMP
+  title: Ativar transmissão ao vivo
   tooltip: Ative o «Stream principal» e defina o áudio como AAC ou off
   URL:
     title: URL

@@ -366,7 +366,7 @@
     }
   },
   "RTMP": {
-    "title": "RTMP",
+    "title": "ライブ配信を有効にする",
     "tooltip": "「メイン配信」を on にして音声を AAC か off にする必要があります",
     "URL": {
       "title": "URL",

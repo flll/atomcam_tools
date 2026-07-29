@@ -8,13 +8,10 @@ import {
   Film,
   Globe,
   House,
-  Link2,
   Lock,
   QrCode,
   ShieldAlert,
   Smartphone,
-  TimerReset,
-  Radio,
   Video,
   Volume2,
 } from 'lucide-react';
@@ -257,22 +254,6 @@ export default function StreamingPage() {
           </IntegrationCard>
 
           <IntegrationCard
-            icon={Radio}
-            title={tUi('hub.youtube.title')}
-            desc={tUi('hub.youtube.desc')}
-            badge={rtmpOn ? tUi('hub.enabled') : null}
-          >
-            <SettingSwitch i18nKey="RTMP" value={draft.RTMP_ENABLE ?? 'off'} onChange={(v) => patch({ RTMP_ENABLE: v })} />
-            {rtmpOn && (
-              <SubSettings>
-                <SettingInput icon={Link2} i18nKey="RTMP.URL" value={draft.RTMP_URL ?? ''} onChange={(v) => patch({ RTMP_URL: v })} />
-                <p className="px-4 py-3 text-xs leading-relaxed text-muted-foreground">{tUi('hub.youtube.autoNote')}</p>
-                <SettingInputNumber icon={TimerReset} i18nKey="RTMP.IntervalRestart" value={Math.abs(Number(draft.RTMP_RESTART ?? 240))} min={20} max={2880} onChange={(v) => patch({ RTMP_RESTART: String(-v) })} />
-              </SubSettings>
-            )}
-          </IntegrationCard>
-
-          <IntegrationCard
             icon={Airplay}
             title={tUi('hub.homekit.title')}
             desc={tUi('hub.homekit.desc')}
@@ -295,7 +276,7 @@ export default function StreamingPage() {
         </div>
       </Section>
 
-      <LiveGuides patch={patch} />
+      <LiveGuides draft={draft} patch={patch} config={config} />
 
       {/* 基盤ストリーム */}
       <Section title={tUi('hub.streams')} description={tUi('hub.streamsDesc')}>

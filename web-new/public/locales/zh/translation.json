@@ -366,7 +366,7 @@
     }
   },
   "RTMP": {
-    "title": "RTMP",
+    "title": "启用直播",
     "tooltip": "需要开启“主码流”并将音频设为 AAC 或 off",
     "URL": {
       "title": "URL",

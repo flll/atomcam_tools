@@ -366,7 +366,7 @@
     }
   },
   "RTMP": {
-    "title": "RTMP",
+    "title": "Livestream aktivieren",
     "tooltip": "„Hauptstream“ aktivieren und Audio auf AAC oder off stellen",
     "URL": {
       "title": "URL",

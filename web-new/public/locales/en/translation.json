@@ -370,7 +370,7 @@
     }
   },
   "RTMP": {
-    "title": "RTMP",
+    "title": "Enable live streaming",
     "tooltip": "RTSP Main must be on and audio must be set to AAC.",
     "URL": {
       "title": "URL",

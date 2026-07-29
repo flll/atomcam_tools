@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Camera, HardDrive, Network, ShieldAlert } from 'lucide-react';
 import { WebUiAuthSection } from '@/components/auth/WebUiAuthSection';
+import { LangSwitch } from '@/components/layout/LangSwitch';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { api } from '@/api';
 import type { HackIni, StorageInfo } from '@/api';
 import { runCmd } from '@/lib/runCmd';
@@ -59,6 +61,12 @@ export default function SetupPage() {
   return (
     <div className="min-h-dvh bg-background">
       <div className="mx-auto flex max-w-xl flex-col gap-6 p-6 pt-12">
+        {/* ログイン前でも言語とテーマを選べるようにする(ナビが無いページのため) */}
+        <div className="flex items-center justify-end gap-1">
+          <LangSwitch placement="down" />
+          <ThemeToggle />
+        </div>
+
         <div>
           <h1 className="flex items-center gap-2 text-title-xl">
             <ShieldAlert aria-hidden="true" className="size-6 shrink-0 text-warning" />

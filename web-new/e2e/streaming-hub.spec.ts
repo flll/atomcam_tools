@@ -6,9 +6,9 @@ const HUB_URL = '/?mockModel=ATOMCAM2#/settings/streaming';
 test.describe('配信・連携ハブ', () => {
   test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
 
-  test('連携カード4枚が並び、Frigate 設定例に実パス(_unicast)が入りコピーできる', async ({ page }) => {
+  test('連携カード3枚が並び、Frigate 設定例に実パス(_unicast)が入りコピーできる', async ({ page }) => {
     await page.goto(HUB_URL);
-    for (const name of ['Frigate', 'Home Assistant', 'ライブ配信 (YouTube Live 等)', 'Apple Home (HomeKit)']) {
+    for (const name of ['Frigate', 'Home Assistant', 'Apple Home (HomeKit)']) {
       await expect(page.getByRole('heading', { name })).toBeVisible();
     }
 
@@ -52,16 +52,31 @@ test.describe('配信・連携ハブ', () => {
   });
 });
 
-test("配信ガイド: 4サイトのカードがあり、YouTube 雛形を適用できる", async ({ page }) => {
-  await page.goto("/#/settings/streaming");
-  await expect(page.getByRole("heading", { name: "ライブ配信ガイド" })).toBeVisible();
-  for (const name of ["YouTube Live", "Twitch", "ニコニコ生放送", "Facebook Live"]) {
-    await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+test('ライブ配信: 配信先タイルを選ぶとURL雛形が入り手順が出る(重複カードなし)', async ({ page }) => {
+  await page.goto('/#/settings/streaming');
+
+  // 統合前は「ライブ配信 (YouTube Live 等)」と「ライブ配信ガイド」が二重にあった
+  await expect(page.getByRole('heading', { name: 'ライブ配信', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /ライブ配信 \(YouTube/ })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'ライブ配信ガイド' })).toHaveCount(0);
+
+  // 4サイトのタイル
+  for (const name of ['YouTube Live', 'Twitch', 'ニコニコ生放送', 'Facebook Live']) {
+    await expect(page.getByRole('button', { name: new RegExp(name) })).toBeVisible();
   }
-  await page.getByText("手順を見る").first().click();
-  await page.getByRole("button", { name: "この配信先を使う" }).first().click();
-  await expect(page.getByRole("textbox", { name: /^URL / })).toHaveValue(
-    "rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY",
+
+  // 選ぶと URL 雛形が入り、その配信先の手順が出る
+  await page.getByRole('button', { name: /YouTube Live/ }).click();
+  await expect(page.getByRole('textbox', { name: /^URL / })).toHaveValue(
+    'rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY',
   );
-  await expect(page.getByText("未保存の変更があります")).toBeVisible();
+  await expect(page.getByText('YouTube Live へつなぐ手順')).toBeVisible();
+  await expect(page.getByText('未保存の変更があります')).toBeVisible();
+
+  // 別サイトに切り替えると手順もURLも入れ替わる
+  await page.getByRole('button', { name: /Twitch/ }).click();
+  await expect(page.getByRole('textbox', { name: /^URL / })).toHaveValue(
+    'rtmp://live.twitch.tv/app/YOUR_STREAM_KEY',
+  );
+  await expect(page.getByText('Twitch へつなぐ手順')).toBeVisible();
 });

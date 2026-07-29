@@ -134,14 +134,8 @@
     "advanced": "高级设置",
     "hevcNote": "HEVC (H.265) 更省带宽，但兼容的播放器有限且更耗内存。一般推荐主码流 (H.264)。",
     "guide": {
-      "title": "直播连接指南",
-      "desc": "连接主要直播网站的步骤。所有网站都是同样的3步: 获取推流密钥 → 粘贴URL → 保存。",
-      "open": "查看步骤",
       "getKey": "获取推流密钥",
-      "useThis": "使用此目标",
-      "applied": "已在上方 RTMP URL 中填入模板。请将 YOUR_STREAM_KEY 替换为实际密钥后保存",
       "step1": "通过下方“获取推流密钥”打开网站管理页面,复制推流密钥",
-      "step2": "点击“使用此目标”后 RTMP 卡片的 URL 会填入模板,请将 YOUR_STREAM_KEY 替换为复制的密钥",
       "step3": "保存后约一分钟内开始推流,请在直播网站的预览中确认画面",
       "youtube": {
         "desc": "全球最大的视频网站。不公开直播也适合家庭看护",
@@ -159,7 +153,15 @@
       "facebook": {
         "desc": "Facebook 直播,可将观众限定为好友",
         "note": "注意 URL 为 rtmps://(加密)。推流密钥每次直播都会重新发放"
-      }
+      },
+      "step2b": "下方“推流URL”已填入模板,请将 YOUR_STREAM_KEY 替换为复制的密钥"
+    },
+    "live": {
+      "title": "直播",
+      "desc": "将摄像头画面直接推流到 YouTube、Twitch 等。选择目标后会显示连接步骤。",
+      "choose": "选择推流目标",
+      "howto": "连接到 {{name}} 的步骤",
+      "onAir": "直播中"
     }
   },
   "settings": {

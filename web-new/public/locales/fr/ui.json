@@ -134,14 +134,8 @@
     "advanced": "Avancé",
     "hevcNote": "Le HEVC (H.265) économise la bande passante mais reste peu compatible et consomme plus de mémoire. Le flux principal (H.264) est recommandé.",
     "guide": {
-      "title": "Guides de diffusion en direct",
-      "desc": "Comment se connecter aux principaux sites de streaming. Toujours les 3 mêmes étapes : obtenir la clé → coller l'URL → enregistrer.",
-      "open": "Voir les étapes",
       "getKey": "Obtenir la clé de stream",
-      "useThis": "Utiliser cette destination",
-      "applied": "Un modèle a été placé dans l'URL RTMP ci-dessus. Remplacez YOUR_STREAM_KEY par votre clé réelle puis enregistrez",
       "step1": "Ouvrez le tableau de bord du site via « Obtenir la clé de stream » et copiez votre clé",
-      "step2": "Appuyez sur « Utiliser cette destination » pour remplir l'URL de la carte RTMP, puis remplacez YOUR_STREAM_KEY par la clé copiée",
       "step3": "Après l'enregistrement, la diffusion démarre en moins d'une minute. Vérifiez l'aperçu sur le site",
       "youtube": {
         "desc": "Le plus grand site de vidéo au monde. Les directs non répertoriés conviennent à la surveillance familiale",
@@ -159,7 +153,15 @@
       "facebook": {
         "desc": "Facebook Live. L'audience peut être limitée aux amis",
         "note": "Attention : l'URL est en rtmps:// (chiffrée). Une nouvelle clé est émise à chaque diffusion"
-      }
+      },
+      "step2b": "Un modèle est déjà dans le champ « URL » ci-dessous. Remplacez YOUR_STREAM_KEY par la clé copiée"
+    },
+    "live": {
+      "title": "Diffusion en direct",
+      "desc": "Diffusez la caméra vers YouTube, Twitch, etc. Choisissez une destination pour voir les étapes.",
+      "choose": "Choisir une destination",
+      "howto": "Comment se connecter à {{name}}",
+      "onAir": "En direct"
     }
   },
   "settings": {

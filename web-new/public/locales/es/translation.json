@@ -366,7 +366,7 @@
     }
   },
   "RTMP": {
-    "title": "RTMP",
+    "title": "Activar la transmisión en vivo",
     "tooltip": "Active la «Emisión principal» y ajuste el audio a AAC u off",
     "URL": {
       "title": "URL",
