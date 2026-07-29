@@ -286,40 +286,49 @@ static const char *SearchStr = "[%s,%04d]----- p2p recv protocol set property --
 
 static void __attribute ((constructor)) set_property_init(void) {
   libcb_trace("property");
-  // F-3 guard: the raw memory scan below (from &_fini up to iCamera's mapping end)
-  // reads unmapped pages on this firmware layout and SIGSEGVs. The property command is
-  // non-essential; skip the scan so the rest of libcallback (port 4000/video/jpeg/audio
-  // = live view) loads safely.
-  fprintf(stderr, "set_property_init: skipped (F-3 guard)\n");
-  return;
-
+  // 旧実装は maps の先頭1行だけ読み、&_fini から「その end」まで線形スキャンしていた。
+  // このファームのメモリレイアウトではマッピングの切れ目(未マップページ)を踏んで
+  // SIGSEGV になるため一時的に全スキップしていた(F-3 guard)が、それでは property の
+  // 設定側(rotate/watermark/motionDet 等)が全滅する。maps を全行パースし、
+  // 実行ファイル本体の読める領域だけを境界チェック付きで走査する安全版に置き換えた。
   char path[256];
+  char exe[256] = "";
+  ssize_t exelen = readlink("/proc/self/exe", exe, sizeof(exe) - 1);
+  if(exelen > 0) exe[exelen] = 0;
+
   snprintf(path, 256, "/proc/%d/maps", getpid());
   FILE *fp = fopen(path, "r");
   if(!fp) {
     fprintf(stderr, "set_property_init: file can't open /proc/pid/maps\n");
     return;
   }
-  unsigned int start, end;
-  int ret = fscanf(fp, "%08x-%08x ", &start, &end);
-  fclose(fp);
-  if(ret != 2) {
-    fprintf(stderr, "set_property_init: /proc/pid/maps format error\n");
-    return;
-  }
-  fprintf(stderr, "iCamera_app address: %08x-%08x\n", start, end);
 
+  const size_t searchLen = strlen(SearchStr);
   unsigned int strAddr = 0;
-  for(char *p = (char *)&_fini; p < (char *)end; p++) {
-    if((*p == '[') && !strcmp(p, SearchStr)) {
-      strAddr = (unsigned int)p;
-      break;
+  char line[512];
+  while(fgets(line, sizeof(line), fp)) {
+    unsigned int start = 0, end = 0;
+    char perm[8] = "";
+    char mapPath[384] = "";
+    if(sscanf(line, "%x-%x %7s %*x %*s %*s %383s", &start, &end, perm, mapPath) < 3) continue;
+    if(perm[0] != 'r') continue;                       // 読めない領域は触らない
+    if(exelen > 0 && strcmp(mapPath, exe)) continue;   // iCamera 本体のマッピングのみ
+    if(end < start + searchLen + 1) continue;
+    // 領域内に閉じた memcmp(終端 NUL 含む)で境界を越えない
+    for(char *p = (char *)start; p <= (char *)(end - searchLen - 1); p++) {
+      if((*p == '[') && !memcmp(p, SearchStr, searchLen + 1)) {
+        strAddr = (unsigned int)p;
+        break;
+      }
     }
+    if(strAddr) break;
   }
+  fclose(fp);
   if(!strAddr) {
     fprintf(stderr, "set_property_init: p2p recv not string found\n");
     return;
   }
+  fprintf(stderr, "set_property_init: SearchStr found at %08x\n", strAddr);
 
   unsigned int lui = strAddr >> 16;
   unsigned int addiu = strAddr & 0xffff;

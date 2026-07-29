@@ -195,6 +195,9 @@
         "tooltip": "Supprimés après le nombre de jours indiqué"
       }
     },
+    "nasServerMissing": {
+      "comment": "Aucun serveur NAS n'est configuré. Définissez le chemin réseau, le compte et le mot de passe dans les paramètres NAS de la page Stockage.\n"
+    },
     "recordTypeWarn": {
       "comment": "Réglez le mode d'enregistrement de la caméra sur Continu ou Sur détection. S'il est désactivé, rien ne sera enregistré.\n"
     },
@@ -249,7 +252,7 @@
     },
     "directWrite": {
       "title": "Écriture directe",
-      "tooltip": "Normalement l'enregistrement passe par le RAM-DISK avant copie sur la carte SD ; pour économiser la RAM, écrit directement sur la carte SD"
+      "tooltip": "Normalement, les enregistrements sont d'abord écrits sur un disque RAM en mémoire puis copiés sur la carte SD à la fin de chaque fichier (moins d'écritures SD, mais plusieurs Mo de RAM occupés en permanence). Une fois activé, les enregistrements sont écrits directement sur la carte SD dès le départ, économisant la RAM et aidant à éviter les redémarrages par manque de mémoire. En contrepartie, la carte SD subit davantage de petites écritures, ce qui peut en théorie réduire sa durée de vie. Recommandé sur les appareils avec peu de mémoire libre ou pour un fonctionnement stable à long terme"
     },
     "eraseSDCard": {
       "title": "Effacer la carte SD",

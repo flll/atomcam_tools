@@ -195,6 +195,9 @@
         "tooltip": "Excluídas após o número de dias indicado"
       }
     },
+    "nasServerMissing": {
+      "comment": "Nenhum servidor NAS configurado. Defina o caminho de rede, a conta e a senha nas configurações de NAS da página Armazenamento.\n"
+    },
     "recordTypeWarn": {
       "comment": "Defina o modo de gravação da câmera como Contínua ou Ao detectar. Se estiver Desligado, nada será gravado.\n"
     },
@@ -249,7 +252,7 @@
     },
     "directWrite": {
       "title": "Gravação direta",
-      "tooltip": "Normalmente grava primeiro no RAM-DISK e depois copia para o cartão SD; para economizar RAM, grava diretamente no cartão SD"
+      "tooltip": "Normalmente as gravações são escritas primeiro em um disco RAM na memória e copiadas para o cartão SD quando cada arquivo é concluído (menos escritas no SD, mas vários MB de RAM sempre em uso). Quando ativado, as gravações são escritas diretamente no cartão SD desde o início, economizando RAM e ajudando a evitar reinicializações por falta de memória. Em contrapartida, o cartão SD recebe mais escritas pequenas, o que teoricamente pode reduzir sua vida útil. Recomendado em dispositivos com pouca memória livre ou para operação estável de longo prazo"
     },
     "eraseSDCard": {
       "title": "Apagar cartão SD",

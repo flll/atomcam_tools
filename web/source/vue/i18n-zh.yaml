@@ -144,6 +144,9 @@ record:
     daysToKeep:
       title: 保存天数
       tooltip: 超过指定天数后删除
+  nasServerMissing:
+    comment: |
+      尚未配置NAS服务器。请在“存储”页面的NAS设置中配置网络路径、账户和密码。
   recordTypeWarn:
     comment: |
       请将摄像头设置中的录像模式设为“连续”或“侦测时”。设为关闭时不会录像。
@@ -190,7 +193,7 @@ SDCardSettings:
     tooltip: 将 SD 卡作为 CIFS(smb) 服务器在局域网内共享
   directWrite:
     title: 直接写入录像
-    tooltip: 通常先录制到 RAM-DISK 再复制到 SD 卡；为节省内存，可直接写入 SD 卡
+    tooltip: 通常录像先写入内存中的RAM盘,每个文件完成后再复制到SD卡(减少SD卡写入,但会常驻占用数MB内存)。开启后录像数据从一开始就直接写入SD卡,可节省内存,有助于避免因内存不足导致的重启。代价是SD卡的细碎写入增多,理论上会缩短其寿命。内存紧张或需要长期稳定运行时建议开启
   eraseSDCard:
     title: 清除SD卡
     tooltip: 清除 SD 卡上的录像文件夹

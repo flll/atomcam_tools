@@ -144,6 +144,9 @@ record:
     daysToKeep:
       title: 保存日数
       tooltip: 指定日数後に削除します
+  nasServerMissing:
+    comment: |
+      NASサーバが未設定です。「ストレージ」ページのNAS設定でネットワークPATH・アカウント・パスワードを設定してください。
   recordTypeWarn:
     comment: |
       カメラ設定の録画モードを連続もしくは検知時に設定してください。オフになっていると録画されません。
@@ -190,11 +193,11 @@ SDCardSettings:
     tooltip: SD-CardをCIFS(smb) serverとしてLAN内に公開します
   directWrite:
     title: 録画を直接記録
-    tooltip: 通常は一旦RAM-DISKに録画した後SD-Cardにコピーしますが、RAMの節約のため直接SD-Cardに記録します
+    tooltip: 通常の録画はまず本体メモリ上のRAM-DISKに書き込み、1ファイル完成ごとにSD-Cardへコピーします(SD-Cardへの書き込みがまとまる反面、RAMを数MB常時消費)。オンにすると録画データを最初からSD-Cardへ直接書き込むため、RAM使用量を節約でき、メモリ不足による再起動や機能停止の対策になります。代わりにSD-Cardへの細かい書き込みが増えるため、カードの寿命は理論上短くなります。メモリ残量に余裕がない機体や長期安定運用ではオン推奨です
   eraseSDCard:
     title: SD-Card消去
     tooltip: SD-Cardの録画フォルダを消去します
-    button: Erase
+    button: 消去する
 
 NASSettings:
   title: NAS設定

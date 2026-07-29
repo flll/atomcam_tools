@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CalendarClock, CalendarDays, Film, FolderOpen, HardDrive, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarDays, Film, FolderOpen, HardDrive, Server, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   ScheduleListEditor,
@@ -81,6 +81,17 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
               {draft.PERIODICREC_SCHEDULE === 'on' && <ScheduleListEditor entries={periodic} onChange={setPeriodicEdit} />}
             </>
           )}
+          <SettingSwitch icon={Server} i18nKey="record.NAS" value={draft.PERIODICREC_CIFS ?? 'off'} onChange={(v) => patch({ PERIODICREC_CIFS: v })} />
+          {draft.PERIODICREC_CIFS === 'on' && (
+            <>
+              {(draft.STORAGE_CIFSSERVER ?? '') === '' && <SettingComment i18nKey="record.nasServerMissing" tone="danger" />}
+              <SettingInput icon={FolderOpen} i18nKey="record.NAS.savePath" value={draft.PERIODICREC_CIFS_PATH ?? ''} onChange={(v) => patch({ PERIODICREC_CIFS_PATH: v })} />
+              <SettingSwitch icon={Trash2} i18nKey="record.NAS.automaticDeletion" value={draft.PERIODICREC_CIFS_REMOVE ?? 'off'} onChange={(v) => patch({ PERIODICREC_CIFS_REMOVE: v })} />
+              {draft.PERIODICREC_CIFS_REMOVE === 'on' && (
+                <SettingInputNumber icon={CalendarDays} i18nKey="record.NAS.daysToKeep" value={Number(draft.PERIODICREC_CIFS_REMOVE_DAYS ?? 30)} min={1} onChange={(v) => patch({ PERIODICREC_CIFS_REMOVE_DAYS: String(v) })} />
+              )}
+            </>
+          )}
         </Section>
       )}
 
@@ -94,6 +105,17 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
               {draft.ALARMREC_SCHEDULE === 'on' && <ScheduleListEditor entries={alarm} onChange={setAlarmEdit} />}
             </>
           )}
+          <SettingSwitch icon={Server} i18nKey="record.NAS" value={draft.ALARMREC_CIFS ?? 'off'} onChange={(v) => patch({ ALARMREC_CIFS: v })} />
+          {draft.ALARMREC_CIFS === 'on' && (
+            <>
+              {(draft.STORAGE_CIFSSERVER ?? '') === '' && <SettingComment i18nKey="record.nasServerMissing" tone="danger" />}
+              <SettingInput icon={FolderOpen} i18nKey="record.NAS.savePath" value={draft.ALARMREC_CIFS_PATH ?? ''} onChange={(v) => patch({ ALARMREC_CIFS_PATH: v })} />
+              <SettingSwitch icon={Trash2} i18nKey="record.NAS.automaticDeletion" value={draft.ALARMREC_CIFS_REMOVE ?? 'off'} onChange={(v) => patch({ ALARMREC_CIFS_REMOVE: v })} />
+              {draft.ALARMREC_CIFS_REMOVE === 'on' && (
+                <SettingInputNumber icon={CalendarDays} i18nKey="record.NAS.daysToKeep" value={Number(draft.ALARMREC_CIFS_REMOVE_DAYS ?? 30)} min={1} onChange={(v) => patch({ ALARMREC_CIFS_REMOVE_DAYS: String(v) })} />
+              )}
+            </>
+          )}
         </Section>
       )}
 
@@ -105,6 +127,17 @@ export default function RecordingPage({ section }: { section?: 'periodic' | 'ala
               <SettingInput icon={FolderOpen} i18nKey="record.SDCard.savePath" value={draft.TIMELAPSE_SDCARD_PATH ?? ''} onChange={(v) => patch({ TIMELAPSE_SDCARD_PATH: v })} />
               <SettingInputNumber icon={Film} i18nKey="timelapse.fps" value={Number(draft.TIMELAPSE_FPS ?? 20)} min={1} max={60} onChange={(v) => patch({ TIMELAPSE_FPS: String(v) })} />
               <TimelapseScheduleEditor entries={timelapse} onChange={setTimelapseEdit} />
+            </>
+          )}
+          <SettingSwitch icon={Server} i18nKey="record.NAS" value={draft.TIMELAPSE_CIFS ?? 'off'} onChange={(v) => patch({ TIMELAPSE_CIFS: v })} />
+          {draft.TIMELAPSE_CIFS === 'on' && (
+            <>
+              {(draft.STORAGE_CIFSSERVER ?? '') === '' && <SettingComment i18nKey="record.nasServerMissing" tone="danger" />}
+              <SettingInput icon={FolderOpen} i18nKey="record.NAS.savePath" value={draft.TIMELAPSE_CIFS_PATH ?? ''} onChange={(v) => patch({ TIMELAPSE_CIFS_PATH: v })} />
+              <SettingSwitch icon={Trash2} i18nKey="record.NAS.automaticDeletion" value={draft.TIMELAPSE_CIFS_REMOVE ?? 'off'} onChange={(v) => patch({ TIMELAPSE_CIFS_REMOVE: v })} />
+              {draft.TIMELAPSE_CIFS_REMOVE === 'on' && (
+                <SettingInputNumber icon={CalendarDays} i18nKey="record.NAS.daysToKeep" value={Number(draft.TIMELAPSE_CIFS_REMOVE_DAYS ?? 30)} min={1} onChange={(v) => patch({ TIMELAPSE_CIFS_REMOVE_DAYS: String(v) })} />
+              )}
             </>
           )}
         </Section>

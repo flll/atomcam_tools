@@ -62,7 +62,14 @@ export const handlers = [
       const hasTarget = (mock.hackIni.WEBHOOK_URL ?? '') !== '' || mock.hackIni.MQTT_ENABLE === 'on';
       if (name === 'notify-status' && !mock.lastNotify) return HttpResponse.text('{}');
       const channel = mock.hackIni.MQTT_ENABLE === 'on' ? 'mqtt' : 'webhook';
-      const res = { channel, event: 'testEvent', ok: hasTarget, at: '2026/07/11 02:00:00' };
+      const res = {
+        channel,
+        event: 'testEvent',
+        ok: hasTarget,
+        at: '2026/07/11 02:00:00',
+        epoch: Math.floor(Date.now() / 1000),
+        reason: hasTarget ? '' : 'HTTP 400',
+      };
       if (name === 'notify-test') mock.lastNotify = res;
       return HttpResponse.text(JSON.stringify(mock.lastNotify ?? res));
     }

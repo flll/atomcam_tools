@@ -146,7 +146,7 @@
   "events": {
     "webhookDesc": "Envia um JSON via POST para qualquer servidor quando ocorre um evento.",
     "presets": "Exemplos de destino",
-    "presetsNote": "ntfy funciona com este formato de URL. Discord / Slack usam outro formato JSON; use um relay.",
+    "presetsNote": "O ntfy funciona como está com este formato de URL. URLs de webhook do Discord / Slack são detectadas automaticamente e a carga é convertida para o formato de cada serviço.",
     "viaRelay": "requer relay",
     "mqttDesc": "Integre com Home Assistant, etc. via um broker MQTT.",
     "mqttDiscovery": "Salvar com MQTT ativado envia a config de descoberta automática do Home Assistant (MQTT Discovery) e um sensor é adicionado.",
@@ -156,7 +156,10 @@
     "sending": "Enviando…",
     "sendOk": "Enviado",
     "sendFail": "Falhou",
-    "needTarget": "Configure uma URL de WebHook ou MQTT primeiro"
+    "needTarget": "Configure uma URL de WebHook ou MQTT primeiro",
+    "failReason": "Motivo",
+    "failHint4xx": "O destino rejeitou o corpo da solicitação. Verifique a URL e o formato",
+    "failHintTimeout": "Não foi possível alcançar o destino. Verifique a URL, a rede e o DNS"
   },
   "ts": {
     "desc": "Configure uma VPN (Tailscale) para acessar a câmera com segurança de outras redes.",

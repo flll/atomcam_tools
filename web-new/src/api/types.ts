@@ -119,6 +119,10 @@ export interface NotifyStatus {
   event?: string;
   ok?: boolean;
   at?: string;
+  // UNIX 秒。閲覧者のタイムゾーンで表示するために使う(at はデバイスのローカル表記)
+  epoch?: number;
+  // 失敗理由の短文("HTTP 400"・"timeout" 等。成功時は空)
+  reason?: string;
 }
 
 // cmd.cgi name=tailscale-status(tailscale.sh status-json)。

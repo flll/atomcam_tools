@@ -49,16 +49,34 @@ const EVENTS: { key: string; hackKey: string; icon: typeof BellRing; atomOnly?: 
 
 function StatusLine({ status }: { status: NotifyStatus }) {
   const { t: tUi } = useTranslation('ui');
-  if (!status.at) return null;
+  const { i18n } = useTranslation();
+  if (!status.at && status.epoch == null) return null;
   const ok = status.ok === true;
   const Icon = ok ? CircleCheck : CircleX;
+  // epoch があれば閲覧者のタイムゾーン・言語で表示(at はデバイス時計の生文字列)
+  const when =
+    status.epoch != null
+      ? new Date(status.epoch * 1000).toLocaleString(i18n.language, {
+          dateStyle: 'short',
+          timeStyle: 'medium',
+        })
+      : status.at;
   return (
-    <div className={cn('flex items-center gap-2 text-xs', ok ? 'text-success' : 'text-destructive')}>
-      <Icon className="size-3.5 shrink-0" />
-      <span>
-        {ok ? tUi('events.sendOk') : tUi('events.sendFail')}
-        {status.channel && status.channel !== 'none' ? ` · ${status.channel}` : ''} · {status.at}
+    <div className={cn('flex flex-col gap-0.5 text-xs', ok ? 'text-success' : 'text-destructive')}>
+      <span className="flex items-center gap-2">
+        <Icon className="size-3.5 shrink-0" />
+        <span>
+          {ok ? tUi('events.sendOk') : tUi('events.sendFail')}
+          {status.channel && status.channel !== 'none' ? ` · ${status.channel}` : ''} · {when}
+        </span>
       </span>
+      {!ok && status.reason && (
+        <span className="pl-6 text-muted-foreground">
+          {tUi('events.failReason')}: {status.reason}
+          {status.reason.startsWith('HTTP 4') ? ` — ${tUi('events.failHint4xx')}` : ''}
+          {status.reason === 'timeout' ? ` — ${tUi('events.failHintTimeout')}` : ''}
+        </span>
+      )}
     </div>
   );
 }

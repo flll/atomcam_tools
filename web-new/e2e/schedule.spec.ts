@@ -41,3 +41,16 @@ test('不正なスケジュールでは保存できずエラー表示 (A-5)', as
   await expect(page.getByText('曜日を1つ以上選択してください')).toBeVisible();
   await expect(page.getByRole('button', { name: '保存', exact: true })).toBeDisabled();
 });
+
+// NAS録画トグルが各録画セクションに存在し、開くと保存PATH・未設定警告が現れる
+test('録画ページに NAS録画 が追加されている', async ({ page }) => {
+  for (const path of ['/#/settings/recording', '/#/settings/recording/alarm', '/#/settings/recording/timelapse']) {
+    await page.goto(path);
+    const nas = page.getByRole('switch', { name: /^NAS録画 / });
+    await expect(nas).toHaveCount(1);
+  }
+  await page.goto('/#/settings/recording');
+  await page.getByRole('switch', { name: /^NAS録画 / }).click();
+  await expect(page.getByRole('textbox', { name: /^保存するPATH / })).toBeVisible();
+  await expect(page.getByText('NASサーバが未設定です', { exact: false })).toBeVisible();
+});

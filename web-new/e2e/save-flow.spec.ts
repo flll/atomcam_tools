@@ -50,3 +50,13 @@ test('保存失敗時はエラートーストが出てバーが残る (A-6)', as
   // 変更は失われていない
   await expect(page.getByText('未保存の変更があります')).toBeVisible();
 });
+
+// トグルを元の値に戻したら未保存バーも消える(overlay 実差分での dirty 判定)
+test('トグルを元に戻すと未保存バーが消える', async ({ page }) => {
+  await page.goto('/#/settings/recording');
+  const sd = page.getByRole('switch', { name: /^SD-Card/ }).first();
+  await sd.click();
+  await expect(page.getByText('未保存の変更があります')).toBeVisible();
+  await sd.click();
+  await expect(page.getByText('未保存の変更があります')).toBeHidden();
+});

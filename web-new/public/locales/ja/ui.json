@@ -146,7 +146,7 @@
   "events": {
     "webhookDesc": "任意のサーバーへイベント発生時に JSON を POST します。",
     "presets": "通知先の例",
-    "presetsNote": "ntfy はこの URL 形式でそのまま使えます。Discord / Slack は JSON 形式が異なるため中継サービスを介してください。",
+    "presetsNote": "ntfy はこの URL 形式でそのまま使えます。Discord / Slack の webhook URL は自動で各サービスの形式({\"content\":...} / {\"text\":...})に変換して送信します。",
     "viaRelay": "中継が必要",
     "mqttDesc": "MQTT ブローカー経由で Home Assistant 等に連携します。",
     "mqttDiscovery": "MQTT 有効化を保存すると Home Assistant の自動検出(MQTT Discovery)設定を送信し、センサーが自動で追加されます。",
@@ -156,7 +156,10 @@
     "sending": "送信中…",
     "sendOk": "送信成功",
     "sendFail": "送信失敗",
-    "needTarget": "WebHook URL か MQTT を設定してください"
+    "needTarget": "WebHook URL か MQTT を設定してください",
+    "failReason": "失敗理由",
+    "failHint4xx": "送信先が本文の形式を受け付けていません。URLと形式を確認してください",
+    "failHintTimeout": "送信先に到達できません。URL・ネットワーク・DNSを確認してください"
   },
   "ts": {
     "desc": "別ネットワークからも安全にカメラへアクセスできる VPN(Tailscale)を設定します。",

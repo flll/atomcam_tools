@@ -144,6 +144,9 @@ record:
     daysToKeep:
       title: Aufbewahrungsdauer (Tage)
       tooltip: Nach der angegebenen Anzahl Tage werden sie gelöscht
+  nasServerMissing:
+    comment: |
+      Kein NAS-Server konfiguriert. Legen Sie Netzwerkpfad, Konto und Passwort in den NAS-Einstellungen auf der Seite Speicher fest.
   recordTypeWarn:
     comment: |
       Stellen Sie den Aufnahmemodus der Kamera auf Durchgehend oder Bei Erkennung. Bei Aus wird nichts aufgenommen.
@@ -190,7 +193,7 @@ SDCardSettings:
     tooltip: Gibt die SD-Karte als CIFS(smb)-Server im LAN frei
   directWrite:
     title: Direkt aufnehmen
-    tooltip: Normalerweise wird zuerst auf die RAM-DISK aufgenommen und dann auf die SD-Karte kopiert; zum RAM-Sparen wird direkt auf die SD-Karte geschrieben
+    tooltip: Normalerweise werden Aufnahmen zuerst auf eine RAM-Disk im Arbeitsspeicher geschrieben und nach Fertigstellung jeder Datei auf die SD-Karte kopiert (weniger SD-Schreibvorgänge, aber mehrere MB RAM dauerhaft belegt). Bei Aktivierung werden Aufnahmen von Anfang an direkt auf die SD-Karte geschrieben, was RAM spart und Neustarts durch Speichermangel vorbeugt. Im Gegenzug erhält die SD-Karte mehr kleine Schreibvorgänge, was ihre Lebensdauer theoretisch verkürzen kann. Empfohlen bei Geräten mit wenig freiem Speicher oder für langfristig stabilen Betrieb
   eraseSDCard:
     title: SD-Karte löschen
     tooltip: Löscht die Aufnahmeordner auf der SD-Karte

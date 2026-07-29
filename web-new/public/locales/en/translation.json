@@ -198,6 +198,9 @@
     "recordType": {
       "comment": "Set the Record mode in the Camera settings to Continuous or Motion. If it is Off, no video will be recorded.\n"
     },
+    "nasServerMissing": {
+      "comment": "No NAS server is configured. Set the network path, account and password under NAS settings on the Storage page.\n"
+    },
     "alarmRecWarn": {
       "comment": "Turn on Motion alarm, Sound alarm, or Fire/CO alarm detection in the Camera settings. If all are turned off, no video will be recorded.\n"
     },
@@ -253,7 +256,7 @@
     },
     "directWrite": {
       "title": "Direct Recording",
-      "tooltip": "Normally, the recording is made once on the RAM-DISK and then copied to the SD-Card, but to save RAM, the recording is made directly on the SD-Card."
+      "tooltip": "Normally recordings are first written to a RAM disk in main memory and copied to the SD card when each file completes (fewer SD writes, but several MB of RAM are always in use). When enabled, recordings are written directly to the SD card from the start, saving RAM and helping prevent out-of-memory reboots. In exchange, the SD card receives more small writes, which can theoretically shorten its lifespan. Recommended on devices with little free memory or for long-term stable operation"
     },
     "eraseSDCard": {
       "title": "Erase SD card",

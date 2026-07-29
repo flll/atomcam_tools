@@ -146,7 +146,7 @@
   "events": {
     "webhookDesc": "事件发生时向任意服务器 POST 一个 JSON。",
     "presets": "通知目标示例",
-    "presetsNote": "ntfy 可直接使用此 URL 形式。Discord / Slack 的 JSON 格式不同，请通过中继服务。",
+    "presetsNote": "ntfy 可直接使用此URL格式。Discord / Slack 的 webhook URL 会被自动识别并转换为对应格式发送。",
     "viaRelay": "需要中继",
     "mqttDesc": "通过 MQTT 代理与 Home Assistant 等联动。",
     "mqttDiscovery": "启用 MQTT 并保存后，会发送 Home Assistant 自动发现(MQTT Discovery)配置，自动添加传感器。",
@@ -156,7 +156,10 @@
     "sending": "发送中…",
     "sendOk": "发送成功",
     "sendFail": "发送失败",
-    "needTarget": "请先设置 WebHook URL 或 MQTT"
+    "needTarget": "请先设置 WebHook URL 或 MQTT",
+    "failReason": "失败原因",
+    "failHint4xx": "接收端不接受该请求格式,请检查URL与格式",
+    "failHintTimeout": "无法连接到接收端,请检查URL、网络和DNS"
   },
   "ts": {
     "desc": "配置 VPN(Tailscale),从其他网络也能安全访问摄像头。",

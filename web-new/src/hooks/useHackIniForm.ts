@@ -7,7 +7,14 @@ import type { HackIni } from '@/api';
 export function useHackIniForm() {
   const { config, isLoading, error, save } = useHackIni();
   const [overlay, setOverlay] = useState<Partial<HackIni> | null>(null);
-  const dirty = overlay !== null;
+  // トグルを元の値に戻したら未保存バーも消えるよう、overlay の存在ではなく
+  // サーバ値との実差分で判定する(overlay 自体は保持したままで害がない)
+  const dirty = useMemo(
+    () =>
+      overlay !== null &&
+      Object.entries(overlay).some(([k, v]) => (config?.[k] ?? '') !== (v ?? '')),
+    [overlay, config],
+  );
 
   const draft = useMemo<HackIni>(
     () => ({ ...(config ?? {}), ...(overlay ?? {}) }),

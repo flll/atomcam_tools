@@ -33,12 +33,29 @@ mqtt_auth() { [ -n "$MQTT_USER" ] && printf -- '-u %s:%s' "$MQTT_USER" "$MQTT_PA
 WEBHOOK_TIMEOUT=10
 MQTT_TIMEOUT=5
 
-# $1=channel(webhook|mqtt) $2=event $3=rc
+# curl の exit code を人が読める短い理由に変換する
+curl_reason() {
+  case "$1" in
+    0) echo "" ;;
+    6) echo "DNS lookup failed" ;;
+    7) echo "connection refused" ;;
+    22) echo "HTTP error" ;;
+    28) echo "timeout" ;;
+    35|60) echo "TLS error" ;;
+    *) echo "curl error $1" ;;
+  esac
+}
+
+# $1=channel(webhook|mqtt) $2=event $3=rc $4=reason(空なら curl_reason から生成)
 # チャネル別の一時ファイルに書き、finalize_status で1オブジェクトに集約する
 # (旧実装は両チャネル有効時に > 上書きで最後のチャネルの結果しか残らなかった)
+# at はデバイスのローカル表記、epoch は WebUI が閲覧者のタイムゾーンで整形するための UNIX 秒
 record() {
-  printf '{"channel":"%s","event":"%s","ok":%s,"at":"%s"}\n' \
-    "$1" "$2" "$([ "$3" -eq 0 ] && echo true || echo false)" "$(date +'%Y/%m/%d %H:%M:%S')" > "$STATUS.$1"
+  reason="$4"
+  [ -n "$reason" ] || reason="$(curl_reason "$3")"
+  reason=$(printf '%s' "$reason" | tr -d '"\\' | cut -c1-200)
+  printf '{"channel":"%s","event":"%s","ok":%s,"at":"%s","epoch":%s,"reason":"%s"}\n' \
+    "$1" "$2" "$([ "$3" -eq 0 ] && echo true || echo false)" "$(date +'%Y/%m/%d %H:%M:%S')" "$(date +%s)" "$reason" > "$STATUS.$1"
 }
 
 # WebUI(parseNotifyStatus)は単一 JSON オブジェクト前提のため、STATUS は1行を維持し
@@ -70,8 +87,26 @@ send() {
   overall=0
   rm -f "$STATUS.webhook" "$STATUS.mqtt"
   if [ -n "$WEBHOOK_URL" ]; then
-    curl -sf -m "$WEBHOOK_TIMEOUT" -X POST -H 'Content-Type: application/json' -d "$payload" $INSECURE "$WEBHOOK_URL" >/dev/null 2>&1
-    rc=$?; record webhook "$event" "$rc"; [ "$rc" -eq 0 ] || overall=1
+    # Discord/Slack の webhook は独自 JSON({"content":...}/{"text":...})しか受けないため
+    # URL から判別して自動変換する(生 payload を送ると常に HTTP 400 で失敗していた)
+    body="$payload"
+    case "$WEBHOOK_URL" in
+      *discord.com/api/webhooks/*|*discordapp.com/api/webhooks/*)
+        detail=$(printf '%s' "$data" | tr -d '"\\' | tr '\n' ' ')
+        body="{\"content\":\"[$HOSTNAME] $event${detail:+ }${detail}\"}" ;;
+      *hooks.slack.com/*)
+        body="{\"text\":\"[$HOSTNAME] $event\"}" ;;
+    esac
+    http_code=$(curl -s -o /dev/null -w '%{http_code}' -m "$WEBHOOK_TIMEOUT" -X POST -H 'Content-Type: application/json' -d "$body" $INSECURE "$WEBHOOK_URL" 2>/dev/null)
+    rc=$?
+    reason=""
+    if [ "$rc" -eq 0 ]; then
+      case "$http_code" in
+        2*) rc=0 ;;
+        *) rc=22; reason="HTTP $http_code" ;;
+      esac
+    fi
+    record webhook "$event" "$rc" "$reason"; [ "$rc" -eq 0 ] || overall=1
   fi
   if [ "$MQTT_ENABLE" = "on" ] && [ -n "$MQTT_HOST" ]; then
     mqtt_pub "$MQTT_TOPIC" "$payload"; rc=$?; record mqtt "$event" "$rc"; [ "$rc" -eq 0 ] || overall=1

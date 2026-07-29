@@ -146,7 +146,7 @@
   "events": {
     "webhookDesc": "Sendet bei einem Ereignis ein JSON per POST an einen Server.",
     "presets": "Zielbeispiele",
-    "presetsNote": "ntfy funktioniert mit diesem URL-Format direkt. Discord / Slack nutzen ein anderes JSON-Format – über ein Relay leiten.",
+    "presetsNote": "ntfy funktioniert mit diesem URL-Format direkt. Discord- / Slack-Webhook-URLs werden automatisch erkannt und die Nutzlast in das jeweilige Format umgewandelt.",
     "viaRelay": "Relay nötig",
     "mqttDesc": "Über einen MQTT-Broker mit Home Assistant usw. verbinden.",
     "mqttDiscovery": "Speichern mit aktiviertem MQTT sendet die Home-Assistant-Autoerkennung (MQTT Discovery); ein Sensor wird automatisch hinzugefügt.",
@@ -156,7 +156,10 @@
     "sending": "Wird gesendet…",
     "sendOk": "Gesendet",
     "sendFail": "Fehlgeschlagen",
-    "needTarget": "Zuerst WebHook-URL oder MQTT einrichten"
+    "needTarget": "Zuerst WebHook-URL oder MQTT einrichten",
+    "failReason": "Grund",
+    "failHint4xx": "Der Empfänger hat den Anfragetext abgelehnt. URL und Format prüfen",
+    "failHintTimeout": "Empfänger nicht erreichbar. URL, Netzwerk und DNS prüfen"
   },
   "ts": {
     "desc": "Richten Sie ein VPN (Tailscale) ein, um die Kamera sicher aus anderen Netzwerken zu erreichen.",
