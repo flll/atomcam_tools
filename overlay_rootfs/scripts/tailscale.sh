@@ -11,11 +11,21 @@ TAILSCALE_EXITNODE_ONLY="off"
 
 mkdir -p "$TAILSCALE_STATE_DIR"
 mkdir -p "$(dirname "$TAILSCALE_SOCKET")"
-mkdir -p "$(dirname "$TAILSCALE_SOCKET")"
 
 TAILSCALE_STATE_FILE="$TAILSCALE_STATE_DIR/tailscaled.state"
 TAILSCALE_STATE_BAK="/media/mmc/tailscaled.state"
 TAILSCALE_FAKEBIN="/tmp/fakebin"
+# WebUI 向け: 直近の up 失敗理由と、最後に成功した up 引数(ロールバック用)
+TAILSCALE_LAST_ERROR="$TAILSCALE_STATE_DIR/last_error"
+TAILSCALE_LAST_GOOD="$TAILSCALE_STATE_DIR/last_good_args"
+
+# S60tailscale は umask 077 で呼ぶため、mkdir したソケットディレクトリが 700 になり
+# lighttpd(www-data)の CGI から tailscale CLI が届かず WebUI の状態が常に「不明」になる。
+# state ディレクトリは秘密(ノード鍵)を含むので 700 のまま、ソケット側だけ辿れるようにする。
+fix_socket_perms() {
+    chmod 755 "$(dirname "$TAILSCALE_SOCKET")" 2>/dev/null || true
+}
+fix_socket_perms
 
 setup_fakebin() {
     mkdir -p "$TAILSCALE_FAKEBIN"
@@ -235,9 +245,25 @@ start_daemon() {
     return 1
 }
 
+# up の失敗理由を WebUI が読める1行テキストで残す(JSON には status_json 側で整形)
+record_up_error() {
+    printf '%s' "$1" | tr '\r\n' '  ' | cut -c1-500 > "$TAILSCALE_LAST_ERROR"
+}
+
+apply_guard_and_persist() {
+    if [ "$TAILSCALE_EXITNODE_ONLY" = "on" ] || [ "$TAILSCALE_EXITNODE_ONLY" = "1" ]; then
+        apply_port_guard
+    else
+        clear_port_guard
+    fi
+    ts_env
+    /usr/bin/tailscale status
+    persist_state
+}
+
 connect() {
     echo "Connecting to Tailscale network..."
-    
+
     local up_args="--auth-key=$TAILSCALE_AUTH_KEY --hostname=$TAILSCALE_HOSTNAME --ssh --timeout=60s"
 
     if [ -n "$TAILSCALE_TAGS" ]; then
@@ -250,21 +276,37 @@ connect() {
     fi
 
     ts_env
-    if /usr/bin/tailscale up $up_args; then
+    local up_out
+    if up_out=$(/usr/bin/tailscale up $up_args 2>&1); then
         echo "Successfully connected to Tailscale"
-        if [ "$TAILSCALE_EXITNODE_ONLY" = "on" ] || [ "$TAILSCALE_EXITNODE_ONLY" = "1" ]; then
-            apply_port_guard
-        else
-            clear_port_guard
-        fi
-        ts_env
-        /usr/bin/tailscale status
-        persist_state
+        rm -f "$TAILSCALE_LAST_ERROR"
+        printf '%s\n' "$up_args" > "$TAILSCALE_LAST_GOOD"
+        apply_guard_and_persist
         return 0
-    else
-        echo "Error: Failed to connect to Tailscale"
-        return 1
     fi
+
+    echo "Error: Failed to connect to Tailscale"
+    echo "$up_out"
+    record_up_error "$up_out"
+
+    # タグ変更ミス(ACL 未許可等)で up が失敗しても、直前まで動いていた接続まで
+    # 失うと tailscale 経由のアクセスが締め出される。最後に成功した引数で
+    # ロールバックを試み、少なくとも旧設定での到達性を維持する。
+    if [ -s "$TAILSCALE_LAST_GOOD" ]; then
+        local good_args
+        good_args=$(cat "$TAILSCALE_LAST_GOOD")
+        if [ "$good_args" != "$up_args" ]; then
+            echo "Attempting rollback to last known-good settings..."
+            ts_env
+            if /usr/bin/tailscale up $good_args 2>/dev/null; then
+                echo "Rollback succeeded (still using previous settings)"
+                apply_guard_and_persist
+                return 1
+            fi
+            echo "Rollback also failed"
+        fi
+    fi
+    return 1
 }
 
 stop() {
@@ -297,7 +339,11 @@ status() {
 status_json() {
     ts_env
     if ! pidof tailscaled > /dev/null 2>&1; then
-        printf '{"state":"stopped"}\n'
+        lasterr=""
+        if [ -s "$TAILSCALE_LAST_ERROR" ]; then
+            lasterr=$(tr -d '"\\\r\n' < "$TAILSCALE_LAST_ERROR")
+        fi
+        printf '{"state":"stopped","lastError":"%s"}\n' "$lasterr"
         return 0
     fi
     json=$(/usr/bin/tailscale status --json 2>/dev/null)
@@ -308,7 +354,12 @@ status_json() {
     backend=$(printf '%s' "$json" | grep -o '"BackendState":[ ]*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
     dnsname=$(printf '%s' "$json" | grep -o '"DNSName":[ ]*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/;s/[.]$//')
     [ -n "$backend" ] || backend="unknown"
-    printf '{"state":"%s","ip":"%s","dnsName":"%s"}\n' "$backend" "$ip" "$dnsname"
+    # 直近の up 失敗理由(あれば)。JSON を壊す文字は落とす
+    lasterr=""
+    if [ -s "$TAILSCALE_LAST_ERROR" ]; then
+        lasterr=$(tr -d '"\\\r\n' < "$TAILSCALE_LAST_ERROR")
+    fi
+    printf '{"state":"%s","ip":"%s","dnsName":"%s","lastError":"%s"}\n' "$backend" "$ip" "$dnsname" "$lasterr"
 }
 
 start() {
@@ -325,8 +376,10 @@ start() {
         exit 1
     fi
     
+    # connect 失敗時に stop まですると、直前まで生きていた tailscale 経由の
+    # アクセスも道連れに落ちて締め出しになる。デーモンは残して状態を
+    # WebUI(status-json の state/lastError)から診断できるようにする。
     if ! connect; then
-        stop
         exit 1
     fi
 }

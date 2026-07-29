@@ -124,7 +124,10 @@ do
     cmd=""
   fi
   if [ "$cmd" = "tailscale" ] && [ "$params" != "" ]; then
-    /scripts/tailscale.sh $params
+    # tailscale up は --timeout=60s まで粘るため、同期実行すると FIFO 全体が
+    # 最長1分以上詰まり他の webcmd も道連れになる。バックグラウンドで実行し、
+    # 進捗は WebUI が status-json をポーリングして追う
+    /scripts/tailscale.sh $params > /tmp/tailscale_action.log 2>&1 &
     echo "$cmd $params OK" >> /var/run/webres
     cmd=""
   fi
