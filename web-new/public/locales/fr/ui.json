@@ -193,6 +193,18 @@
       "desc": "Pare-feu fin qui limite les ports par tag.",
       "hint": "Collez ce modèle dans l'éditeur de politiques de la console et ajustez-le.",
       "openEditor": "Modifier la politique (console)"
-    }
+    },
+    "warn": {
+      "title": "Cette modification peut vous déconnecter ou vous bloquer",
+      "viaTailnet": "Vous consultez cette page via Tailscale. En cas d'échec de l'application, cette page pourrait devenir inaccessible. Notez l'URL LAN (http://<IP LAN>/) avant d'enregistrer.",
+      "tags": "Changement de tag : la reconnexion échoue si le nouveau tag n'est pas autorisé dans tagOwners de l'ACL ou si l'auth key ne peut pas l'attribuer. Vérifiez dans la console d'administration avant d'enregistrer.",
+      "hostname": "Changement de nom d'hôte : le nom MagicDNS change et l'ancienne URL ne fonctionnera plus.",
+      "authKey": "Changement d'auth key : la reconnexion échoue si la clé est invalide ou expirée.",
+      "disable": "Désactivation : tout accès via Tailscale sera coupé.",
+      "exitNodeOnly": "Mode Tailscale uniquement : les ports LAN (80/8080/8554) seront fermés. Si Tailscale échoue, cette WebUI deviendra aussi inaccessible depuis le LAN."
+    },
+    "applying": "Application des paramètres Tailscale (jusqu'à 60 s). La connexion peut être coupée temporairement.",
+    "applyFailed": "Échec de l'envoi de la commande d'application. Les paramètres prendront effet au prochain démarrage.",
+    "lastErrorLabel": "Dernière erreur"
   }
 }

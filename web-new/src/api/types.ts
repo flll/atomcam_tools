@@ -127,6 +127,8 @@ export interface TailscaleStatus {
   state?: string;
   ip?: string;
   dnsName?: string;
+  // 直近の tailscale up 失敗理由(成功すると空)。tailscale.sh status-json 由来
+  lastError?: string;
 }
 
 // cmd.cgi POST の宛先。socket は go2rtc 制御ポート(localhost:4000)直、

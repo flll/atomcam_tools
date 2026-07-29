@@ -193,6 +193,18 @@
       "desc": "Firewall detallado que limita puertos por etiqueta.",
       "hint": "Pega esta plantilla en el editor de políticas de la consola y ajústala.",
       "openEditor": "Editar política (consola)"
-    }
+    },
+    "warn": {
+      "title": "Este cambio puede desconectarte o bloquear el acceso",
+      "viaTailnet": "Estás viendo esta página a través de Tailscale. Si la aplicación falla, esta página podría quedar inaccesible. Anota la URL de la LAN (http://<IP LAN>/) antes de guardar.",
+      "tags": "Cambio de etiqueta: la reconexión falla si la nueva etiqueta no está permitida en tagOwners del ACL o la auth key no puede otorgarla. Verifícalo en la consola de administración antes de guardar.",
+      "hostname": "Cambio de nombre de host: el nombre MagicDNS cambia y la URL anterior dejará de funcionar.",
+      "authKey": "Cambio de auth key: la reconexión falla si la clave es inválida o ha caducado.",
+      "disable": "Desactivar: se cortará todo el acceso vía Tailscale.",
+      "exitNodeOnly": "Modo solo Tailscale: se cerrarán los puertos LAN (80/8080/8554). Si Tailscale falla, esta WebUI tampoco será accesible desde la LAN."
+    },
+    "applying": "Aplicando la configuración de Tailscale (hasta 60 s). La conexión puede cortarse temporalmente.",
+    "applyFailed": "No se pudo enviar el comando de aplicación. La configuración se aplicará en el próximo arranque.",
+    "lastErrorLabel": "Último error"
   }
 }

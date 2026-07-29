@@ -193,6 +193,18 @@
       "desc": "Fine-grained firewall that limits ports per tag.",
       "hint": "Paste this template into the policy editor in the admin console and adjust as needed.",
       "openEditor": "Edit policy (admin console)"
-    }
+    },
+    "warn": {
+      "title": "This change may disconnect you or lock you out",
+      "viaTailnet": "You are viewing this page via Tailscale. If applying fails, this page itself may become unreachable. Note the LAN URL (http://<LAN IP>/) before saving.",
+      "tags": "Tag change: reconnection fails if the new tag is not allowed in the ACL tagOwners or the auth key cannot grant it. Verify in the admin console before saving.",
+      "hostname": "Hostname change: the MagicDNS name changes, so the previous URL will stop working.",
+      "authKey": "Auth key change: reconnection fails if the key is invalid or expired.",
+      "disable": "Disabling: all access via Tailscale will be cut off.",
+      "exitNodeOnly": "Tailscale-only mode: LAN ports (80/8080/8554) will be closed. If Tailscale fails, this WebUI becomes unreachable from the LAN too."
+    },
+    "applying": "Applying Tailscale settings (up to 60s). The connection may drop temporarily.",
+    "applyFailed": "Failed to send the apply command. Settings will take effect on next boot.",
+    "lastErrorLabel": "Last error"
   }
 }

@@ -193,6 +193,18 @@
       "desc": "Feingranulare Firewall, die Ports pro Tag begrenzt.",
       "hint": "Fügen Sie diese Vorlage in den Richtlinieneditor der Konsole ein und passen Sie sie an.",
       "openEditor": "Richtlinie bearbeiten (Konsole)"
-    }
+    },
+    "warn": {
+      "title": "Diese Änderung kann die Verbindung trennen oder Sie aussperren",
+      "viaTailnet": "Sie betrachten diese Seite über Tailscale. Schlägt die Übernahme fehl, ist diese Seite womöglich nicht mehr erreichbar. Notieren Sie vor dem Speichern die LAN-URL (http://<LAN-IP>/).",
+      "tags": "Tag-Änderung: Die Neuverbindung schlägt fehl, wenn der neue Tag nicht in den tagOwners der ACL erlaubt ist oder der Auth-Key ihn nicht vergeben kann. Vor dem Speichern in der Verwaltungskonsole prüfen.",
+      "hostname": "Hostname-Änderung: Der MagicDNS-Name ändert sich, die bisherige URL funktioniert nicht mehr.",
+      "authKey": "Auth-Key-Änderung: Die Neuverbindung schlägt fehl, wenn der Schlüssel ungültig oder abgelaufen ist.",
+      "disable": "Deaktivierung: Jeglicher Zugriff über Tailscale wird getrennt.",
+      "exitNodeOnly": "Nur-Tailscale-Modus: Die LAN-Ports (80/8080/8554) werden geschlossen. Fällt Tailscale aus, ist diese WebUI auch aus dem LAN nicht mehr erreichbar."
+    },
+    "applying": "Tailscale-Einstellungen werden übernommen (bis zu 60 s). Die Verbindung kann kurz abbrechen.",
+    "applyFailed": "Senden des Übernahme-Befehls fehlgeschlagen. Die Einstellungen greifen beim nächsten Start.",
+    "lastErrorLabel": "Letzter Fehler"
   }
 }

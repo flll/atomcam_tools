@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Cat, ExternalLink, KeyRound, Lock, Server, Shield, ShieldCheck, Tags } from 'lucide-react';
+import { Cat, ExternalLink, KeyRound, Lock, Server, Shield, ShieldCheck, Tags, TriangleAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Section, SettingInput, SettingSwitch } from '@/components/settings';
 import { Disclosure } from '@/components/ui/disclosure';
@@ -8,6 +8,7 @@ import { CopyButton, SnippetBlock } from '@/components/ui/snippet';
 import { api } from '@/api';
 import type { HackIni, TailscaleStatus } from '@/api';
 import { frigateSnippet, maskAuthKey, tailscaleAclSnippet } from '@/lib/integration-snippets';
+import { isTailnetAccess, tailscaleRisks } from '@/lib/tailscale-changes';
 import { runCmd } from '@/lib/runCmd';
 import { cn } from '@/lib/utils';
 
@@ -140,6 +141,9 @@ export function TailscaleSection({
 
   const tailnetHost = ts.dnsName || ts.ip || '';
   const connected = (ts.state ?? '').toLowerCase() === 'running' && tailnetHost !== '';
+  // 未保存の編集に締め出しリスクがあれば保存前に警告する
+  const risks = tailscaleRisks(config, draft);
+  const viaTailnet = isTailnetAccess(window.location.hostname, ts.dnsName);
   const auth = { on: draft.RTSP_AUTH === 'on', user: draft.RTSP_USER ?? '', pass: draft.RTSP_PASSWD ?? '' };
   const camName = (config?.HOSTNAME || 'atomcam').toLowerCase().replace(/[^a-z0-9_]/g, '_');
   const tag = draft.TAILSCALE_TAGS || 'tag:cctv';
@@ -158,6 +162,24 @@ export function TailscaleSection({
         )}
       </Section>
 
+      {risks.length > 0 && (
+        <div
+          role="alert"
+          className="space-y-1.5 rounded-card border border-warning/40 bg-warning/10 p-4"
+        >
+          <p className="flex items-center gap-2 text-sm font-semibold text-warning">
+            <TriangleAlert aria-hidden="true" className="size-4 shrink-0" />
+            {tUi('ts.warn.title')}
+          </p>
+          {viaTailnet && <p className="text-xs leading-relaxed">{tUi('ts.warn.viaTailnet')}</p>}
+          <ul className="list-disc space-y-1 pl-5 text-xs leading-relaxed text-muted-foreground">
+            {risks.map((r) => (
+              <li key={r}>{tUi(`ts.warn.${r}`)}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {enabled && (
         <Section title={tUi('ts.statusTitle')} description={tUi('ts.statusDesc')}>
           <div className="space-y-2 px-4 py-3">
@@ -168,6 +190,11 @@ export function TailscaleSection({
             {ts.ip && <ValueRow label={tUi('ts.ipLabel')} value={ts.ip} />}
             {ts.dnsName && <ValueRow label={tUi('ts.dnsLabel')} value={ts.dnsName} />}
             {!connected && <p className="text-body-xs text-muted-foreground">{tUi('ts.notConnected')}</p>}
+            {ts.lastError && (
+              <p className="text-body-xs text-destructive">
+                {tUi('ts.lastErrorLabel')}: <code className="break-all font-mono">{ts.lastError}</code>
+              </p>
+            )}
           </div>
           <div className="flex items-center justify-between gap-4 px-4 py-3">
             <span className="min-w-0">

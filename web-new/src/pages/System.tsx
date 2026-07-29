@@ -1,5 +1,8 @@
 import { CloudOff, Gauge, Signal, SignalLow, Timer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { toast } from '@/lib/toast';
+import { api } from '@/api';
+import { tailscaleChanged } from '@/lib/tailscale-changes';
 import { Section, SettingInputNumber, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useHackIni } from '@/hooks/useHackIni';
@@ -8,8 +11,25 @@ import { TailscaleSection } from '@/components/tailscale/TailscaleSection';
 
 export default function SystemPage({ section }: { section?: 'device' | 'tailscale' }) {
   const { t } = useTranslation('translation');
+  const { t: tUi } = useTranslation('ui');
   const { config } = useHackIni();
   const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
+
+  // hack.ini の保存はファイルを書くだけで tailscale には反映されない(旧UIの
+  // webcmd 経路が新UIに未移植だった)。tailscale 関連キーが変わったら保存後に
+  // restart / stop を FIFO 経由で送る。適用は最長60秒かかり得るため fire-and-forget。
+  const save = async () => {
+    const prev = config;
+    await submit();
+    if (!tailscaleChanged(prev, draft)) return;
+    const cmd = draft.TAILSCALE_ENABLE === 'on' ? 'tailscale restart' : 'tailscale stop';
+    try {
+      await api.exec(cmd, 'fifo');
+      toast.success(tUi('ts.applying'));
+    } catch {
+      toast.error(tUi('ts.applyFailed'));
+    }
+  };
 
   const showDevice = !section || section === 'device';
   const showTailscale = !section || section === 'tailscale';
@@ -37,7 +57,7 @@ export default function SystemPage({ section }: { section?: 'device' | 'tailscal
 
       {showTailscale && <TailscaleSection draft={draft} patch={patch} config={config} />}
 
-      <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => submit()} onCancel={reset} />
+      <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => save()} onCancel={reset} />
     </div>
   );
 }

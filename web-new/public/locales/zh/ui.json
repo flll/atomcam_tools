@@ -193,6 +193,18 @@
       "desc": "按标签限制端口的精细防火墙。",
       "hint": "将此模板粘贴到管理控制台的策略编辑器并按需调整。",
       "openEditor": "编辑策略(管理控制台)"
-    }
+    },
+    "warn": {
+      "title": "此更改可能导致连接中断或无法访问",
+      "viaTailnet": "您正通过 Tailscale 访问本页面。若应用失败,本页面可能无法访问。请先记下局域网地址(http://<局域网IP>/)再保存。",
+      "tags": "更改标签: 若新标签未在 ACL 的 tagOwners 中获准,或 auth key 无法授予该标签,重连将失败。保存前请在管理控制台确认。",
+      "hostname": "更改主机名: MagicDNS 名称会改变,旧地址将失效。",
+      "authKey": "更改 auth key: 若密钥无效或已过期,重连将失败。",
+      "disable": "停用: 所有经由 Tailscale 的访问都会断开。",
+      "exitNodeOnly": "仅限 Tailscale 通信: 局域网端口(80/8080/8554)将关闭。若 Tailscale 无法连接,局域网也将无法访问本界面。"
+    },
+    "applying": "正在应用 Tailscale 设置(最长60秒),连接可能暂时中断。",
+    "applyFailed": "应用命令发送失败。设置将在下次启动时生效。",
+    "lastErrorLabel": "最近的错误"
   }
 }
