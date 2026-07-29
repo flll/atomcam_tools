@@ -313,10 +313,10 @@ connect() {
 
 stop() {
     echo "Stopping Tailscale..."
-    
+
     clear_port_guard
-    /usr/bin/tailscale down 2>/dev/null || true
-    
+    timeout 10 /usr/bin/tailscale down 2>/dev/null || true
+
     if [ -f "$TAILSCALE_PID" ]; then
         local pid=$(cat "$TAILSCALE_PID")
         if kill "$pid" 2>/dev/null; then
@@ -324,8 +324,18 @@ stop() {
         fi
         rm -f "$TAILSCALE_PID"
     fi
-    
+
     pkill -f tailscaled 2>/dev/null || true
+
+    # kill は非同期。死にかけプロセスを次の start_daemon が「起動済み」と
+    # 誤認して二重管理になる競合を実機で観測 → 消えるまで待つ(最後は SIGKILL)
+    local i=0
+    while pidof tailscaled > /dev/null 2>&1 && [ "$i" -lt 15 ]; do
+        sleep 1
+        i=$((i + 1))
+    done
+    pidof tailscaled > /dev/null 2>&1 && pkill -9 tailscaled 2>/dev/null
+    return 0
 }
 
 status() {
@@ -342,7 +352,13 @@ status() {
 # 「接続は維持されていますか?」に対する trial-confirm が期限内に届かなければ、
 # hack.ini 全体をスナップショットへ巻き戻して再接続する(PS の解像度変更と同じ発想。
 # 締め出された瞬間からブラウザは何も送れないため、巻き戻しは必ずデバイス側で自律実行する)。
-TRIAL_DIR="$TAILSCALE_STATE_DIR"
+# state ディレクトリ(700・ノード鍵入り)とは分離し、www-data の CGI からも
+# 状態を読めるよう 755 の専用ディレクトリに置く。スナップショットに auth key を
+# 含むが、hack.ini 自体が無認証の hack_ini.cgi で読める前提のデバイスであり
+# 脅威モデルは既存と同等
+TRIAL_DIR="/tmp/tailscale-trial"
+mkdir -p "$TRIAL_DIR"
+chmod 755 "$TRIAL_DIR" 2>/dev/null || true
 TRIAL_BAK="$TRIAL_DIR/trial_hack.ini.bak"
 TRIAL_CONFIRM="$TRIAL_DIR/trial.confirm"
 TRIAL_PID="$TRIAL_DIR/trial.pid"
@@ -357,6 +373,7 @@ trial_revert_now() {
     sync
     rm -f "$TRIAL_BAK" "$TRIAL_DEADLINE"
     date +%s > "$TRIAL_REVERTED"
+    chmod 644 "$TRIAL_REVERTED" 2>/dev/null || true
     # 巻き戻した設定で再接続(自分自身の restart を呼ぶ)
     "$0" restart
 }
@@ -369,6 +386,8 @@ trial_start() {
     rm -f "$TRIAL_CONFIRM" "$TRIAL_REVERTED" "$TRIAL_PID"
     cp /tmp/hack.ini "$TRIAL_BAK" || { echo "trial: snapshot failed"; return 1; }
     expr "$(date +%s)" + "$secs" > "$TRIAL_DEADLINE"
+    # webcmd(root・umask 077)経由でも CGI(www-data)から読めるように
+    chmod 644 "$TRIAL_BAK" "$TRIAL_DEADLINE" 2>/dev/null || true
     (
         sleep "$secs"
         if [ ! -f "$TRIAL_CONFIRM" ] && [ -f "$TRIAL_BAK" ]; then
@@ -452,14 +471,34 @@ start() {
     fi
 }
 
+# start/stop/restart の重なり(WebUI 適用とトライアル復元 watchdog 等)を直列化する。
+# 保持者が消えても詰まらないよう 120 秒で奪取する
+TAILSCALE_OP_LOCK="/tmp/tailscale-op.lock"
+acquire_op_lock() {
+    local n=0
+    while ! mkdir "$TAILSCALE_OP_LOCK" 2>/dev/null; do
+        n=$((n + 1))
+        # 保持側の最長シーケンス(stop 25s + up 90s + ロールバック 90s + 余裕)より長く待つ
+        if [ "$n" -ge 300 ]; then
+            echo "op-lock: stale, stealing"
+            rm -rf "$TAILSCALE_OP_LOCK"
+        fi
+        sleep 1
+    done
+    trap 'rmdir "$TAILSCALE_OP_LOCK" 2>/dev/null' EXIT
+}
+
 case "${1:-start}" in
     start)
+        acquire_op_lock
         start
         ;;
     stop)
+        acquire_op_lock
         stop
         ;;
     restart)
+        acquire_op_lock
         stop
         sleep 2
         start
