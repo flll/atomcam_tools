@@ -224,5 +224,22 @@
       "revertedBody": "Es kam keine Bestätigung rechtzeitig an, daher wurden die vorherigen Einstellungen wiederhergestellt und die Verbindung neu aufgebaut. Diese Absicherung verhindert ein Aussperren.",
       "revertedNotice": "Keine Bestätigung — Einstellungen automatisch wiederhergestellt"
     }
+  },
+  "auth": {
+    "title": "WebUI-Anmeldung",
+    "desc": "Beim Öffnen dieses Bildschirms nach Benutzername und Passwort fragen.",
+    "warnTitle": "WebUI-Anmeldung ist nicht eingerichtet",
+    "warnBody": "Ohne Anmeldung kann jeder im selben Netzwerk diese Einstellungen öffnen und den Tailscale-Auth-Key sowie NAS-/RTSP-Passwörter auslesen. Legen Sie Benutzername und Passwort fest.",
+    "stateLabel": "Status",
+    "stateOn": "Eingerichtet ({{user}})",
+    "stateOff": "Nicht eingerichtet",
+    "user": "Benutzername",
+    "pass": "Passwort",
+    "hint": "Der Browser fragt dann nach diesen Zugangsdaten. Bei vergessenem Passwort die DIGEST-Zeile in der hack.ini auf der SD-Karte entfernen.",
+    "enable": "Anmeldung aktivieren",
+    "update": "Passwort ändern",
+    "disable": "Anmeldung deaktivieren",
+    "enabled": "WebUI-Anmeldung aktiviert — ab dem nächsten Besuch sind Zugangsdaten nötig",
+    "disabled": "WebUI-Anmeldung deaktiviert"
   }
 }

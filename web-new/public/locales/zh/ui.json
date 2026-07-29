@@ -224,5 +224,22 @@
       "revertedBody": "未在时限内确认,已恢复先前的设置并重新连接。这是防止失联的安全机制。",
       "revertedNotice": "未收到确认,设置已自动恢复"
     }
+  },
+  "auth": {
+    "title": "WebUI 登录",
+    "desc": "打开本界面时要求输入用户名和密码。",
+    "warnTitle": "尚未设置 WebUI 登录",
+    "warnBody": "未设置登录时,同一网络中的任何人都可以打开此设置界面,读取 Tailscale 的 auth key 以及 NAS/RTSP 密码。请设置用户名和密码。",
+    "stateLabel": "状态",
+    "stateOn": "已设置({{user}})",
+    "stateOff": "未设置",
+    "user": "用户名",
+    "pass": "密码",
+    "hint": "设置后浏览器会要求登录。若忘记密码,请删除 SD 卡 hack.ini 中的 DIGEST 行。",
+    "enable": "设置登录",
+    "update": "更改密码",
+    "disable": "取消登录",
+    "enabled": "已设置 WebUI 登录,下次访问起需要登录",
+    "disabled": "已取消 WebUI 登录"
   }
 }

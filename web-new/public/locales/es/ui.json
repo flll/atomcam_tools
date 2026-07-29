@@ -224,5 +224,22 @@
       "revertedBody": "No llegó la confirmación a tiempo, así que se restauró la configuración anterior y se restableció la conexión. Este mecanismo evita quedar bloqueado.",
       "revertedNotice": "Sin confirmación — la configuración se restauró automáticamente"
     }
+  },
+  "auth": {
+    "title": "Inicio de sesión de la WebUI",
+    "desc": "Pedir usuario y contraseña al abrir esta pantalla.",
+    "warnTitle": "El inicio de sesión de la WebUI no está configurado",
+    "warnBody": "Sin inicio de sesión, cualquiera en la misma red puede abrir estos ajustes y leer su auth key de Tailscale y las contraseñas de NAS/RTSP. Configure un usuario y una contraseña.",
+    "stateLabel": "Estado",
+    "stateOn": "Configurado ({{user}})",
+    "stateOff": "Sin configurar",
+    "user": "Usuario",
+    "pass": "Contraseña",
+    "hint": "El navegador pedirá estas credenciales. Si olvida la contraseña, elimine la línea DIGEST de hack.ini en la tarjeta SD.",
+    "enable": "Activar inicio de sesión",
+    "update": "Cambiar contraseña",
+    "disable": "Desactivar inicio de sesión",
+    "enabled": "Inicio de sesión activado: se pedirán credenciales desde la próxima visita",
+    "disabled": "Inicio de sesión desactivado"
   }
 }

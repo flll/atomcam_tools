@@ -8,6 +8,7 @@ import { api } from '@/api';
 import { runCmd } from '@/lib/runCmd';
 import { parseRebootSchedule, serializeRebootSchedule } from '@/lib/schedule';
 import type { RebootSchedule } from '@/api';
+import { WebUiAuthSection } from '@/components/auth/WebUiAuthSection';
 
 export default function MaintenancePage() {
   const { t } = useTranslation('translation');
@@ -26,6 +27,7 @@ export default function MaintenancePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-title-xl">{t('maintenance.tab')}</h1>
+      <WebUiAuthSection />
       <Section title={t('monitoring.title')}>
         <SettingSwitch icon={Wifi} i18nKey="monitoring.network" value={draft.MONITORING_NETWORK ?? 'on'} onChange={(v) => patch({ MONITORING_NETWORK: v })} />
         <SettingSwitch icon={HeartPulse} i18nKey="monitoring.ping" value={draft.HEALTHCHECK ?? 'off'} onChange={(v) => patch({ HEALTHCHECK: v })} />

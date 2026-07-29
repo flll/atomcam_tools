@@ -123,6 +123,12 @@ do
     echo "$cmd $params OK" >> /var/run/webres
     cmd=""
   fi
+  if [ "$cmd" = "webui_auth" ] && [ "$params" != "" ]; then
+    # WebUI の digest 認証設定。lighttpd 再起動を伴うためバックグラウンド実行
+    /scripts/webui_auth.sh $params > /tmp/webui_auth.log 2>&1 &
+    echo "$cmd OK" >> /var/run/webres
+    cmd=""
+  fi
   if [ "$cmd" = "tailscale" ] && [ "$params" != "" ]; then
     # tailscale up は --timeout=60s まで粘るため、同期実行すると FIFO 全体が
     # 最長1分以上詰まり他の webcmd も道連れになる。バックグラウンドで実行し、

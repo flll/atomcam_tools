@@ -11,6 +11,7 @@ export interface MockState {
   property: Record<string, string>;
   lastNotify?: { channel: string; event: string; ok: boolean; at: string };
   trial?: { active: boolean; deadline: number; reverted: boolean };
+  webuiAuth?: { enabled: boolean; user: string };
 }
 
 const DEFAULT_HACK_INI: Record<string, string> = {
@@ -51,6 +52,11 @@ export const mock: MockState = {
 export function applyExec(cmd: string): string {
   const args = cmd.trim().split(/\s+/);
   // tailscale 適用トライアル(デッドマンスイッチ)の模擬
+  if (args[0] === 'webui_auth') {
+    if (args[1] === 'set') mock.webuiAuth = { enabled: true, user: args[2] ?? '' };
+    if (args[1] === 'clear') mock.webuiAuth = { enabled: false, user: '' };
+    return 'webui_auth OK';
+  }
   if (args[0] === 'tailscale') {
     if (args[1] === 'trial-start') {
       mock.trial = { active: true, deadline: Date.now() + Number(args[2] ?? 120) * 1000, reverted: false };

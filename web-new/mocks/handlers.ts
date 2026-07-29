@@ -73,6 +73,10 @@ export const handlers = [
       if (name === 'notify-test') mock.lastNotify = res;
       return HttpResponse.text(JSON.stringify(mock.lastNotify ?? res));
     }
+    // WebUI ログイン(digest 認証)の設定状態。デモでは未設定から始める
+    if (name === 'webui-auth') {
+      return HttpResponse.text(JSON.stringify(mock.webuiAuth ?? { enabled: false, user: '' }));
+    }
     // 適用トライアル(デッドマンスイッチ)の状態
     if (name === 'tailscale-trial') {
       const t = mock.trial;

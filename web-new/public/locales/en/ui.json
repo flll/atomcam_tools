@@ -224,5 +224,22 @@
       "revertedBody": "No confirmation arrived in time, so the previous settings were restored and the connection re-established. This fail-safe prevents lockouts.",
       "revertedNotice": "No confirmation received — settings were restored automatically"
     }
+  },
+  "auth": {
+    "title": "WebUI login",
+    "desc": "Ask for a username and password when opening this screen.",
+    "warnTitle": "WebUI login is not set",
+    "warnBody": "Without a login, anyone on the same network can open these settings and read your Tailscale auth key and NAS/RTSP passwords. Set a username and password.",
+    "stateLabel": "Status",
+    "stateOn": "Enabled ({{user}})",
+    "stateOff": "Not set",
+    "user": "Username",
+    "pass": "Password",
+    "hint": "Your browser will ask for these credentials. If you forget the password, remove the DIGEST line from hack.ini on the SD card.",
+    "enable": "Enable login",
+    "update": "Change password",
+    "disable": "Disable login",
+    "enabled": "WebUI login enabled — credentials are required from the next visit",
+    "disabled": "WebUI login disabled"
   }
 }

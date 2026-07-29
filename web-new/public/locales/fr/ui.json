@@ -224,5 +224,22 @@
       "revertedBody": "Aucune confirmation n'est arrivée à temps : les paramètres précédents ont été restaurés et la connexion rétablie. Ce garde-fou évite tout verrouillage.",
       "revertedNotice": "Aucune confirmation — paramètres restaurés automatiquement"
     }
+  },
+  "auth": {
+    "title": "Connexion à la WebUI",
+    "desc": "Demander un nom d'utilisateur et un mot de passe à l'ouverture de cet écran.",
+    "warnTitle": "La connexion à la WebUI n'est pas configurée",
+    "warnBody": "Sans connexion, toute personne sur le même réseau peut ouvrir ces paramètres et lire votre auth key Tailscale ainsi que les mots de passe NAS/RTSP. Définissez un nom d'utilisateur et un mot de passe.",
+    "stateLabel": "État",
+    "stateOn": "Configurée ({{user}})",
+    "stateOff": "Non configurée",
+    "user": "Nom d'utilisateur",
+    "pass": "Mot de passe",
+    "hint": "Le navigateur demandera ces identifiants. En cas d'oubli, supprimez la ligne DIGEST du fichier hack.ini sur la carte SD.",
+    "enable": "Activer la connexion",
+    "update": "Changer le mot de passe",
+    "disable": "Désactiver la connexion",
+    "enabled": "Connexion activée — les identifiants seront demandés dès la prochaine visite",
+    "disabled": "Connexion désactivée"
   }
 }

@@ -102,6 +102,19 @@ export const api = {
     return parseTailscaleStatus(await getText(`${CGI_BASE}/cmd.cgi?name=tailscale-status`));
   },
 
+  // WebUI ログイン(lighttpd digest 認証)の設定状態。ハッシュは返らない
+  async getWebUiAuth(): Promise<{ enabled?: boolean; user?: string }> {
+    try {
+      const o = JSON.parse((await getText(`${CGI_BASE}/cmd.cgi?name=webui-auth`)).trim()) as {
+        enabled?: boolean;
+        user?: string;
+      };
+      return o && typeof o === 'object' ? o : {};
+    } catch {
+      return {};
+    }
+  },
+
   // 適用トライアル(デッドマンスイッチ)の進行状態
   async getTailscaleTrial(): Promise<TailscaleTrial> {
     try {

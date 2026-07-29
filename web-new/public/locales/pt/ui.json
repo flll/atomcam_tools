@@ -224,5 +224,22 @@
       "revertedBody": "Nenhuma confirmação chegou a tempo, então as configurações anteriores foram restauradas e a conexão restabelecida. Este mecanismo evita bloqueios.",
       "revertedNotice": "Sem confirmação — configurações restauradas automaticamente"
     }
+  },
+  "auth": {
+    "title": "Login da WebUI",
+    "desc": "Pedir nome de usuário e senha ao abrir esta tela.",
+    "warnTitle": "O login da WebUI não está configurado",
+    "warnBody": "Sem login, qualquer pessoa na mesma rede pode abrir estas configurações e ler sua auth key do Tailscale e as senhas de NAS/RTSP. Defina um nome de usuário e uma senha.",
+    "stateLabel": "Estado",
+    "stateOn": "Configurado ({{user}})",
+    "stateOff": "Não configurado",
+    "user": "Nome de usuário",
+    "pass": "Senha",
+    "hint": "O navegador pedirá essas credenciais. Se esquecer a senha, remova a linha DIGEST do hack.ini no cartão SD.",
+    "enable": "Ativar login",
+    "update": "Alterar senha",
+    "disable": "Desativar login",
+    "enabled": "Login da WebUI ativado — as credenciais serão exigidas na próxima visita",
+    "disabled": "Login da WebUI desativado"
   }
 }

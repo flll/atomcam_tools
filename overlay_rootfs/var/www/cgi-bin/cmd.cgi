@@ -128,6 +128,10 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
       # Tailscale 接続状態(state/ip/dnsName)を JSON で返す
       /scripts/tailscale.sh status-json 2>/dev/null || echo '{"state":"stopped"}'
       ;;
+    webui-auth)
+      # WebUI 認証の設定状態(パスワードハッシュは返さない)
+      /scripts/webui_auth.sh status 2>/dev/null || echo '{"enabled":false,"user":""}'
+      ;;
     tailscale-trial)
       # 適用トライアル(デッドマンスイッチ)の状態
       /scripts/tailscale.sh trial-status 2>/dev/null || echo '{"active":false,"remaining":0,"reverted":false}'
