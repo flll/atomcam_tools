@@ -173,8 +173,8 @@
       "needsmachineauth": "待批准",
       "starting": "启动中",
       "stopped": "已停止",
-      "nostate": "未配置",
-      "unknown": "未知"
+      "nostate": "连接中",
+      "unknown": "确认中…"
     },
     "ipLabel": "IP 地址",
     "dnsLabel": "MagicDNS 名称",
@@ -223,7 +223,9 @@
       "revertedTitle": "设置已自动恢复",
       "revertedBody": "未在时限内确认,已恢复先前的设置并重新连接。这是防止失联的安全机制。",
       "revertedNotice": "未收到确认,设置已自动恢复"
-    }
+    },
+    "checkingHint": "正在确认状态。应用后可能需要1〜2分钟生效。",
+    "stoppedHint": "未连接。可通过下方“最近的错误”或重启 tailscaled 排查。"
   },
   "auth": {
     "title": "WebUI 登录",
@@ -240,6 +242,8 @@
     "update": "更改密码",
     "disable": "取消登录",
     "enabled": "已设置 WebUI 登录,下次访问起需要登录",
-    "disabled": "已取消 WebUI 登录"
+    "disabled": "已取消 WebUI 登录",
+    "gateTitle": "请先设置 WebUI 登录",
+    "gateBody": "本设置界面保存着 Tailscale 的 auth key 和各种密码。为防止被他人读取,设置登录之前无法使用其他界面。"
   }
 }

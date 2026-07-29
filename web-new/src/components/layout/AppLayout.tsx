@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { LayoutGrid } from 'lucide-react';
 import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { NAV, type NavGroup, type NavItem } from './nav';
 import { useHackIni } from '@/hooks/useHackIni';
 import { Toaster } from '@/components/ui/toaster';
+import { AuthGate } from '@/components/auth/AuthGate';
 
 function filterNav(items: NavItem[], model?: string): NavItem[] {
   const isSwing = model === 'ATOM_CAKP1JZJP';
@@ -66,6 +67,11 @@ export function AppLayout() {
   const location = useLocation();
   const reduceMotion = useReducedMotion();
   const [moreOpen, setMoreOpen] = useState(false);
+
+  // ページ遷移でスクロール位置を引き継がない(SPA は既定で保持されてしまう)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   const nav = filterNav(NAV, config?.PRODUCT_MODEL);
   const primary = nav.filter((i) => i.primary);
 
@@ -152,6 +158,9 @@ export function AppLayout() {
       </div>
 
       <Toaster />
+
+      {/* WebUI ログイン必須: 未設定の間は全画面で設定を求める */}
+      <AuthGate />
 
       {/* モバイル: M3 ナビゲーションバー */}
       <nav className="fixed inset-x-0 bottom-0 z-20 flex bg-surface-container pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_0_0_hsl(var(--border))] md:hidden">

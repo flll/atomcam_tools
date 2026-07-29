@@ -173,8 +173,8 @@
       "needsmachineauth": "Approbation requise",
       "starting": "Démarrage",
       "stopped": "Arrêté",
-      "nostate": "Non configuré",
-      "unknown": "Inconnu"
+      "nostate": "Connexion",
+      "unknown": "Vérification…"
     },
     "ipLabel": "Adresse IP",
     "dnsLabel": "Nom MagicDNS",
@@ -223,7 +223,9 @@
       "revertedTitle": "Paramètres restaurés automatiquement",
       "revertedBody": "Aucune confirmation n'est arrivée à temps : les paramètres précédents ont été restaurés et la connexion rétablie. Ce garde-fou évite tout verrouillage.",
       "revertedNotice": "Aucune confirmation — paramètres restaurés automatiquement"
-    }
+    },
+    "checkingHint": "Vérification de l'état. Juste après l'application, cela peut prendre 1 à 2 minutes.",
+    "stoppedHint": "Non connecté. Consultez « Dernière erreur » ci-dessous ou redémarrez tailscaled."
   },
   "auth": {
     "title": "Connexion à la WebUI",
@@ -240,6 +242,8 @@
     "update": "Changer le mot de passe",
     "disable": "Désactiver la connexion",
     "enabled": "Connexion activée — les identifiants seront demandés dès la prochaine visite",
-    "disabled": "Connexion désactivée"
+    "disabled": "Connexion désactivée",
+    "gateTitle": "Configurez d'abord la connexion à la WebUI",
+    "gateBody": "Cette caméra stocke votre auth key Tailscale et d'autres mots de passe. Pour les protéger, le reste de l'interface est indisponible tant qu'une connexion n'est pas configurée."
   }
 }

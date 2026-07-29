@@ -173,8 +173,8 @@
       "needsmachineauth": "Freigabe nötig",
       "starting": "Startet",
       "stopped": "Gestoppt",
-      "nostate": "Nicht eingerichtet",
-      "unknown": "Unbekannt"
+      "nostate": "Verbinde",
+      "unknown": "Prüfe…"
     },
     "ipLabel": "IP-Adresse",
     "dnsLabel": "MagicDNS-Name",
@@ -223,7 +223,9 @@
       "revertedTitle": "Einstellungen automatisch wiederhergestellt",
       "revertedBody": "Es kam keine Bestätigung rechtzeitig an, daher wurden die vorherigen Einstellungen wiederhergestellt und die Verbindung neu aufgebaut. Diese Absicherung verhindert ein Aussperren.",
       "revertedNotice": "Keine Bestätigung — Einstellungen automatisch wiederhergestellt"
-    }
+    },
+    "checkingHint": "Status wird geprüft. Direkt nach der Übernahme kann es 1–2 Minuten dauern.",
+    "stoppedHint": "Nicht verbunden. Siehe „Letzter Fehler“ unten oder tailscaled neu starten."
   },
   "auth": {
     "title": "WebUI-Anmeldung",
@@ -240,6 +242,8 @@
     "update": "Passwort ändern",
     "disable": "Anmeldung deaktivieren",
     "enabled": "WebUI-Anmeldung aktiviert — ab dem nächsten Besuch sind Zugangsdaten nötig",
-    "disabled": "WebUI-Anmeldung deaktiviert"
+    "disabled": "WebUI-Anmeldung deaktiviert",
+    "gateTitle": "Richten Sie zuerst die WebUI-Anmeldung ein",
+    "gateBody": "Diese Kamera speichert Ihren Tailscale-Auth-Key und weitere Passwörter. Zu deren Schutz ist der Rest der Oberfläche erst nach Einrichtung einer Anmeldung verfügbar."
   }
 }

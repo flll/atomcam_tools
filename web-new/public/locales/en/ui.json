@@ -173,8 +173,8 @@
       "needsmachineauth": "Needs approval",
       "starting": "Starting",
       "stopped": "Stopped",
-      "nostate": "Not set up",
-      "unknown": "Unknown"
+      "nostate": "Connecting",
+      "unknown": "Checking…"
     },
     "ipLabel": "IP address",
     "dnsLabel": "MagicDNS name",
@@ -223,7 +223,9 @@
       "revertedTitle": "Settings were automatically restored",
       "revertedBody": "No confirmation arrived in time, so the previous settings were restored and the connection re-established. This fail-safe prevents lockouts.",
       "revertedNotice": "No confirmation received — settings were restored automatically"
-    }
+    },
+    "checkingHint": "Checking the status. Right after applying, it can take 1–2 minutes to settle.",
+    "stoppedHint": "Not connected. Check \"Last error\" below or restart tailscaled."
   },
   "auth": {
     "title": "WebUI login",
@@ -240,6 +242,8 @@
     "update": "Change password",
     "disable": "Disable login",
     "enabled": "WebUI login enabled — credentials are required from the next visit",
-    "disabled": "WebUI login disabled"
+    "disabled": "WebUI login disabled",
+    "gateTitle": "Set up WebUI login first",
+    "gateBody": "This camera stores your Tailscale auth key and other passwords. To keep them private, the rest of the UI is unavailable until a login is configured."
   }
 }

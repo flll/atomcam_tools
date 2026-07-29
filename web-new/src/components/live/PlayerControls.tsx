@@ -7,7 +7,7 @@ import {
   Moon,
   PictureInPicture2,
   RectangleHorizontal,
-  RefreshCw,
+
   Volume2,
   VolumeX,
 } from 'lucide-react';
@@ -55,9 +55,7 @@ export function PlayerControls({
   onToggleMute,
   nightVision,
   onNightChange,
-  isAtom,
   isSwing,
-  onFlip,
   onCenter,
   ptzOpen,
   onTogglePtz,
@@ -74,9 +72,7 @@ export function PlayerControls({
   onToggleMute: () => void;
   nightVision: NightVision;
   onNightChange: (v: NightVision) => void;
-  isAtom: boolean;
   isSwing: boolean;
-  onFlip: () => void;
   onCenter: () => void;
   ptzOpen?: boolean;
   onTogglePtz?: () => void;
@@ -117,11 +113,6 @@ export function PlayerControls({
                   { value: 'off', label: 'OFF', title: 'off' },
                 ]}
               />
-              {isAtom && (
-                <IconBtn label={t('live.flip')} onClick={onFlip}>
-                  <RefreshCw className="size-4" />
-                </IconBtn>
-              )}
               {isSwing && (
                 <IconBtn label={t('live.center')} onClick={onCenter}>
                   <Crosshair className="size-4" />

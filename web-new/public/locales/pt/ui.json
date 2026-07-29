@@ -173,8 +173,8 @@
       "needsmachineauth": "Requer aprovação",
       "starting": "Iniciando",
       "stopped": "Parado",
-      "nostate": "Não configurado",
-      "unknown": "Desconhecido"
+      "nostate": "Conectando",
+      "unknown": "Verificando…"
     },
     "ipLabel": "Endereço IP",
     "dnsLabel": "Nome MagicDNS",
@@ -223,7 +223,9 @@
       "revertedTitle": "Configurações restauradas automaticamente",
       "revertedBody": "Nenhuma confirmação chegou a tempo, então as configurações anteriores foram restauradas e a conexão restabelecida. Este mecanismo evita bloqueios.",
       "revertedNotice": "Sem confirmação — configurações restauradas automaticamente"
-    }
+    },
+    "checkingHint": "Verificando o estado. Logo após aplicar, pode levar 1–2 minutos.",
+    "stoppedHint": "Não conectado. Veja \"Último erro\" abaixo ou reinicie o tailscaled."
   },
   "auth": {
     "title": "Login da WebUI",
@@ -240,6 +242,8 @@
     "update": "Alterar senha",
     "disable": "Desativar login",
     "enabled": "Login da WebUI ativado — as credenciais serão exigidas na próxima visita",
-    "disabled": "Login da WebUI desativado"
+    "disabled": "Login da WebUI desativado",
+    "gateTitle": "Configure primeiro o login da WebUI",
+    "gateBody": "Esta câmera armazena sua auth key do Tailscale e outras senhas. Para protegê-las, o restante da interface fica indisponível até que um login seja configurado."
   }
 }

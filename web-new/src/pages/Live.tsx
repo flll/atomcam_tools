@@ -70,7 +70,6 @@ export default function Live() {
   }, []);
 
   const isSwing = config?.PRODUCT_MODEL === 'ATOM_CAKP1JZJP';
-  const isAtom = (config?.PRODUCT_MODEL?.startsWith('ATOM') ?? false) && !isSwing;
   const nightVision = (property?.nightVision as NightVision | undefined) ?? 'auto';
   const immersed = fullscreen.pseudo || theater;
 
@@ -107,9 +106,7 @@ export default function Live() {
           }}
           nightVision={nightVision}
           onNightChange={(v) => runCmd(setField('nightVision', v))}
-          isAtom={isAtom}
           isSwing={isSwing}
-          onFlip={() => runCmd(api.exec('flip'))}
           onCenter={() => runCmd(api.exec('move 177 90 5'))}
           ptzOpen={ptzOpen}
           onTogglePtz={() => setPtzOpen((v) => !v)}

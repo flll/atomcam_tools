@@ -67,12 +67,13 @@ function AuthKeyField({ value, saved, onChange }: { value: string; saved: string
 
 function StateBadge({ state }: { state?: string }) {
   const { t: tUi } = useTranslation('ui');
-  const s = (state ?? 'stopped').toLowerCase();
+  const s = (state ?? 'unknown').toLowerCase();
   const label = tUi(`ts.state.${s}`, { defaultValue: state ?? '-' });
   const tone =
     s === 'running' ? 'bg-success/15 text-success'
     : s === 'needslogin' || s === 'needsmachineauth' ? 'bg-warning/15 text-warning'
-    : s === 'starting' ? 'bg-info/15 text-info'
+    // unknown = CLI が時間内に応答しなかった(接続処理中など)。失敗ではなく確認中
+    : s === 'starting' || s === 'unknown' || s === 'nostate' ? 'bg-info/15 text-info'
     : 'bg-muted text-muted-foreground';
   return <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-medium', tone)}>{label}</span>;
 }
@@ -192,7 +193,18 @@ export function TailscaleSection({
             </div>
             {ts.ip && <ValueRow label={tUi('ts.ipLabel')} value={ts.ip} />}
             {ts.dnsName && <ValueRow label={tUi('ts.dnsLabel')} value={ts.dnsName} />}
-            {!connected && <p className="text-body-xs text-muted-foreground">{tUi('ts.notConnected')}</p>}
+            {/* 案内は状態に合わせて出し分ける: 確認中に「未接続です」と書くと
+                MagicDNS で開けているのに矛盾して見える(実際に混乱を招いた) */}
+            {!connected && (() => {
+              const s = (ts.state ?? 'unknown').toLowerCase();
+              if (s === 'unknown' || s === 'starting' || s === 'nostate') {
+                return <p className="text-body-xs text-muted-foreground">{tUi('ts.checkingHint')}</p>;
+              }
+              if (s === 'stopped' && (draft.TAILSCALE_AUTH_KEY ?? '') === '') {
+                return <p className="text-body-xs text-muted-foreground">{tUi('ts.notConnected')}</p>;
+              }
+              return <p className="text-body-xs text-muted-foreground">{tUi('ts.stoppedHint')}</p>;
+            })()}
             {ts.lastError && (
               <p className="text-body-xs text-destructive">
                 {tUi('ts.lastErrorLabel')}: <code className="break-all font-mono">{ts.lastError}</code>

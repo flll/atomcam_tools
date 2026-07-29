@@ -35,6 +35,9 @@ const DEFAULT_HACK_INI: Record<string, string> = {
 
 // 開発/E2E 用: `?mockModel=ATOMCAM2` 等で機種を上書きできる(既定は AtomSwing)。
 // /settings/camera(ATOM 専用ページ)をモック環境で表示するために使う。
+const mockAuthOff =
+  typeof location !== 'undefined' && new URLSearchParams(location.search).get('mockAuth') === 'off';
+
 const mockModel =
   typeof location !== 'undefined' ? new URLSearchParams(location.search).get('mockModel') : null;
 
@@ -44,6 +47,7 @@ export const mock: MockState = {
   horSwitch: 0,
   verSwitch: 0,
   hackIni: { ...DEFAULT_HACK_INI, ...(mockModel ? { PRODUCT_MODEL: mockModel } : {}) },
+  webuiAuth: mockAuthOff ? { enabled: false, user: '' } : { enabled: true, user: 'demo' },
   isp: { cont: '128', bri: '128', expmode: 'auto' },
   property: { nightVision: 'auto', motionDet: 'on', recordType: 'cont', watermark: 'off' },
 };

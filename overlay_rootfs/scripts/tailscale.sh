@@ -432,9 +432,11 @@ status_json() {
         return 0
     fi
     # up の進行中は status/ip が無期限ブロックする(実機観測: WebUI の5秒ポーリングが
-    # 積み上がり www-data プロセスが増殖)→ 必ずタイムアウトを掛ける
-    json=$(timeout 5 /usr/bin/tailscale status --json 2>/dev/null)
-    ip=$(timeout 3 /usr/bin/tailscale ip -4 2>/dev/null | head -1)
+    # 積み上がり www-data プロセスが増殖)→ 必ずタイムアウトを掛ける。
+    # この SoC は正常時でも status --json に 6〜7 秒かかることがある(実測)ので
+    # 短すぎる値だと接続中なのに unknown(確認中)に化ける
+    json=$(timeout 12 /usr/bin/tailscale status --json 2>/dev/null)
+    ip=$(timeout 8 /usr/bin/tailscale ip -4 2>/dev/null | head -1)
     # tailscale status --json はキーと値の間にスペースを入れる("BackendState": "Running")。
     # 旧パターン '"BackendState":"..."' はスペース無し前提で常に不一致となり、
     # WebUI の Tailscale ページは接続中でも state=unknown を表示していた。
