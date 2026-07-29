@@ -197,28 +197,42 @@ else
 fi
 
 # --- case: rtsp --------------------------------------------------------------
-RTSP_ENABLE="$(remote "awk -F= '/^RTSP *=/ {print \$2}' /tmp/hack.ini 2>/dev/null" | tr -d '\r')"
+# 有効判定は RTSP_VIDEO0/1/2(hack.ini に "RTSP=" というキーは存在しない — 旧実装は
+# 常に空を掴み判定不能だった)。URL は v4l2rtspserver のパス規則に合わせて
+# "<device>_unicast"(custompackages の 0002-fixed-rtsp-path.patch で常に device 名が付く)。
+# 旧実装の /unicast は実機で 404 Stream Not Found になり恒久 fail していた。
+RTSP_V0="$(remote "awk -F= '/^RTSP_VIDEO0 *=/ {print \$2}' /tmp/hack.ini 2>/dev/null" | tr -d '\r')"
+RTSP_V1="$(remote "awk -F= '/^RTSP_VIDEO1 *=/ {print \$2}' /tmp/hack.ini 2>/dev/null" | tr -d '\r')"
+if [ "$RTSP_V0" = "on" ]; then
+  RTSP_PATH="video0_unicast"
+elif [ "$RTSP_V1" = "on" ]; then
+  RTSP_PATH="video1_unicast"
+else
+  # SSH 不通で設定が読めない場合も既定パスで直接プローブする
+  RTSP_PATH="video0_unicast"
+fi
+RTSP_ENABLE="$RTSP_V0"
 if ! nc -z -w 5 "$HOST" 8554 2>/dev/null; then
   if [ "$RTSP_ENABLE" = "on" ]; then
-    report "rtsp" "fail" "{\"port_open\":false,\"rtsp_enable\":\"$(json_escape "$RTSP_ENABLE")\"}"
+    report "rtsp" "fail" "{\"port_open\":false,\"rtsp_video0\":\"$(json_escape "$RTSP_V0")\"}"
   else
-    report "rtsp" "skip" "{\"port_open\":false,\"rtsp_enable\":\"$(json_escape "$RTSP_ENABLE")\"}"
+    report "rtsp" "skip" "{\"port_open\":false,\"rtsp_video0\":\"$(json_escape "$RTSP_V0")\"}"
   fi
 elif command -v ffprobe >/dev/null 2>&1; then
   FRAME_RC=0
-  agent_debug_log "C" "smoke_test_remote.sh:rtsp" "ffprobe_start" "{\"host\":\"$HOST\"}" "pre-fix"
+  agent_debug_log "C" "smoke_test_remote.sh:rtsp" "ffprobe_start" "{\"host\":\"$HOST\",\"path\":\"$RTSP_PATH\"}" "pre-fix"
   if command -v timeout >/dev/null 2>&1; then
-    timeout 20 ffprobe -v error -rtsp_transport tcp -select_streams v:0 -show_frames -read_intervals '%+#1' \
-      "rtsp://${HOST}:8554/unicast" >/dev/null 2>&1 || FRAME_RC=$?
+    timeout 30 ffprobe -v error -rtsp_transport tcp -select_streams v:0 -show_frames -read_intervals '%+#1' \
+      "rtsp://${HOST}:8554/${RTSP_PATH}" >/dev/null 2>&1 || FRAME_RC=$?
   else
     ffprobe -v error -rtsp_transport tcp -select_streams v:0 -show_frames -read_intervals '%+#1' \
-      "rtsp://${HOST}:8554/unicast" >/dev/null 2>&1 || FRAME_RC=$?
+      "rtsp://${HOST}:8554/${RTSP_PATH}" >/dev/null 2>&1 || FRAME_RC=$?
   fi
   agent_debug_log "C" "smoke_test_remote.sh:rtsp" "ffprobe_end" "{\"rc\":$FRAME_RC}" "pre-fix"
   if [ "$FRAME_RC" -eq 0 ]; then
-    report "rtsp" "pass" "{\"port_open\":true,\"ffprobe\":\"ok\"}"
+    report "rtsp" "pass" "{\"port_open\":true,\"path\":\"$(json_escape "$RTSP_PATH")\",\"ffprobe\":\"ok\"}"
   else
-    report "rtsp" "fail" "{\"port_open\":true,\"ffprobe\":\"rc=${FRAME_RC}\"}"
+    report "rtsp" "fail" "{\"port_open\":true,\"path\":\"$(json_escape "$RTSP_PATH")\",\"ffprobe\":\"rc=${FRAME_RC}\"}"
   fi
 else
   report "rtsp" "pass" "{\"port_open\":true,\"ffprobe\":\"not available on host, skipped\"}"
