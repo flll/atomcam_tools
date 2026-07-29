@@ -65,7 +65,7 @@ TS_PS="$(remote 'ps -o pid,rss,vsz,pcpu,comm 2>/dev/null | grep -E "tailscale|PI
 log_host "C" "verify:resources" "memory and processes" "{\"free_mb\":\"${FREE_MEM}\",\"ps\":\"${TS_PS}\"}"
 
 # tailscale status if daemon running
-if remote 'pgrep -f tailscaled >/dev/null 2>&1'; then
+if remote 'pidof tailscaled >/dev/null 2>&1'; then
     STATUS="$(remote '/usr/bin/tailscale status 2>&1 | head -5' | tr -d '\r' | sed 's/"/\\"/g')"
     log_host "E" "verify:status" "tailscale status" "{\"output\":\"${STATUS}\"}"
 else

@@ -246,7 +246,7 @@ else
   agent_debug_log "D" "smoke_test_remote.sh:tailscale" "tailscale_check_start" "{}" "pre-fix"
   TS_VER="$(remote 'tailscale version 2>&1 | head -1' | tr -d '\r')"
   agent_debug_log "D" "smoke_test_remote.sh:tailscale" "tailscale_check_end" "{\"version\":\"$TS_VER\"}" "pre-fix"
-  TS_UP="$(remote 'pgrep -f tailscaled >/dev/null 2>&1 && echo yes || echo no' | tr -d '\r')"
+  TS_UP="$(remote 'pidof tailscaled >/dev/null 2>&1 && echo yes || echo no' | tr -d '\r')"
   if [ "$TS_UP" = "yes" ]; then
     report "tailscale" "pass" "{\"version\":\"$(json_escape "$TS_VER")\",\"daemon\":\"running\"}"
   else
