@@ -1,10 +1,14 @@
 import { expect, test } from '@playwright/test';
 
-// WebUI ログイン必須ゲート: 未設定なら全画面で設定を求め、設定するとコマンドが飛ぶ
-test('ログイン未設定なら全画面ゲートが出て、設定操作でコマンドが飛ぶ', async ({ page }) => {
+// WebUI ログイン必須: 未設定なら専用ページ /setup へ強制リダイレクトされ、
+// 設定するとコマンドが飛び、認証済みになるとライブへ戻る
+test('ログイン未設定なら /setup へ強制遷移し、設定で復帰する', async ({ page }) => {
   await page.goto('/?mockAuth=off#/settings/recording');
 
+  await expect(page).toHaveURL(/#\/setup/);
   await expect(page.getByRole('heading', { name: '最初にWebUIログインを設定してください' })).toBeVisible();
+  // 専用ページはナビゲーションを出さない
+  await expect(page.getByRole('link', { name: 'ライブ' })).toHaveCount(0);
 
   const reqs: string[] = [];
   page.on('request', (r) => {
@@ -19,14 +23,15 @@ test('ログイン未設定なら全画面ゲートが出て、設定操作で�
   await page.getByRole('button', { name: 'ログインを設定' }).click();
 
   expect(reqs).toContain('webui_auth set admin s3cret');
-  // モックが enabled になり、ポーリングでゲートが閉じる(コンポーネントは3秒後に再取得)
-  await expect(page.getByRole('heading', { name: '最初にWebUIログインを設定してください' })).toBeHidden({ timeout: 15000 });
+  // モックが enabled になり、ポーリングでライブへ戻る
+  await expect(page).toHaveURL(/#\/$/, { timeout: 15000 });
 });
 
-// 認証済み(既定モック)ならゲートは出ず、メンテナンスに警告も出ない
-test('ログイン設定済みならゲート・警告なし', async ({ page }) => {
+// 認証済み(既定モック)なら /setup へ飛ばされない
+test('ログイン設定済みならリダイレクトされない', async ({ page }) => {
   await page.goto('/#/maintenance');
-  await expect(page.getByRole('heading', { name: 'メンテナンス' })).toBeVisible();
+  await page.waitForTimeout(1500);
+  await expect(page).toHaveURL(/#\/maintenance/);
   await expect(page.getByText('WebUIログインが未設定です')).toHaveCount(0);
 });
 

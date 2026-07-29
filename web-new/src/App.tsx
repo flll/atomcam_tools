@@ -15,6 +15,7 @@ const System = lazy(() => import('@/pages/System'));
 const Files = lazy(() => import('@/pages/Files'));
 const Maintenance = lazy(() => import('@/pages/Maintenance'));
 const Placeholder = lazy(() => import('@/pages/Placeholder'));
+const Setup = lazy(() => import('@/pages/Setup'));
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
     <LazyMotion features={loadMotionFeatures} strict>
       <MotionConfig reducedMotion="user">
         <Routes>
+          {/* WebUI ログイン初期設定(ナビ無しの専用ページ。AuthGate がここへ誘導) */}
+          <Route path="setup" element={<Setup />} />
           <Route element={<AppLayout />}>
             <Route index element={<Live />} />
             <Route path="settings/camera" element={<Camera />} />
