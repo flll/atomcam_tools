@@ -1,6 +1,6 @@
 import { Suspense, useState } from 'react';
 import { LayoutGrid } from 'lucide-react';
-import { AnimatePresence, m } from 'motion/react';
+import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -64,6 +64,7 @@ export function AppLayout() {
   const { t } = useTranslation();
   const { config } = useHackIni();
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
   const [moreOpen, setMoreOpen] = useState(false);
   const nav = filterNav(NAV, config?.PRODUCT_MODEL);
   const primary = nav.filter((i) => i.primary);
@@ -132,7 +133,20 @@ export function AppLayout() {
           )}
         >
           <Suspense fallback={<div className="p-8 text-muted-foreground">{t('common.loading')}</div>}>
-            <Outlet />
+            {/* ナビ遷移の入場モーション(transform/opacity のみ・[ATL] enter 250ms)。
+                Live(ルート)は映像が主役なので動かさない。reduced-motion 時は無効 */}
+            {location.pathname === '/' || reduceMotion ? (
+              <Outlet />
+            ) : (
+              <m.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, ease: [0, 0.4, 0, 1] }}
+              >
+                <Outlet />
+              </m.div>
+            )}
           </Suspense>
         </main>
       </div>
