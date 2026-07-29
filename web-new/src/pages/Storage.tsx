@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
-import { Section, SettingAction, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { Section, SettingAction, SettingInput, SettingSwitch, UnsavedBar, SettingSecret } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
 import { useCameraStatus } from '@/hooks/useCameraStatus';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,7 @@ const DU_LABEL_KEY: Record<keyof StorageDu, string> = {
 export default function StoragePage() {
   const { t } = useTranslation('translation');
   const { t: tUi } = useTranslation('ui');
-  const { draft, patch, submit, reset, dirty, isLoading } = useHackIniForm();
+  const { draft, patch, submit, reset, dirty, isLoading, config } = useHackIniForm();
   const { media } = useCameraStatus();
   const [confirmErase, setConfirmErase] = useState(false);
   // マウント/swap/メモリの実態(cmd.cgi name=storage-info)
@@ -203,7 +203,7 @@ export default function StoragePage() {
       <Section title={t('NASSettings.title')} description={tUi('storage.nasSectionDesc')}>
         <SettingInput icon={Network} i18nKey="NASSettings.networkPath" value={draft.STORAGE_CIFSSERVER ?? ''} onChange={(v) => patch({ STORAGE_CIFSSERVER: v.replace(/\\/g, '/') })} />
         <SettingInput icon={User} i18nKey="NASSettings.account" value={draft.STORAGE_CIFSUSER ?? ''} onChange={(v) => patch({ STORAGE_CIFSUSER: v })} />
-        <SettingInput icon={KeyRound} i18nKey="NASSettings.password" type="password" value={draft.STORAGE_CIFSPASSWD ?? ''} onChange={(v) => patch({ STORAGE_CIFSPASSWD: v })} />
+        <SettingSecret icon={KeyRound} i18nKey="NASSettings.password" value={draft.STORAGE_CIFSPASSWD ?? ''} saved={config?.STORAGE_CIFSPASSWD ?? ''} onChange={(v) => patch({ STORAGE_CIFSPASSWD: v })} />
       </Section>
 
       <UnsavedBar dirty={dirty} disabled={isLoading} onSave={() => submit()} onCancel={reset} />

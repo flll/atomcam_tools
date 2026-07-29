@@ -17,7 +17,7 @@ import {
   User,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Section, SettingInput, SettingInputNumber, SettingSwitch, UnsavedBar } from '@/components/settings';
+import { Section, SettingInput, SettingInputNumber, SettingSwitch, UnsavedBar, SettingSecret } from '@/components/settings';
 import { Disclosure } from '@/components/ui/disclosure';
 import { Button } from '@/components/ui/button';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -139,7 +139,7 @@ export default function EventsPage() {
             <SettingInput icon={Server} i18nKey="event.mqtt.host" value={draft.MQTT_HOST ?? ''} onChange={(v) => patch({ MQTT_HOST: v })} />
             <SettingInputNumber icon={Link2} i18nKey="event.mqtt.port" value={Number(draft.MQTT_PORT ?? 1883)} min={1} max={65535} onChange={(v) => patch({ MQTT_PORT: String(v) })} />
             <SettingInput icon={User} i18nKey="event.mqtt.user" value={draft.MQTT_USER ?? ''} onChange={(v) => patch({ MQTT_USER: v })} />
-            <SettingInput icon={KeyRound} i18nKey="event.mqtt.pass" type="password" value={draft.MQTT_PASS ?? ''} onChange={(v) => patch({ MQTT_PASS: v })} />
+            <SettingSecret icon={KeyRound} i18nKey="event.mqtt.pass" value={draft.MQTT_PASS ?? ''} saved={config?.MQTT_PASS ?? ''} onChange={(v) => patch({ MQTT_PASS: v })} />
             <SettingInput icon={Radio} i18nKey="event.mqtt.topic" value={draft.MQTT_TOPIC ?? ''} onChange={(v) => patch({ MQTT_TOPIC: v })} />
             <div className="px-4 py-3 text-xs leading-relaxed text-muted-foreground">{tUi('events.mqttDiscovery')}</div>
           </>

@@ -34,7 +34,8 @@
     "saveFailed": "Falha ao salvar",
     "saving": "Salvando…",
     "execFailed": "A operação falhou",
-    "close": "Fechar"
+    "close": "Fechar",
+    "change": "Alterar"
   },
   "live": {
     "title": "Visualização ao vivo",

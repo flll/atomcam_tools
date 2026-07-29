@@ -9,3 +9,4 @@ export { SettingAction } from './SettingAction';
 export { UnsavedBar } from './UnsavedBar';
 export { ScheduleListEditor, TimelapseScheduleEditor, RebootScheduleEditor } from './ScheduleEditor';
 export { SubSettings } from './SubSettings';
+export { SettingSecret, maskSecret } from './SettingSecret';

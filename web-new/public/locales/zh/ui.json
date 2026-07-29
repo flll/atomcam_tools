@@ -34,7 +34,8 @@
     "saveFailed": "保存失败",
     "saving": "保存中…",
     "execFailed": "操作失败",
-    "close": "关闭"
+    "close": "关闭",
+    "change": "更改"
   },
   "live": {
     "title": "实时画面",

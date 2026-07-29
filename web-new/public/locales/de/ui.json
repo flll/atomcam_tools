@@ -34,7 +34,8 @@
     "saveFailed": "Speichern fehlgeschlagen",
     "saving": "Wird gespeichert…",
     "execFailed": "Vorgang fehlgeschlagen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "change": "Ändern"
   },
   "live": {
     "title": "Live-Ansicht",

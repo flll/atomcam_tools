@@ -34,7 +34,8 @@
     "saveFailed": "保存に失敗しました",
     "saving": "保存中…",
     "execFailed": "操作に失敗しました",
-    "close": "閉じる"
+    "close": "閉じる",
+    "change": "変更"
   },
   "live": {
     "title": "ライブビュー",

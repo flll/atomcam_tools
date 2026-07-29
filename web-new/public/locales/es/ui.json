@@ -34,7 +34,8 @@
     "saveFailed": "Error al guardar",
     "saving": "Guardando…",
     "execFailed": "La operación falló",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "change": "Cambiar"
   },
   "live": {
     "title": "Vista en vivo",

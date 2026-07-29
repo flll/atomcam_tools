@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Section, SettingInput, SettingInputNumber, SettingSelect, SettingSwitch, SubSettings, UnsavedBar } from '@/components/settings';
+import { Section, SettingInput, SettingInputNumber, SettingSelect, SettingSwitch, SubSettings, UnsavedBar, SettingSecret } from '@/components/settings';
 import { Disclosure } from '@/components/ui/disclosure';
 import { Button } from '@/components/ui/button';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -314,7 +314,7 @@ export default function StreamingPage() {
         {auth.on && (
           <SubSettings>
             <SettingInput i18nKey="RTSP.account" value={draft.RTSP_USER ?? ''} onChange={(v) => patch({ RTSP_USER: v })} />
-            <SettingInput i18nKey="RTSP.password" type="password" value={draft.RTSP_PASSWD ?? ''} onChange={(v) => patch({ RTSP_PASSWD: v })} />
+            <SettingSecret i18nKey="RTSP.password" value={draft.RTSP_PASSWD ?? ''} saved={config?.RTSP_PASSWD ?? ''} onChange={(v) => patch({ RTSP_PASSWD: v })} />
           </SubSettings>
         )}
         <SettingSwitch i18nKey="WebRTC" value={draft.WEBRTC_ENABLE ?? 'off'} onChange={(v) => patch({ WEBRTC_ENABLE: v })} />

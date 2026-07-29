@@ -131,3 +131,28 @@ test('トライアルの今すぐ元に戻すで復元コマンドが飛ぶ', as
   expect(reqs).toContain('tailscale restart');
   expect(reqs).toContain('tailscale trial-revert');
 });
+
+// 秘密値の再表示脆弱性の回帰テスト: 「変更」→「破棄」しても保存済みの生キーが
+// input の value に復活しない(マスク表示へ戻る)
+test('auth key は 変更→破棄 で生値が input に復活しない', async ({ page }) => {
+  await page.goto('/#/settings/system/tailscale');
+  await page.getByRole('switch', { name: /^Tailscale有効化 / }).click();
+  const input = page.locator('input[type="password"]');
+  await input.fill('tskey-auth-k1secretsecretsecret123');
+  // 初回の auth key 入力は締め出しリスクではないのでトライアルは出ない
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await expect(page.getByText('未保存の変更があります')).toBeHidden();
+
+  // 保存後はマスク表示
+  await expect(page.getByText(/••••/).first()).toBeVisible();
+  // 変更 → 破棄
+  await page.getByRole('button', { name: '変更', exact: true }).click();
+  await expect(page.locator('input[type="password"]')).toBeVisible();
+  await page.getByRole('button', { name: '破棄' }).click();
+  // マスク表示に戻り、DOM のどの input にも生キーが存在しない
+  await expect(page.getByText(/••••/).first()).toBeVisible();
+  const leaked = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('input')).some((i) => i.value.includes('secretsecret')),
+  );
+  expect(leaked).toBe(false);
+});

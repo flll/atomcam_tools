@@ -17,13 +17,15 @@ const ADMIN_KEYS = 'https://login.tailscale.com/admin/settings/keys';
 const ADMIN_ACLS = 'https://login.tailscale.com/admin/acls';
 
 // Discord の bot token 式: 保存済みなら一部マスク表示+「変更」で再入力。
-function AuthKeyField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+// 表示モードは「draft 値 == 保存値」から導出する。state で持つと「変更 → 破棄」で
+// draft が保存値に戻っても入力モードが残り、保存済みの生キーが input の value に
+// 復活する(実際に踏んだ脆弱性)。編集中も保存済みの生値は input に注入しない。
+function AuthKeyField({ value, saved, onChange }: { value: string; saved: string; onChange: (v: string) => void }) {
   const { t } = useTranslation('translation');
   const { t: tUi } = useTranslation('ui');
-  const hasSaved = value !== '';
-  const [editing, setEditing] = useState(!hasSaved);
+  const masked = saved !== '' && value === saved;
 
-  if (hasSaved && !editing) {
+  if (masked) {
     return (
       <div className="flex items-center justify-between gap-4 px-4 py-3">
         <span className="min-w-0">
@@ -31,10 +33,10 @@ function AuthKeyField({ value, onChange }: { value: string; onChange: (v: string
             <KeyRound aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
             {t('tailscaleSettings.authKey.title')}
           </span>
-          <code className="mt-1 block truncate font-mono text-body-xs text-muted-foreground">{maskAuthKey(value)}</code>
+          <code className="mt-1 block truncate font-mono text-body-xs text-muted-foreground">{maskAuthKey(saved)}</code>
         </span>
         {/* 変更でクリア→再入力。既に認証済みなら state 退避で接続は維持される */}
-        <Button variant="outline" size="sm" className="shrink-0" onClick={() => { onChange(''); setEditing(true); }}>
+        <Button variant="outline" size="sm" className="shrink-0" onClick={() => onChange('')}>
           {tUi('ts.authKeyChange')}
         </Button>
       </div>
@@ -49,7 +51,8 @@ function AuthKeyField({ value, onChange }: { value: string; onChange: (v: string
       <span className="mt-0.5 block text-body-xs text-muted-foreground">{t('tailscaleSettings.authKey.tooltip')}</span>
       <input
         type="password"
-        value={value}
+        autoComplete="new-password"
+        value={value === saved ? '' : value}
         placeholder="tskey-auth-…"
         onChange={(e) => onChange(e.target.value)}
         className="mt-2 w-full rounded-control border border-input bg-background px-2.5 py-1.5 text-sm placeholder:text-muted-foreground/50"
@@ -154,7 +157,7 @@ export function TailscaleSection({
         <SettingSwitch icon={Shield} i18nKey="tailscaleSettings.enable" value={draft.TAILSCALE_ENABLE ?? 'off'} onChange={(v) => patch({ TAILSCALE_ENABLE: v })} />
         {enabled && (
           <>
-            <AuthKeyField value={draft.TAILSCALE_AUTH_KEY ?? ''} onChange={(v) => patch({ TAILSCALE_AUTH_KEY: v })} />
+            <AuthKeyField value={draft.TAILSCALE_AUTH_KEY ?? ''} saved={config?.TAILSCALE_AUTH_KEY ?? ''} onChange={(v) => patch({ TAILSCALE_AUTH_KEY: v })} />
             <SettingInput icon={Server} i18nKey="tailscaleSettings.hostname" value={draft.TAILSCALE_HOSTNAME ?? ''} onChange={(v) => patch({ TAILSCALE_HOSTNAME: v })} />
             <SettingInput icon={Tags} i18nKey="tailscaleSettings.tags" value={draft.TAILSCALE_TAGS ?? 'tag:cctv'} onChange={(v) => patch({ TAILSCALE_TAGS: v })} />
             <SettingSwitch icon={Lock} i18nKey="tailscaleSettings.exitNodeOnly" value={draft.TAILSCALE_EXITNODE_ONLY ?? 'off'} onChange={(v) => patch({ TAILSCALE_EXITNODE_ONLY: v })} />

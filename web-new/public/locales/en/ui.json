@@ -34,7 +34,8 @@
     "saveFailed": "Failed to save",
     "saving": "Saving…",
     "execFailed": "Operation failed",
-    "close": "Close"
+    "close": "Close",
+    "change": "Change"
   },
   "live": {
     "title": "Live View",

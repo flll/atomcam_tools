@@ -34,7 +34,8 @@
     "saveFailed": "저장에 실패했습니다",
     "saving": "저장 중…",
     "execFailed": "작업에 실패했습니다",
-    "close": "닫기"
+    "close": "닫기",
+    "change": "변경"
   },
   "live": {
     "title": "라이브 뷰",

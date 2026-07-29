@@ -34,7 +34,8 @@
     "saveFailed": "Échec de l'enregistrement",
     "saving": "Enregistrement…",
     "execFailed": "L'opération a échoué",
-    "close": "Fermer"
+    "close": "Fermer",
+    "change": "Modifier"
   },
   "live": {
     "title": "Vue en direct",
