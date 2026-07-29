@@ -210,6 +210,18 @@
     "applyFailed": "Senden des Übernahme-Befehls fehlgeschlagen. Die Einstellungen greifen beim nächsten Start.",
     "lastErrorLabel": "Letzter Fehler",
     "restartDaemon": "tailscaled neu starten",
-    "restarting": "tailscaled wird neu gestartet. Die Rückkehr kann bis zu einer Minute dauern."
+    "restarting": "tailscaled wird neu gestartet. Die Rückkehr kann bis zu einer Minute dauern.",
+    "trial": {
+      "title": "Funktioniert die Verbindung noch?",
+      "body": "Die Tailscale-Einstellungen wurden übernommen. Wenn Sie diesen Bildschirm sehen und bedienen können, drücken Sie „Einstellungen behalten“. Ohne Bestätigung werden die vorherigen Einstellungen zur Sicherheit automatisch wiederhergestellt.",
+      "countdown": "In {{s}} s werden die vorherigen Einstellungen wiederhergestellt",
+      "keep": "Einstellungen behalten",
+      "revertNow": "Jetzt zurücksetzen",
+      "confirmed": "Einstellungen bestätigt",
+      "reverting": "Vorherige Einstellungen werden wiederhergestellt. Die Neuverbindung kann bis zu einer Minute dauern",
+      "revertedTitle": "Einstellungen automatisch wiederhergestellt",
+      "revertedBody": "Es kam keine Bestätigung rechtzeitig an, daher wurden die vorherigen Einstellungen wiederhergestellt und die Verbindung neu aufgebaut. Diese Absicherung verhindert ein Aussperren.",
+      "revertedNotice": "Keine Bestätigung — Einstellungen automatisch wiederhergestellt"
+    }
   }
 }

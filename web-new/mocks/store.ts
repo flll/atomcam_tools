@@ -10,6 +10,7 @@ export interface MockState {
   isp: Record<string, string>;
   property: Record<string, string>;
   lastNotify?: { channel: string; event: string; ok: boolean; at: string };
+  trial?: { active: boolean; deadline: number; reverted: boolean };
 }
 
 const DEFAULT_HACK_INI: Record<string, string> = {
@@ -49,6 +50,15 @@ export const mock: MockState = {
 // AtomSwing 風に move コマンドへ反応する（pan/tilt をクランプ）。
 export function applyExec(cmd: string): string {
   const args = cmd.trim().split(/\s+/);
+  // tailscale 適用トライアル(デッドマンスイッチ)の模擬
+  if (args[0] === 'tailscale') {
+    if (args[1] === 'trial-start') {
+      mock.trial = { active: true, deadline: Date.now() + Number(args[2] ?? 120) * 1000, reverted: false };
+    }
+    if (args[1] === 'trial-confirm') mock.trial = { active: false, deadline: 0, reverted: false };
+    if (args[1] === 'trial-revert') mock.trial = { active: false, deadline: 0, reverted: true };
+    return `tailscale ${args.slice(1).join(' ')} OK`;
+  }
   if (args[0] === 'move') {
     if (args[1] != null) mock.pan = clamp(Number(args[1]), 0, 355);
     if (args[2] != null) mock.tilt = clamp(Number(args[2]), 0, 180);

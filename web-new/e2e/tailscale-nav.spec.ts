@@ -44,15 +44,20 @@ test('タグ変更で締め出し警告が出て、保存で適用される', as
   await expect(alert).toBeVisible();
   await expect(alert).toContainText('タグの変更');
 
-  // 保存すると hack.ini 書込に加えて tailscale restart(FIFO)が送られ、適用中トーストが出る
-  const applyReq = page.waitForRequest(
-    (req) => req.method() === 'POST' && req.url().includes('cmd.cgi') && !req.url().includes('port=socket'),
-  );
+  // 保存すると trial-start(デッドマンスイッチ)→hack.ini 書込→restart の順で送られる
+  const reqs: string[] = [];
+  page.on('request', (r) => {
+    if (r.method() === 'POST' && r.url().includes('cmd.cgi') && !r.url().includes('port=socket')) {
+      const body = r.postDataJSON() as { exec?: string };
+      if (body.exec) reqs.push(body.exec);
+    }
+  });
   await page.getByRole('button', { name: '保存', exact: true }).click();
-  const req = await applyReq;
-  expect(req.postDataJSON()).toEqual({ exec: 'tailscale restart' });
   await expect(page.getByText('Tailscale 設定を適用しています', { exact: false })).toBeVisible();
-  // 警告は保存済み値と一致した時点で消える
+  expect(reqs).toContain('tailscale trial-start 120');
+  expect(reqs).toContain('tailscale restart');
+  // トライアルを確定すると警告も消える(保存済み値と一致)
+  await page.getByRole('alertdialog').getByRole('button', { name: '維持されています(確定)' }).click();
   await expect(page.getByRole('alert')).toHaveCount(0);
 });
 
@@ -69,10 +74,60 @@ test('無効化で警告が出て、保存で stop が送られる', async ({ pa
   await expect(alert).toBeVisible();
   await expect(alert).toContainText('無効化');
 
-  const applyReq = page.waitForRequest(
-    (req) => req.method() === 'POST' && req.url().includes('cmd.cgi') && !req.url().includes('port=socket'),
-  );
+  const reqs: string[] = [];
+  page.on('request', (r) => {
+    if (r.method() === 'POST' && r.url().includes('cmd.cgi') && !r.url().includes('port=socket')) {
+      const body = r.postDataJSON() as { exec?: string };
+      if (body.exec) reqs.push(body.exec);
+    }
+  });
   await page.getByRole('button', { name: '保存', exact: true }).click();
-  const req = await applyReq;
-  expect(req.postDataJSON()).toEqual({ exec: 'tailscale stop' });
+  await expect(page.getByRole('alertdialog')).toBeVisible();
+  expect(reqs).toContain('tailscale trial-start 120');
+  expect(reqs).toContain('tailscale stop');
+  await page.getByRole('alertdialog').getByRole('button', { name: '維持されています(確定)' }).click();
+});
+
+// 締め出しリスク変更の保存で「接続は維持されていますか?」ダイアログが出る(デッドマンスイッチ)
+test('リスク変更の保存でトライアルダイアログが出て、確定で閉じる', async ({ page }) => {
+  await page.goto('/#/settings/system/tailscale');
+  await page.getByRole('switch', { name: /^Tailscale有効化 / }).click();
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await expect(page.getByText('未保存の変更があります')).toBeHidden();
+
+  await page.getByRole('textbox', { name: /^タグ / }).fill('tag:server');
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+
+  const dialog = page.getByRole('alertdialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('接続は維持されていますか?');
+  await expect(dialog).toContainText(/秒後に自動的に元の設定へ戻ります/);
+
+  await dialog.getByRole('button', { name: '維持されています(確定)' }).click();
+  await expect(dialog).toBeHidden();
+});
+
+// 「今すぐ元に戻す」で巻き戻しが送られ、ダイアログが閉じる
+test('トライアルの今すぐ元に戻すで復元コマンドが飛ぶ', async ({ page }) => {
+  await page.goto('/#/settings/system/tailscale');
+  await page.getByRole('switch', { name: /^Tailscale有効化 / }).click();
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await expect(page.getByText('未保存の変更があります')).toBeHidden();
+
+  await page.getByRole('textbox', { name: /^タグ / }).fill('tag:oops');
+  const reqs: string[] = [];
+  page.on('request', (r) => {
+    if (r.method() === 'POST' && r.url().includes('cmd.cgi') && !r.url().includes('port=socket')) {
+      const body = r.postDataJSON() as { exec?: string };
+      if (body.exec) reqs.push(body.exec);
+    }
+  });
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  const dialog = page.getByRole('alertdialog');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: '今すぐ元に戻す' }).click();
+  await expect(dialog).toBeHidden();
+  expect(reqs).toContain('tailscale trial-start 120');
+  expect(reqs).toContain('tailscale restart');
+  expect(reqs).toContain('tailscale trial-revert');
 });

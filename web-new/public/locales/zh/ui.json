@@ -210,6 +210,18 @@
     "applyFailed": "应用命令发送失败。设置将在下次启动时生效。",
     "lastErrorLabel": "最近的错误",
     "restartDaemon": "重启 tailscaled",
-    "restarting": "正在重启 tailscaled,恢复可能需要几十秒。"
+    "restarting": "正在重启 tailscaled,恢复可能需要几十秒。",
+    "trial": {
+      "title": "连接是否仍然正常?",
+      "body": "已应用 Tailscale 设置。如果您能看到并操作此界面,请按“保持设置”。若未确认,为安全起见将自动恢复先前的设置。",
+      "countdown": "{{s}}秒后将自动恢复先前的设置",
+      "keep": "保持设置",
+      "revertNow": "立即恢复",
+      "confirmed": "设置已确认",
+      "reverting": "正在恢复先前的设置,重新连接可能需要约一分钟",
+      "revertedTitle": "设置已自动恢复",
+      "revertedBody": "未在时限内确认,已恢复先前的设置并重新连接。这是防止失联的安全机制。",
+      "revertedNotice": "未收到确认,设置已自动恢复"
+    }
   }
 }

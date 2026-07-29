@@ -73,6 +73,14 @@ export const handlers = [
       if (name === 'notify-test') mock.lastNotify = res;
       return HttpResponse.text(JSON.stringify(mock.lastNotify ?? res));
     }
+    // 適用トライアル(デッドマンスイッチ)の状態
+    if (name === 'tailscale-trial') {
+      const t = mock.trial;
+      const remaining = t?.active ? Math.max(0, Math.ceil((t.deadline - Date.now()) / 1000)) : 0;
+      return HttpResponse.text(
+        JSON.stringify({ active: t?.active ?? false, remaining, reverted: t?.reverted ?? false }),
+      );
+    }
     // Tailscale 接続状態: デモでは常に接続済みサンプル(実機は tailscale.sh が実状態を返す)
     if (name === 'tailscale-status') {
       const host = (mock.hackIni.HOSTNAME || 'atomcam').toLowerCase();

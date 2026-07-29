@@ -210,6 +210,18 @@
     "applyFailed": "Falha ao enviar o comando de aplicação. As configurações terão efeito na próxima inicialização.",
     "lastErrorLabel": "Último erro",
     "restartDaemon": "Reiniciar tailscaled",
-    "restarting": "Reiniciando o tailscaled. Pode levar até um minuto para voltar."
+    "restarting": "Reiniciando o tailscaled. Pode levar até um minuto para voltar.",
+    "trial": {
+      "title": "A conexão continua funcionando?",
+      "body": "As configurações do Tailscale foram aplicadas. Se você consegue ver e usar esta tela, pressione \"Manter configurações\". Sem confirmação, as configurações anteriores serão restauradas automaticamente por segurança.",
+      "countdown": "Restaurando as configurações anteriores em {{s}} s",
+      "keep": "Manter configurações",
+      "revertNow": "Reverter agora",
+      "confirmed": "Configurações confirmadas",
+      "reverting": "Restaurando as configurações anteriores. A reconexão pode levar até um minuto",
+      "revertedTitle": "Configurações restauradas automaticamente",
+      "revertedBody": "Nenhuma confirmação chegou a tempo, então as configurações anteriores foram restauradas e a conexão restabelecida. Este mecanismo evita bloqueios.",
+      "revertedNotice": "Sem confirmação — configurações restauradas automaticamente"
+    }
   }
 }

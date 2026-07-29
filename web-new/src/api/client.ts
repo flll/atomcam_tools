@@ -20,6 +20,7 @@ import type {
   StorageDu,
   StorageInfo,
   TailscaleStatus,
+  TailscaleTrial,
 } from './types';
 
 const CGI_BASE = './cgi-bin';
@@ -99,6 +100,16 @@ export const api = {
   // Tailscale 接続状態(state/ip/dnsName)
   async getTailscaleStatus(): Promise<TailscaleStatus> {
     return parseTailscaleStatus(await getText(`${CGI_BASE}/cmd.cgi?name=tailscale-status`));
+  },
+
+  // 適用トライアル(デッドマンスイッチ)の進行状態
+  async getTailscaleTrial(): Promise<TailscaleTrial> {
+    try {
+      const o = JSON.parse((await getText(`${CGI_BASE}/cmd.cgi?name=tailscale-trial`)).trim()) as TailscaleTrial;
+      return o && typeof o === 'object' ? o : {};
+    } catch {
+      return {};
+    }
   },
 
   // du はフォルダサイズ次第で数秒かかるため、ボタン押下時のみ呼ぶ

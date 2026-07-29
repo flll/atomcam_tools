@@ -210,6 +210,18 @@
     "applyFailed": "Failed to send the apply command. Settings will take effect on next boot.",
     "lastErrorLabel": "Last error",
     "restartDaemon": "Restart tailscaled",
-    "restarting": "Restarting tailscaled. It may take up to a minute to come back."
+    "restarting": "Restarting tailscaled. It may take up to a minute to come back.",
+    "trial": {
+      "title": "Is the connection still working?",
+      "body": "Tailscale settings were applied. If you can see and use this screen, press \"Keep settings\". If you don't confirm, the previous settings will be restored automatically for safety.",
+      "countdown": "Reverting to the previous settings in {{s}}s",
+      "keep": "Keep settings",
+      "revertNow": "Revert now",
+      "confirmed": "Settings confirmed",
+      "reverting": "Restoring the previous settings. Reconnection may take up to a minute",
+      "revertedTitle": "Settings were automatically restored",
+      "revertedBody": "No confirmation arrived in time, so the previous settings were restored and the connection re-established. This fail-safe prevents lockouts.",
+      "revertedNotice": "No confirmation received — settings were restored automatically"
+    }
   }
 }

@@ -337,6 +337,70 @@ status() {
     fi
 }
 
+# ===== 適用トライアル(デッドマンスイッチ) =====
+# 締め出しリスクのある設定適用の前に UI が trial-start を送る。適用後、UI 上の
+# 「接続は維持されていますか?」に対する trial-confirm が期限内に届かなければ、
+# hack.ini 全体をスナップショットへ巻き戻して再接続する(PS の解像度変更と同じ発想。
+# 締め出された瞬間からブラウザは何も送れないため、巻き戻しは必ずデバイス側で自律実行する)。
+TRIAL_DIR="$TAILSCALE_STATE_DIR"
+TRIAL_BAK="$TRIAL_DIR/trial_hack.ini.bak"
+TRIAL_CONFIRM="$TRIAL_DIR/trial.confirm"
+TRIAL_PID="$TRIAL_DIR/trial.pid"
+TRIAL_REVERTED="$TRIAL_DIR/trial.reverted"
+TRIAL_DEADLINE="$TRIAL_DIR/trial.deadline"
+
+trial_revert_now() {
+    [ -f "$TRIAL_BAK" ] || return 1
+    echo "trial: reverting hack.ini to pre-change snapshot"
+    cat "$TRIAL_BAK" > /media/mmc/hack.ini
+    cat "$TRIAL_BAK" > /tmp/hack.ini
+    sync
+    rm -f "$TRIAL_BAK" "$TRIAL_DEADLINE"
+    date +%s > "$TRIAL_REVERTED"
+    # 巻き戻した設定で再接続(自分自身の restart を呼ぶ)
+    "$0" restart
+}
+
+trial_start() {
+    secs="${1:-120}"
+    case "$secs" in *[!0-9]*|"") secs=120 ;; esac
+    # 進行中の旧トライアルは破棄(watchdog を止めてから上書き)
+    [ -f "$TRIAL_PID" ] && kill "$(cat "$TRIAL_PID")" 2>/dev/null
+    rm -f "$TRIAL_CONFIRM" "$TRIAL_REVERTED" "$TRIAL_PID"
+    cp /tmp/hack.ini "$TRIAL_BAK" || { echo "trial: snapshot failed"; return 1; }
+    expr "$(date +%s)" + "$secs" > "$TRIAL_DEADLINE"
+    (
+        sleep "$secs"
+        if [ ! -f "$TRIAL_CONFIRM" ] && [ -f "$TRIAL_BAK" ]; then
+            trial_revert_now >> /tmp/tailscale_trial.log 2>&1
+        fi
+        rm -f "$TRIAL_PID"
+    ) &
+    echo $! > "$TRIAL_PID"
+    echo "trial: armed (${secs}s)"
+}
+
+trial_confirm() {
+    touch "$TRIAL_CONFIRM"
+    [ -f "$TRIAL_PID" ] && kill "$(cat "$TRIAL_PID")" 2>/dev/null
+    rm -f "$TRIAL_BAK" "$TRIAL_PID" "$TRIAL_DEADLINE" "$TRIAL_REVERTED"
+    echo "trial: confirmed"
+}
+
+# UI ポーリング用: {"active":bool,"remaining":n,"reverted":bool}
+trial_status() {
+    active=false; remaining=0; reverted=false
+    if [ -f "$TRIAL_BAK" ] && [ -f "$TRIAL_DEADLINE" ]; then
+        active=true
+        now=$(date +%s)
+        deadline=$(cat "$TRIAL_DEADLINE")
+        remaining=$(expr "$deadline" - "$now" 2>/dev/null || echo 0)
+        [ "$remaining" -ge 0 ] 2>/dev/null || remaining=0
+    fi
+    [ -f "$TRIAL_REVERTED" ] && reverted=true
+    printf '{"active":%s,"remaining":%s,"reverted":%s}\n' "$active" "$remaining" "$reverted"
+}
+
 # WebUI 向け: 接続状態を JSON 1行で返す(state/ip/dnsName)。jq は無いので grep 抽出。
 status_json() {
     ts_env
@@ -405,6 +469,18 @@ case "${1:-start}" in
         ;;
     status-json)
         status_json
+        ;;
+    trial-start)
+        trial_start "$2"
+        ;;
+    trial-confirm)
+        trial_confirm
+        ;;
+    trial-revert)
+        trial_revert_now
+        ;;
+    trial-status)
+        trial_status
         ;;
     *)
         echo "Usage: $0 {start|stop|restart|status|status-json}"

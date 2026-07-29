@@ -210,6 +210,18 @@
     "applyFailed": "Échec de l'envoi de la commande d'application. Les paramètres prendront effet au prochain démarrage.",
     "lastErrorLabel": "Dernière erreur",
     "restartDaemon": "Redémarrer tailscaled",
-    "restarting": "Redémarrage de tailscaled. Le retour peut prendre jusqu'à une minute."
+    "restarting": "Redémarrage de tailscaled. Le retour peut prendre jusqu'à une minute.",
+    "trial": {
+      "title": "La connexion fonctionne-t-elle toujours ?",
+      "body": "Les paramètres Tailscale ont été appliqués. Si vous voyez cet écran et pouvez l'utiliser, appuyez sur « Conserver les paramètres ». Sans confirmation, les paramètres précédents seront restaurés automatiquement par sécurité.",
+      "countdown": "Retour aux paramètres précédents dans {{s}} s",
+      "keep": "Conserver les paramètres",
+      "revertNow": "Rétablir maintenant",
+      "confirmed": "Paramètres confirmés",
+      "reverting": "Restauration des paramètres précédents. La reconnexion peut prendre jusqu'à une minute",
+      "revertedTitle": "Paramètres restaurés automatiquement",
+      "revertedBody": "Aucune confirmation n'est arrivée à temps : les paramètres précédents ont été restaurés et la connexion rétablie. Ce garde-fou évite tout verrouillage.",
+      "revertedNotice": "Aucune confirmation — paramètres restaurés automatiquement"
+    }
   }
 }

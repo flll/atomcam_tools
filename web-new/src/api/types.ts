@@ -135,6 +135,14 @@ export interface TailscaleStatus {
   lastError?: string;
 }
 
+// cmd.cgi name=tailscale-trial(tailscale.sh trial-status)。
+// 適用トライアル(デッドマンスイッチ)の進行状態
+export interface TailscaleTrial {
+  active?: boolean;
+  remaining?: number;
+  reverted?: boolean;
+}
+
 // cmd.cgi POST の宛先。socket は go2rtc 制御ポート(localhost:4000)直、
 // 既定は /var/run/webcmd 経由。
 
