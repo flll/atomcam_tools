@@ -231,7 +231,7 @@
     "title": "Inicio de sesión de la WebUI",
     "desc": "Pedir usuario y contraseña al abrir esta pantalla.",
     "warnTitle": "El inicio de sesión de la WebUI no está configurado",
-    "warnBody": "Sin inicio de sesión, cualquiera en la misma red puede abrir estos ajustes y leer su auth key de Tailscale y las contraseñas de NAS/RTSP. Configure un usuario y una contraseña.",
+    "warnBody": "Sin inicio de sesión, cualquiera en la misma red puede abrir estos ajustes y leer su auth key de Tailscale y las contraseñas de NAS/RTSP. Configure una contraseña.",
     "stateLabel": "Estado",
     "stateOn": "Configurado ({{user}})",
     "stateOff": "Sin configurar",
@@ -244,6 +244,12 @@
     "enabled": "Inicio de sesión activado: se pedirán credenciales desde la próxima visita",
     "disabled": "Inicio de sesión desactivado",
     "gateTitle": "Configure primero el inicio de sesión de la WebUI",
-    "gateBody": "Esta cámara almacena su auth key de Tailscale y otras contraseñas. Para protegerlas, el resto de la interfaz no estará disponible hasta configurar un inicio de sesión."
+    "gateBody": "Esta cámara almacena su auth key de Tailscale y otras contraseñas. Para protegerlas, el resto de la interfaz no estará disponible hasta configurar un inicio de sesión.",
+    "descAdmin": "El nombre de usuario es fijo: admin. Establezca una contraseña.",
+    "passConfirm": "Confirmar contraseña",
+    "passMismatch": "Las contraseñas no coinciden",
+    "deviceModel": "Modelo",
+    "deviceMac": "Dirección MAC",
+    "deviceSd": "Capacidad de la tarjeta SD"
   }
 }

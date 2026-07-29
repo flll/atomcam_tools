@@ -231,7 +231,7 @@
     "title": "Login da WebUI",
     "desc": "Pedir nome de usuário e senha ao abrir esta tela.",
     "warnTitle": "O login da WebUI não está configurado",
-    "warnBody": "Sem login, qualquer pessoa na mesma rede pode abrir estas configurações e ler sua auth key do Tailscale e as senhas de NAS/RTSP. Defina um nome de usuário e uma senha.",
+    "warnBody": "Sem login, qualquer pessoa na mesma rede pode abrir estas configurações e ler sua auth key do Tailscale e as senhas de NAS/RTSP. Defina uma senha.",
     "stateLabel": "Estado",
     "stateOn": "Configurado ({{user}})",
     "stateOff": "Não configurado",
@@ -244,6 +244,12 @@
     "enabled": "Login da WebUI ativado — as credenciais serão exigidas na próxima visita",
     "disabled": "Login da WebUI desativado",
     "gateTitle": "Configure primeiro o login da WebUI",
-    "gateBody": "Esta câmera armazena sua auth key do Tailscale e outras senhas. Para protegê-las, o restante da interface fica indisponível até que um login seja configurado."
+    "gateBody": "Esta câmera armazena sua auth key do Tailscale e outras senhas. Para protegê-las, o restante da interface fica indisponível até que um login seja configurado.",
+    "descAdmin": "O nome de usuário é fixo: admin. Defina uma senha.",
+    "passConfirm": "Confirmar senha",
+    "passMismatch": "As senhas não coincidem",
+    "deviceModel": "Modelo",
+    "deviceMac": "Endereço MAC",
+    "deviceSd": "Capacidade do cartão SD"
   }
 }

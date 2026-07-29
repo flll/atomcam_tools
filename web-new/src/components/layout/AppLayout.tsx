@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { springBouncy, springGentle } from '@/lib/motion-tokens';
-import { Brand } from './Brand';
 import { LangSwitch } from './LangSwitch';
 import { ThemeToggle } from './ThemeToggle';
 import { NAV, type NavGroup, type NavItem } from './nav';
@@ -88,9 +87,7 @@ export function AppLayout() {
           z-20: sticky はスタッキングコンテキストを作るため、無指定だと言語メニュー(z-50)が
           main 側の sticky プレビュー(z-10)の下に潜る */}
       <aside className="sticky top-0 z-20 hidden h-dvh w-[88px] shrink-0 flex-col items-center bg-surface-container-low/60 md:flex">
-        <div className="flex h-14 items-center" title={t('app.title')}>
-          <Brand />
-        </div>
+        <div className="h-6" aria-hidden="true" />
         <nav className="flex w-full flex-1 flex-col items-center gap-0.5 overflow-y-auto px-2 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {GROUPS.map((key, gi) => {
             const items = nav.filter((i) => i.group === key);
@@ -116,7 +113,7 @@ export function AppLayout() {
         {/* z-20: 言語メニューが main 側の sticky 要素(z-10)より前面に出るように */}
         <header className="sticky top-0 z-20 flex h-12 items-center justify-between border-b border-border/50 bg-background/80 px-4 backdrop-blur md:hidden">
           <span className="flex items-center gap-2.5">
-            <Brand withName />
+            <span className="text-base font-semibold tracking-tight">{t('app.title')}</span>
             {current && (
               <span className="border-l border-border pl-2.5 text-sm font-medium text-muted-foreground">
                 {t(current.labelKey)}

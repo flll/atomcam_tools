@@ -231,7 +231,7 @@
     "title": "Connexion à la WebUI",
     "desc": "Demander un nom d'utilisateur et un mot de passe à l'ouverture de cet écran.",
     "warnTitle": "La connexion à la WebUI n'est pas configurée",
-    "warnBody": "Sans connexion, toute personne sur le même réseau peut ouvrir ces paramètres et lire votre auth key Tailscale ainsi que les mots de passe NAS/RTSP. Définissez un nom d'utilisateur et un mot de passe.",
+    "warnBody": "Sans connexion, toute personne sur le même réseau peut ouvrir ces paramètres et lire votre auth key Tailscale ainsi que les mots de passe NAS/RTSP. Définissez un mot de passe.",
     "stateLabel": "État",
     "stateOn": "Configurée ({{user}})",
     "stateOff": "Non configurée",
@@ -244,6 +244,12 @@
     "enabled": "Connexion activée — les identifiants seront demandés dès la prochaine visite",
     "disabled": "Connexion désactivée",
     "gateTitle": "Configurez d'abord la connexion à la WebUI",
-    "gateBody": "Cette caméra stocke votre auth key Tailscale et d'autres mots de passe. Pour les protéger, le reste de l'interface est indisponible tant qu'une connexion n'est pas configurée."
+    "gateBody": "Cette caméra stocke votre auth key Tailscale et d'autres mots de passe. Pour les protéger, le reste de l'interface est indisponible tant qu'une connexion n'est pas configurée.",
+    "descAdmin": "Le nom d'utilisateur est fixé à admin. Définissez un mot de passe.",
+    "passConfirm": "Confirmer le mot de passe",
+    "passMismatch": "Les mots de passe ne correspondent pas",
+    "deviceModel": "Modèle",
+    "deviceMac": "Adresse MAC",
+    "deviceSd": "Capacité de la carte SD"
   }
 }

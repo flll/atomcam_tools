@@ -231,7 +231,7 @@
     "title": "WebUIログイン",
     "desc": "この画面を開くときにユーザー名とパスワードを求めます。",
     "warnTitle": "WebUIログインが未設定です",
-    "warnBody": "ログインを設定しないと、同じネットワークにいる人が誰でもこの設定画面を開き、Tailscaleのauth keyやNAS・RTSPのパスワードを読み取れます。ユーザー名とパスワードを設定してください。",
+    "warnBody": "ログインを設定しないと、同じネットワークにいる人が誰でもこの設定画面を開き、Tailscaleのauth keyやNAS・RTSPのパスワードを読み取れます。パスワードを設定してください。",
     "stateLabel": "状態",
     "stateOn": "設定済み({{user}})",
     "stateOff": "未設定",
@@ -244,6 +244,12 @@
     "enabled": "WebUIログインを設定しました。次回アクセスからログインが必要です",
     "disabled": "WebUIログインを解除しました",
     "gateTitle": "最初にWebUIログインを設定してください",
-    "gateBody": "このカメラの設定画面には Tailscale の auth key や各種パスワードが保存されます。第三者に読み取られないよう、ログインの設定が完了するまで他の画面は使えません。"
+    "gateBody": "このカメラの設定画面には Tailscale の auth key や各種パスワードが保存されます。第三者に読み取られないよう、ログインの設定が完了するまで他の画面は使えません。",
+    "descAdmin": "ユーザー名は admin 固定です。パスワードを設定してください。",
+    "passConfirm": "確認用パスワード",
+    "passMismatch": "パスワードが一致しません",
+    "deviceModel": "モデル",
+    "deviceMac": "MACアドレス",
+    "deviceSd": "SDカード容量"
   }
 }

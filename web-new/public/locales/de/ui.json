@@ -231,7 +231,7 @@
     "title": "WebUI-Anmeldung",
     "desc": "Beim Öffnen dieses Bildschirms nach Benutzername und Passwort fragen.",
     "warnTitle": "WebUI-Anmeldung ist nicht eingerichtet",
-    "warnBody": "Ohne Anmeldung kann jeder im selben Netzwerk diese Einstellungen öffnen und den Tailscale-Auth-Key sowie NAS-/RTSP-Passwörter auslesen. Legen Sie Benutzername und Passwort fest.",
+    "warnBody": "Ohne Anmeldung kann jeder im selben Netzwerk diese Einstellungen öffnen und den Tailscale-Auth-Key sowie NAS-/RTSP-Passwörter auslesen. Legen Sie ein Passwort fest.",
     "stateLabel": "Status",
     "stateOn": "Eingerichtet ({{user}})",
     "stateOff": "Nicht eingerichtet",
@@ -244,6 +244,12 @@
     "enabled": "WebUI-Anmeldung aktiviert — ab dem nächsten Besuch sind Zugangsdaten nötig",
     "disabled": "WebUI-Anmeldung deaktiviert",
     "gateTitle": "Richten Sie zuerst die WebUI-Anmeldung ein",
-    "gateBody": "Diese Kamera speichert Ihren Tailscale-Auth-Key und weitere Passwörter. Zu deren Schutz ist der Rest der Oberfläche erst nach Einrichtung einer Anmeldung verfügbar."
+    "gateBody": "Diese Kamera speichert Ihren Tailscale-Auth-Key und weitere Passwörter. Zu deren Schutz ist der Rest der Oberfläche erst nach Einrichtung einer Anmeldung verfügbar.",
+    "descAdmin": "Der Benutzername ist fest auf admin gesetzt. Legen Sie ein Passwort fest.",
+    "passConfirm": "Passwort bestätigen",
+    "passMismatch": "Passwörter stimmen nicht überein",
+    "deviceModel": "Modell",
+    "deviceMac": "MAC-Adresse",
+    "deviceSd": "SD-Karten-Kapazität"
   }
 }

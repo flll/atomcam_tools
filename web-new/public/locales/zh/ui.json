@@ -231,7 +231,7 @@
     "title": "WebUI 登录",
     "desc": "打开本界面时要求输入用户名和密码。",
     "warnTitle": "尚未设置 WebUI 登录",
-    "warnBody": "未设置登录时,同一网络中的任何人都可以打开此设置界面,读取 Tailscale 的 auth key 以及 NAS/RTSP 密码。请设置用户名和密码。",
+    "warnBody": "未设置登录时,同一网络中的任何人都可以打开此设置界面,读取 Tailscale 的 auth key 以及 NAS/RTSP 密码。请设置密码。",
     "stateLabel": "状态",
     "stateOn": "已设置({{user}})",
     "stateOff": "未设置",
@@ -244,6 +244,12 @@
     "enabled": "已设置 WebUI 登录,下次访问起需要登录",
     "disabled": "已取消 WebUI 登录",
     "gateTitle": "请先设置 WebUI 登录",
-    "gateBody": "本设置界面保存着 Tailscale 的 auth key 和各种密码。为防止被他人读取,设置登录之前无法使用其他界面。"
+    "gateBody": "本设置界面保存着 Tailscale 的 auth key 和各种密码。为防止被他人读取,设置登录之前无法使用其他界面。",
+    "descAdmin": "用户名固定为 admin。请设置密码。",
+    "passConfirm": "确认密码",
+    "passMismatch": "两次输入的密码不一致",
+    "deviceModel": "型号",
+    "deviceMac": "MAC 地址",
+    "deviceSd": "SD 卡容量"
   }
 }

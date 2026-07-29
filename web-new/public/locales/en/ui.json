@@ -231,7 +231,7 @@
     "title": "WebUI login",
     "desc": "Ask for a username and password when opening this screen.",
     "warnTitle": "WebUI login is not set",
-    "warnBody": "Without a login, anyone on the same network can open these settings and read your Tailscale auth key and NAS/RTSP passwords. Set a username and password.",
+    "warnBody": "Without a login, anyone on the same network can open these settings and read your Tailscale auth key and NAS/RTSP passwords. Set a password.",
     "stateLabel": "Status",
     "stateOn": "Enabled ({{user}})",
     "stateOff": "Not set",
@@ -244,6 +244,12 @@
     "enabled": "WebUI login enabled — credentials are required from the next visit",
     "disabled": "WebUI login disabled",
     "gateTitle": "Set up WebUI login first",
-    "gateBody": "This camera stores your Tailscale auth key and other passwords. To keep them private, the rest of the UI is unavailable until a login is configured."
+    "gateBody": "This camera stores your Tailscale auth key and other passwords. To keep them private, the rest of the UI is unavailable until a login is configured.",
+    "descAdmin": "The username is fixed to admin. Set a password.",
+    "passConfirm": "Confirm password",
+    "passMismatch": "Passwords do not match",
+    "deviceModel": "Model",
+    "deviceMac": "MAC address",
+    "deviceSd": "SD card capacity"
   }
 }
