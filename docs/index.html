@@ -9,47 +9,46 @@
 <meta property="og:title" content="atomcam_tools — Your camera, unlocked" />
 <meta property="og:description" content="Extend recording, streaming, NAS backup and remote access — all from a completely redesigned WebUI." />
 <meta property="og:type" content="website" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12.5' fill='none' stroke='%234285f4' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='%234285f4'/%3E%3Ccircle cx='25.5' cy='6.5' r='3' fill='%23ea4335'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12.5' fill='none' stroke='%231A9CFF' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='%231A9CFF'/%3E%3Ccircle cx='25.5' cy='6.5' r='3' fill='%23FF334B'/%3E%3C/svg%3E" />
 <style>
   :root {
-    --blue: #4285f4;
-    --blue-strong: #1a73e8;
-    --red: #ea4335;
+    --blue: #1A9CFF;
+    --blue-strong: #0279D4;
+    --red: #FF334B;
     --radius: 18px;
     --maxw: 1120px;
-    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN",
-      "Noto Sans JP", Meiryo, system-ui, sans-serif;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "Segoe UI", "Hiragino Sans", "Noto Sans JP", Meiryo, system-ui, sans-serif;
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   }
   html[data-theme="dark"] {
-    --bg: #0d1013;
-    --bg-grad: radial-gradient(1200px 600px at 78% -8%, rgba(66, 133, 244, 0.22), transparent 60%),
-      radial-gradient(900px 500px at 5% 10%, rgba(138, 180, 248, 0.10), transparent 55%);
-    --surface: #171a1d;
-    --surface-2: #1e2226;
-    --surface-3: #262b30;
-    --on: #e6e8ea;
-    --muted: #9aa2ab;
-    --border: #2a2f34;
-    --primary: #8ab4f8;
-    --on-primary: #0a1a33;
-    --chip: rgba(138, 180, 248, 0.14);
+    --bg: #111111;
+    --bg-grad: radial-gradient(1200px 600px at 78% -8%, rgba(26, 156, 255, 0.22), transparent 60%),
+      radial-gradient(900px 500px at 5% 10%, rgba(64, 182, 255, 0.10), transparent 55%);
+    --surface: #1F1F1F;
+    --surface-2: #2A2A2A;
+    --surface-3: #383838;
+    --on: #FFFFFF;
+    --muted: #B7B7B7;
+    --border: #3F3F3F;
+    --primary: #40B6FF;
+    --on-primary: #1C476B;
+    --chip: rgba(64, 182, 255, 0.14);
     --shadow: 0 18px 50px -18px rgba(0, 0, 0, 0.7);
-    --glass: rgba(20, 24, 28, 0.72);
+    --glass: rgba(26, 26, 26, 0.72);
   }
   html[data-theme="light"] {
-    --bg: #f6f9fe;
-    --bg-grad: radial-gradient(1200px 600px at 80% -10%, rgba(66, 133, 244, 0.16), transparent 60%),
-      radial-gradient(800px 460px at 0% 6%, rgba(26, 115, 232, 0.08), transparent 55%);
+    --bg: #FCFCFC;
+    --bg-grad: radial-gradient(1200px 600px at 80% -10%, rgba(26, 156, 255, 0.16), transparent 60%),
+      radial-gradient(800px 460px at 0% 6%, rgba(2, 121, 212, 0.08), transparent 55%);
     --surface: #ffffff;
-    --surface-2: #f1f4f9;
-    --surface-3: #e7ecf4;
-    --on: #1b1c1e;
-    --muted: #5b6169;
-    --border: #dfe3ea;
-    --primary: #1a73e8;
+    --surface-2: #F5F5F5;
+    --surface-3: #EFEFEF;
+    --on: #111111;
+    --muted: #616161;
+    --border: #DFDFDF;
+    --primary: #0279D4;
     --on-primary: #ffffff;
-    --chip: rgba(26, 115, 232, 0.10);
+    --chip: rgba(2, 121, 212, 0.10);
     --shadow: 0 18px 44px -20px rgba(20, 40, 80, 0.28);
     --glass: rgba(255, 255, 255, 0.72);
   }
@@ -307,7 +306,7 @@
         </a>
       </div>
       <div class="chips">
-        <span class="chip" data-i18n="hero.chip1">Material 3 デザイン</span>
+        <span class="chip" data-i18n="hero.chip1">刷新されたデザイン</span>
         <span class="chip" data-i18n="hero.chip2">8 言語対応</span>
         <span class="chip" data-i18n="hero.chip3">ダークモード</span>
         <span class="chip" data-i18n="hero.chip4">RTSP / WebRTC</span>
@@ -343,7 +342,7 @@
             <line x1="60" y1="85" x2="520" y2="85"/><line x1="60" y1="170" x2="520" y2="170"/><line x1="60" y1="255" x2="520" y2="255"/>
             <line x1="175" y1="0" x2="175" y2="340"/><line x1="290" y1="0" x2="290" y2="340"/><line x1="405" y1="0" x2="405" y2="340"/>
           </g>
-          <circle cx="330" cy="175" r="34" fill="#8ab4f8" opacity="0.9"/>
+          <circle cx="330" cy="175" r="34" fill="#78CBFF" opacity="0.9"/>
           <circle cx="330" cy="175" r="34" fill="none" stroke="#cfe0ff" stroke-width="2"/>
           <!-- LIVE chip -->
           <g><rect x="76" y="16" width="86" height="26" rx="13" fill="rgba(0,0,0,.5)"/>
@@ -382,7 +381,7 @@
     <div class="sec-head">
       <span class="kicker" data-i18n="show.kicker">Redesigned WebUI</span>
       <h2 data-i18n="show.title">触って気持ちいい、新しい WebUI</h2>
-      <p data-i18n="show.sub">Material 3 をベースに、ライブは没入型、設定は分かりやすく。ダーク/ライト・8 言語対応。実機がなくてもライブデモで体験できます。</p>
+      <p data-i18n="show.sub">刷新されたデザインシステムをベースに、ライブは没入型、設定は分かりやすく。ダーク/ライト・8 言語対応。実機がなくてもライブデモで体験できます。</p>
     </div>
     <div class="showcase">
       <div class="shot">
@@ -394,8 +393,8 @@
             <line x1="0" y1="120" x2="640" y2="120"/><line x1="0" y1="240" x2="640" y2="240"/>
             <line x1="213" y1="0" x2="213" y2="360"/><line x1="426" y1="0" x2="426" y2="360"/>
           </g>
-          <circle cx="410" cy="185" r="46" fill="#8ab4f8" opacity="0.92"/><circle cx="410" cy="185" r="46" fill="none" stroke="#dbe8ff" stroke-width="2.5"/>
-          <g><rect x="22" y="20" width="104" height="32" rx="16" fill="rgba(0,0,0,.5)"/><circle cx="42" cy="36" r="6" fill="#ea4335"/><text x="56" y="41" fill="#fff" font-family="var(--font)" font-size="16" font-weight="700">LIVE</text></g>
+          <circle cx="410" cy="185" r="46" fill="#78CBFF" opacity="0.92"/><circle cx="410" cy="185" r="46" fill="none" stroke="#ABDCFF" stroke-width="2.5"/>
+          <g><rect x="22" y="20" width="104" height="32" rx="16" fill="rgba(0,0,0,.5)"/><circle cx="42" cy="36" r="6" fill="#FF334B"/><text x="56" y="41" fill="#fff" font-family="var(--font)" font-size="16" font-weight="700">LIVE</text></g>
           <text x="620" y="42" text-anchor="end" fill="rgba(255,255,255,.85)" font-family="var(--mono)" font-size="15">24 fps · WebRTC</text>
           <rect x="0" y="300" width="640" height="60" fill="rgba(0,0,0,.34)"/>
           <circle cx="34" cy="330" r="16" fill="rgba(255,255,255,.14)"/>
@@ -409,7 +408,7 @@
           <rect width="640" height="360" fill="var(--surface)"/>
           <!-- preview -->
           <rect x="24" y="24" width="290" height="164" rx="12" fill="#0e2438"/>
-          <circle cx="210" cy="120" r="30" fill="#8ab4f8" opacity="0.9"/>
+          <circle cx="210" cy="120" r="30" fill="#78CBFF" opacity="0.9"/>
           <rect x="36" y="34" width="70" height="20" rx="10" fill="rgba(0,0,0,.5)"/><text x="48" y="48" fill="#fff" font-family="var(--font)" font-size="11" font-weight="700">コントラスト 142</text>
           <!-- settings column -->
           <g>
@@ -553,7 +552,7 @@
     globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/>'
   };
   var FEATURES = [
-    { i: 'layout', t: ['刷新した WebUI', 'Redesigned WebUI'], d: ['Material 3・ダークモード・8 言語。スマホでも快適。', 'Material 3, dark mode, 8 languages — great on mobile.'] },
+    { i: 'layout', t: ['刷新した WebUI', 'Redesigned WebUI'], d: ['ダークモード・8 言語。スマホでも快適。', 'Dark mode, 8 languages — great on mobile.'] },
     { i: 'video', t: ['録画・配信', 'Record & stream'], d: ['連続/動体/タイムラプス、RTSP・RTMP・WebRTC、HomeKit。', 'Continuous/motion/timelapse, RTSP·RTMP·WebRTC, HomeKit.'] },
     { i: 'hdd', t: ['NAS 保存', 'NAS backup'], d: ['CIFS (SMB2+) 共有へ録画を自動保存。', 'Auto-save recordings to a CIFS (SMB2+) share.'] },
     { i: 'shield', t: ['Tailscale VPN', 'Tailscale VPN'], d: ['WebUI から設定できるリモートアクセス(flll 追加)。', 'Remote access configurable from the WebUI (flll addition).'] },
@@ -589,13 +588,13 @@
     'hero.title': ['カメラの能力を、<br>あなたの手に。', 'Your camera.<br>Unlocked.'],
     'hero.lead': ['標準機能では物足りないあなたへ。録画・配信・NAS 保存・リモートアクセスを、刷新した WebUI からまるごと。', 'For everyone the stock features left wanting. Recording, streaming, NAS backup and remote access — all from a redesigned WebUI.'],
     'hero.download': ['最新版をダウンロード', 'Download latest'], 'hero.demo': ['ライブデモを見る', 'Try live demo'],
-    'hero.chip1': ['Material 3 デザイン', 'Material 3 design'], 'hero.chip2': ['8 言語対応', '8 languages'], 'hero.chip3': ['ダークモード', 'Dark mode'], 'hero.chip4': ['RTSP / WebRTC', 'RTSP / WebRTC'],
+    'hero.chip1': ['刷新されたデザイン', 'Refreshed design'], 'hero.chip2': ['8 言語対応', '8 languages'], 'hero.chip3': ['ダークモード', 'Dark mode'], 'hero.chip4': ['RTSP / WebRTC', 'RTSP / WebRTC'],
     'feat.kicker': ['Everything, on your terms', 'Everything, on your terms'],
     'feat.title': ['やりたいことは、だいたい入っています', 'Just about everything you wanted'],
     'feat.sub': ['クラウド任せをやめて、録画・配信・保存・通知を自分の手元で。刷新した WebUI から全部設定できます。', 'Stop depending on the cloud — recording, streaming, storage and alerts, all under your control from the new WebUI.'],
     'show.kicker': ['Redesigned WebUI', 'Redesigned WebUI'],
     'show.title': ['触って気持ちいい、新しい WebUI', 'A WebUI that feels good to use'],
-    'show.sub': ['Material 3 をベースに、ライブは没入型、設定は分かりやすく。ダーク/ライト・8 言語対応。実機がなくてもライブデモで体験できます。', 'Built on Material 3: immersive live view, clear settings, dark/light and 8 languages. Try the live demo without any hardware.'],
+    'show.sub': ['刷新されたデザインシステムをベースに、ライブは没入型、設定は分かりやすく。ダーク/ライト・8 言語対応。実機がなくてもライブデモで体験できます。', 'Built on a refreshed design system: immersive live view, clear settings, dark/light and 8 languages. Try the live demo without any hardware.'],
     'show.live.t': ['ライブ — 没入型プレイヤー', 'Live — immersive player'], 'show.live.d': ['全画面ステージ・シアターモード・PiP・PTZ 操作', 'Full-bleed stage, theater mode, PiP, PTZ controls'],
     'show.cam.t': ['カメラ設定 — 見ながら調整', 'Camera — tune while you watch'], 'show.cam.d': ['固定プレビュー・AUTO/マニュアル露出・変更前後の比較', 'Sticky preview, AUTO/manual exposure, before/after compare'],
     'inst.kicker': ['Get started in minutes', 'Get started in minutes'],
