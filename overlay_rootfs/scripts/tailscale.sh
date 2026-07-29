@@ -291,7 +291,7 @@ status() {
 status_json() {
     ts_env
     if ! pgrep -f tailscaled > /dev/null 2>&1; then
-        printf '{"state":"stopped"}''' + BS + '''n'
+        printf '{"state":"stopped"}\n'
         return 0
     fi
     json=$(/usr/bin/tailscale status --json 2>/dev/null)
@@ -299,7 +299,7 @@ status_json() {
     backend=$(printf '%s' "$json" | grep -o '"BackendState":"[^"]*"' | head -1 | sed 's/.*:"//;s/"//')
     dnsname=$(printf '%s' "$json" | grep -o '"DNSName":"[^"]*"' | head -1 | sed 's/.*:"//;s/"$//;s/[.]$//')
     [ -n "$backend" ] || backend="unknown"
-    printf '{"state":"%s","ip":"%s","dnsName":"%s"}''' + BS + '''n' "$backend" "$ip" "$dnsname"
+    printf '{"state":"%s","ip":"%s","dnsName":"%s"}\n' "$backend" "$ip" "$dnsname"
 }
 
 start() {
