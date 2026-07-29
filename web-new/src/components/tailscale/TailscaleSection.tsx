@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Cat, ExternalLink, KeyRound, Lock, Server, Shield, ShieldCheck, Tags, TriangleAlert } from 'lucide-react';
+import { Cat, ExternalLink, KeyRound, Lock, RotateCw, Server, Shield, ShieldCheck, Tags, TriangleAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Section, SettingInput, SettingSwitch } from '@/components/settings';
 import { Disclosure } from '@/components/ui/disclosure';
@@ -205,6 +205,15 @@ export function TailscaleSection({
               <span className="mt-0.5 block text-body-xs text-muted-foreground">{tUi('ts.adminDesc')}</span>
             </span>
             <div className="flex shrink-0 items-center gap-1.5">
+              {/* tailscaled が固まる・落ちる事象向けの復旧ボタン(webcmd 経由で stop→start) */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => runCmd(api.exec('tailscale restart', 'fifo'), { success: tUi('ts.restarting') })}
+              >
+                <RotateCw className="size-3.5" />
+                {tUi('ts.restartDaemon')}
+              </Button>
               {connected && (
                 <a href={`http://${tailnetHost}/`} target="_blank" rel="noreferrer">
                   <Button variant="outline" size="sm">

@@ -208,6 +208,8 @@
     },
     "applying": "Aplicando la configuración de Tailscale (hasta 60 s). La conexión puede cortarse temporalmente.",
     "applyFailed": "No se pudo enviar el comando de aplicación. La configuración se aplicará en el próximo arranque.",
-    "lastErrorLabel": "Último error"
+    "lastErrorLabel": "Último error",
+    "restartDaemon": "Reiniciar tailscaled",
+    "restarting": "Reiniciando tailscaled. Puede tardar hasta un minuto en volver."
   }
 }

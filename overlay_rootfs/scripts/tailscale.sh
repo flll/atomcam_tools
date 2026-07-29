@@ -277,7 +277,9 @@ connect() {
 
     ts_env
     local up_out
-    if up_out=$(/usr/bin/tailscale up $up_args 2>&1); then
+    # 認証待ち等で up が --timeout を素通りして永久に固まるケースを実機で観測。
+    # ハード上限を掛け、超えたら失敗として扱う(daemon は残る)
+    if up_out=$(timeout 90 /usr/bin/tailscale up $up_args 2>&1); then
         echo "Successfully connected to Tailscale"
         rm -f "$TAILSCALE_LAST_ERROR"
         printf '%s\n' "$up_args" > "$TAILSCALE_LAST_GOOD"
@@ -298,7 +300,7 @@ connect() {
         if [ "$good_args" != "$up_args" ]; then
             echo "Attempting rollback to last known-good settings..."
             ts_env
-            if /usr/bin/tailscale up $good_args 2>/dev/null; then
+            if timeout 90 /usr/bin/tailscale up $good_args 2>/dev/null; then
                 echo "Rollback succeeded (still using previous settings)"
                 apply_guard_and_persist
                 return 1
@@ -346,8 +348,10 @@ status_json() {
         printf '{"state":"stopped","lastError":"%s"}\n' "$lasterr"
         return 0
     fi
-    json=$(/usr/bin/tailscale status --json 2>/dev/null)
-    ip=$(/usr/bin/tailscale ip -4 2>/dev/null | head -1)
+    # up の進行中は status/ip が無期限ブロックする(実機観測: WebUI の5秒ポーリングが
+    # 積み上がり www-data プロセスが増殖)→ 必ずタイムアウトを掛ける
+    json=$(timeout 5 /usr/bin/tailscale status --json 2>/dev/null)
+    ip=$(timeout 3 /usr/bin/tailscale ip -4 2>/dev/null | head -1)
     # tailscale status --json はキーと値の間にスペースを入れる("BackendState": "Running")。
     # 旧パターン '"BackendState":"..."' はスペース無し前提で常に不一致となり、
     # WebUI の Tailscale ページは接続中でも state=unknown を表示していた。

@@ -208,6 +208,8 @@
     },
     "applying": "Applying Tailscale settings (up to 60s). The connection may drop temporarily.",
     "applyFailed": "Failed to send the apply command. Settings will take effect on next boot.",
-    "lastErrorLabel": "Last error"
+    "lastErrorLabel": "Last error",
+    "restartDaemon": "Restart tailscaled",
+    "restarting": "Restarting tailscaled. It may take up to a minute to come back."
   }
 }

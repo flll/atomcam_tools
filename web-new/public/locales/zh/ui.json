@@ -208,6 +208,8 @@
     },
     "applying": "正在应用 Tailscale 设置(最长60秒),连接可能暂时中断。",
     "applyFailed": "应用命令发送失败。设置将在下次启动时生效。",
-    "lastErrorLabel": "最近的错误"
+    "lastErrorLabel": "最近的错误",
+    "restartDaemon": "重启 tailscaled",
+    "restarting": "正在重启 tailscaled,恢复可能需要几十秒。"
   }
 }

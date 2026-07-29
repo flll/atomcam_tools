@@ -208,6 +208,8 @@
     },
     "applying": "Tailscale 設定を適用しています(最長60秒)。接続が一時的に切れる場合があります。",
     "applyFailed": "適用コマンドの送信に失敗しました。設定は次回起動時に反映されます。",
-    "lastErrorLabel": "直近のエラー"
+    "lastErrorLabel": "直近のエラー",
+    "restartDaemon": "tailscaled再起動",
+    "restarting": "tailscaled を再起動しています。復帰まで数十秒かかることがあります。"
   }
 }

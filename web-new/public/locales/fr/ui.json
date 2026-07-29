@@ -208,6 +208,8 @@
     },
     "applying": "Application des paramètres Tailscale (jusqu'à 60 s). La connexion peut être coupée temporairement.",
     "applyFailed": "Échec de l'envoi de la commande d'application. Les paramètres prendront effet au prochain démarrage.",
-    "lastErrorLabel": "Dernière erreur"
+    "lastErrorLabel": "Dernière erreur",
+    "restartDaemon": "Redémarrer tailscaled",
+    "restarting": "Redémarrage de tailscaled. Le retour peut prendre jusqu'à une minute."
   }
 }

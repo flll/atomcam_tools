@@ -208,6 +208,8 @@
     },
     "applying": "Tailscale-Einstellungen werden übernommen (bis zu 60 s). Die Verbindung kann kurz abbrechen.",
     "applyFailed": "Senden des Übernahme-Befehls fehlgeschlagen. Die Einstellungen greifen beim nächsten Start.",
-    "lastErrorLabel": "Letzter Fehler"
+    "lastErrorLabel": "Letzter Fehler",
+    "restartDaemon": "tailscaled neu starten",
+    "restarting": "tailscaled wird neu gestartet. Die Rückkehr kann bis zu einer Minute dauern."
   }
 }

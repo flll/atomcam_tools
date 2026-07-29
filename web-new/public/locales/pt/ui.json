@@ -208,6 +208,8 @@
     },
     "applying": "Aplicando as configurações do Tailscale (até 60 s). A conexão pode cair temporariamente.",
     "applyFailed": "Falha ao enviar o comando de aplicação. As configurações terão efeito na próxima inicialização.",
-    "lastErrorLabel": "Último erro"
+    "lastErrorLabel": "Último erro",
+    "restartDaemon": "Reiniciar tailscaled",
+    "restarting": "Reiniciando o tailscaled. Pode levar até um minuto para voltar."
   }
 }
