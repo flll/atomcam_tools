@@ -148,6 +148,15 @@ else
   fi
 fi
 
+# WebUI 認証(digest)が有効だと HTTP チェックは 401 になる。これは
+# 「lighttpd が生きていて認証が守っている」証拠なので、3ケースとも理由付き skip にする
+WEBUI_AUTH_CODE="$(curl -s -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null)"
+if [ "$WEBUI_AUTH_CODE" = "401" ]; then
+  report "webui_spa" "skip" "{\"reason\":\"auth enabled (401)\"}"
+  report "webui_css" "skip" "{\"reason\":\"auth enabled (401)\"}"
+  report "webui" "skip" "{\"reason\":\"auth enabled (401)\"}"
+else
+
 # --- case: webui-spa (web-new index + gzip assets) ---------------------------
 SPA_INDEX_RC=0
 SPA_INDEX_CT="$(curl -sf -m 10 -o /dev/null -w '%{http_code}' "http://${HOST}/" 2>/dev/null)" || SPA_INDEX_RC=$?
@@ -195,6 +204,8 @@ if [ "$WEBUI_RC" -eq 0 ]; then
 else
   report "webui" "fail" "{\"rc\":${WEBUI_RC},\"output\":\"$(json_escape "$WEBUI_OUT")\"}"
 fi
+
+fi  # WEBUI_AUTH_CODE=401 guard
 
 # --- case: rtsp --------------------------------------------------------------
 # 有効判定は RTSP_VIDEO0/1/2(hack.ini に "RTSP=" というキーは存在しない — 旧実装は
