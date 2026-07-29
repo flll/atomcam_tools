@@ -53,6 +53,33 @@ fi
 
 if [ "$1" = "watchdog" ]; then
   [ "$RTSP_VIDEO0" = "on" -o "$RTSP_VIDEO1" = "on" -o "$RTSP_VIDEO2" = "on" ] || exit 0
+  # 「プロセスは生きているが映像が出ていない」状態の自己修復。
+  # boot 時、S75rtspserver は iCamera_app 起動の約1秒後に走るが、libcallback の
+  # コマンド IF(port 4000)が応答できるようになるのは約37秒後。この窓で
+  # `/scripts/cmd video N on` が黙って失敗し、v4l2rtspserver は死んだ
+  # /dev/videoN を掴んで起動する(rtspserver.log に VIDIOC_REQBUFS: Bad file
+  # descriptor、RTSP は 404 Stream Not Found)。pidof は成功するため従来の
+  # watchdog では検知できず、再起動するまで映像が出ないままだった。
+  # 対策: 有効なはずの video が実際に off なら、on に戻して再起動を促す。
+  if pidof v4l2rtspserver > /dev/null ; then
+    VIDEO_BROKEN=""
+    for n in 0 1 2 ; do
+      eval "want=\$RTSP_VIDEO$n"
+      [ "$want" = "on" ] || continue
+      cur=$(/scripts/cmd video $n 2>/dev/null | tr -d ' \r\n')
+      [ "$cur" = "on" ] || VIDEO_BROKEN="$VIDEO_BROKEN $n"
+    done
+    if [ -n "$VIDEO_BROKEN" ] ; then
+      echo `date +"%Y/%m/%d %H:%M:%S"` ": rtsp video off despite enabled ($VIDEO_BROKEN) -> restart"
+      for n in $VIDEO_BROKEN ; do
+        /scripts/cmd video $n on > /dev/null
+      done
+      while pidof v4l2rtspserver > /dev/null ; do
+        killall v4l2rtspserver > /dev/null 2>&1
+        sleep 0.5
+      done
+    fi
+  fi
 else
   [ "$1" != "on" -a "$1" != "restart" -a "$RTSP_VIDEO0" != "on" -a "$RTSP_VIDEO1" != "on" -a "$RTSP_VIDEO2" != "on" ] && exit 0
 fi
