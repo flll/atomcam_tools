@@ -113,7 +113,7 @@ fi
 # SSH 不通時は get_jpeg.cgi(iCamera が実フレームを返せるか)で代替判定する。
 # get_jpeg「.cgi」が正(拡張子なしは 404 — 2026-07-06 実測)
 if ! ssh_ok; then
-  JPEG_CODE="$(curl -sf -m 15 -o /dev/null -w '%{http_code}' "http://${HOST}/cgi-bin/get_jpeg.cgi" 2>/dev/null || true)"
+  JPEG_CODE="$(curl -sf -m 30 -o /dev/null -w '%{http_code}' "http://${HOST}/cgi-bin/get_jpeg.cgi" 2>/dev/null || true)"
   if [ "$JPEG_CODE" = "200" ]; then
     report "icamera" "pass" "{\"method\":\"http_jpeg\",\"http\":200}"
   else
