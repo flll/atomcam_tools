@@ -13,4 +13,4 @@ export const springGentle: Transition = { type: 'spring', stiffness: 350, dampin
 export const springBouncy: Transition = { type: 'spring', stiffness: 400, damping: 26 };
 
 /** opacity 等スケールしない属性向けの短いトゥイーン */
-export const fadeShort: Transition = { duration: 0.2, ease: [0.2, 0, 0, 1] };
+export const fadeShort: Transition = { duration: 0.2, ease: [0.4, 0, 0, 1] };

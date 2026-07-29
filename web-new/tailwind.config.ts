@@ -11,7 +11,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"LINE Seed JP"', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Roboto', '"Hiragino Sans"', '"Noto Sans JP"', 'sans-serif'],
+        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "Roboto", "Hiragino Sans", "Noto Sans CJK JP", "Noto Sans JP", "sans-serif"],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -119,13 +119,13 @@ export default {
       transitionDuration: {
         'short-2': '100ms',
         'short-4': '200ms',
-        'medium-2': '300ms',
-        'long-2': '500ms',
+        "medium-2": "250ms",
+        "long-2": "400ms",
       },
       transitionTimingFunction: {
-        standard: 'cubic-bezier(0.2, 0, 0, 1)',
-        'emphasized-decelerate': 'cubic-bezier(0.05, 0.7, 0.1, 1)',
-        'emphasized-accelerate': 'cubic-bezier(0.3, 0, 0.8, 0.15)',
+        standard: "cubic-bezier(0.4, 0, 0, 1)",
+        "emphasized-decelerate": "cubic-bezier(0, 0.4, 0, 1)",
+        "emphasized-accelerate": "cubic-bezier(0.6, 0, 0.8, 0.6)",
       },
       borderRadius: {
         lg: 'var(--radius)',

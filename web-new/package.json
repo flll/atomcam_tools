@@ -17,7 +17,7 @@
     "test:watch": "vitest",
     "e2e": "npm run demo:build && playwright test",
     "e2e:test": "playwright test",
-    "theme:generate": "tsx scripts/generate-theme.mjs"
+    "theme:generate": "tsx scripts/generate-ds-theme.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.5",
