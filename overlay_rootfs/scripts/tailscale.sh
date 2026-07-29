@@ -200,12 +200,18 @@ start_daemon() {
     if ! check_binary_health; then
         return 1
     fi
-    
-    if pgrep -f tailscaled > /dev/null; then
+
+    if pidof tailscaled > /dev/null; then
         echo "Tailscale daemon is already running"
         return 0
     fi
-    
+
+    # /media/mmc のバックアップからノード識別を復元してから起動する。
+    # これが無いと毎 boot 空 state で up し直し、tailnet に atomcam33-N が増殖する
+    # (F-9 設計の復元側。persist_state は connect 成功時に呼ばれるが、
+    #  restore_state は定義だけで未配線だった)
+    restore_state
+
     /usr/sbin/tailscaled \
         --state="$TAILSCALE_STATE_DIR/tailscaled.state" \
         --socket="$TAILSCALE_SOCKET" \
@@ -279,7 +285,7 @@ stop() {
 }
 
 status() {
-    if pgrep -f tailscaled > /dev/null; then
+    if pidof tailscaled > /dev/null; then
         echo "Tailscale daemon is running"
         /usr/bin/tailscale status
     else
@@ -290,14 +296,17 @@ status() {
 # WebUI 向け: 接続状態を JSON 1行で返す(state/ip/dnsName)。jq は無いので grep 抽出。
 status_json() {
     ts_env
-    if ! pgrep -f tailscaled > /dev/null 2>&1; then
+    if ! pidof tailscaled > /dev/null 2>&1; then
         printf '{"state":"stopped"}\n'
         return 0
     fi
     json=$(/usr/bin/tailscale status --json 2>/dev/null)
     ip=$(/usr/bin/tailscale ip -4 2>/dev/null | head -1)
-    backend=$(printf '%s' "$json" | grep -o '"BackendState":"[^"]*"' | head -1 | sed 's/.*:"//;s/"//')
-    dnsname=$(printf '%s' "$json" | grep -o '"DNSName":"[^"]*"' | head -1 | sed 's/.*:"//;s/"$//;s/[.]$//')
+    # tailscale status --json はキーと値の間にスペースを入れる("BackendState": "Running")。
+    # 旧パターン '"BackendState":"..."' はスペース無し前提で常に不一致となり、
+    # WebUI の Tailscale ページは接続中でも state=unknown を表示していた。
+    backend=$(printf '%s' "$json" | grep -o '"BackendState":[ ]*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
+    dnsname=$(printf '%s' "$json" | grep -o '"DNSName":[ ]*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/;s/[.]$//')
     [ -n "$backend" ] || backend="unknown"
     printf '{"state":"%s","ip":"%s","dnsName":"%s"}\n' "$backend" "$ip" "$dnsname"
 }
