@@ -4,10 +4,10 @@
   "plan_source": "~/.claude/plans/velvet-sniffing-orbit.md",
   "tier": "C-L",
   "status": "running",
-  "phaseIndex": 3,
-  "phaseTotal": 15,
-  "todoDone": 40,
-  "todoTotal": 337,
+  "phaseIndex": 5,
+  "phaseTotal": 13,
+  "todoDone": 56,
+  "todoTotal": 283,
   "killSwitch": [
     {
       "id": "KS-1",
@@ -19,32 +19,16 @@
     },
     {
       "id": "KS-2",
-      "phase": 5,
-      "title": "open-tx-isp を 3.10.14 で検証（決定的）",
+      "phase": 6,
+      "title": "7.1 でシェル到達(旧KS-3)",
       "result": null,
       "at": null,
       "note": null
     },
     {
       "id": "KS-3",
-      "phase": 7,
-      "title": "7.1 シェル到達 + メモリ予算",
-      "result": null,
-      "at": null,
-      "note": null
-    },
-    {
-      "id": "KS-4",
-      "phase": 9,
-      "title": "open-tx-isp を 7.1 へ（ioctl 適合）",
-      "result": null,
-      "at": null,
-      "note": null
-    },
-    {
-      "id": "KS-5",
-      "phase": 12,
-      "title": "ATBM6031 WiFi を 7.1 へ",
+      "phase": 8,
+      "title": "ATBM6031 WiFi を 7.1 へ(旧KS-5)",
       "result": null,
       "at": null,
       "note": null
@@ -78,45 +62,37 @@
     {
       "id": "P3",
       "title": "thingino buildroot ビルド環境",
-      "status": "pending",
-      "todoDone": 0,
+      "status": "done",
+      "todoDone": 16,
       "todoTotal": 16,
-      "report": null
+      "report": "docs/campaign/P3-report.md"
     },
     {
       "id": "P4",
-      "title": "thingino 3.10.14 + 純正 blob（対照群）",
+      "title": "母艦化(3.10常駐)+ramoops+kexec 経路",
       "status": "pending",
       "todoDone": 0,
-      "todoTotal": 30,
+      "todoTotal": 18,
       "report": null
     },
     {
       "id": "P5",
-      "title": "KS-2 open-tx-isp を 3.10.14 で検証",
-      "status": "pending",
+      "title": "7.1-rc1 のビルド成立(uImage/rootfs 生成)",
+      "status": "in_progress",
       "todoDone": 0,
-      "todoTotal": 30,
+      "todoTotal": 20,
       "report": null
     },
     {
       "id": "P6",
-      "title": "UART シリアルコンソール",
-      "status": "pending",
-      "todoDone": 0,
-      "todoTotal": 12,
-      "report": null
-    },
-    {
-      "id": "P7",
-      "title": "KS-3 7.1 シェル到達 + メモリ予算",
+      "title": "KS-2 7.1 シェル到達(母艦kexec または SD差替)",
       "status": "pending",
       "todoDone": 0,
       "todoTotal": 34,
       "report": null
     },
     {
-      "id": "P8",
+      "id": "P7",
       "title": "MMC/SD を 7.1 で有効化",
       "status": "pending",
       "todoDone": 0,
@@ -124,24 +100,32 @@
       "report": null
     },
     {
+      "id": "P8",
+      "title": "KS-3 ATBM6031 WiFi を 7.1 へ(到達性の生命線)",
+      "status": "pending",
+      "todoDone": 0,
+      "todoTotal": 30,
+      "report": null
+    },
+    {
       "id": "P9",
-      "title": "KS-4 open-tx-isp を 7.1 へ",
+      "title": "tailscale 最新化 + 常用化",
+      "status": "pending",
+      "todoDone": 0,
+      "todoTotal": 22,
+      "report": null
+    },
+    {
+      "id": "P10",
+      "title": "[任意] open-tx-isp を 7.1 へ(映像)",
       "status": "pending",
       "todoDone": 0,
       "todoTotal": 40,
       "report": null
     },
     {
-      "id": "P10",
-      "title": "AVPU エンコーダ移植",
-      "status": "pending",
-      "todoDone": 0,
-      "todoTotal": 20,
-      "report": null
-    },
-    {
       "id": "P11",
-      "title": "7.1 で映像 E2E",
+      "title": "[任意] AVPU エンコーダ + 映像 E2E",
       "status": "pending",
       "todoDone": 0,
       "todoTotal": 24,
@@ -149,22 +133,6 @@
     },
     {
       "id": "P12",
-      "title": "KS-5 ATBM6031 WiFi を 7.1 へ",
-      "status": "pending",
-      "todoDone": 0,
-      "todoTotal": 30,
-      "report": null
-    },
-    {
-      "id": "P13",
-      "title": "常用化・機能再構築・tailscale 最新",
-      "status": "pending",
-      "todoDone": 0,
-      "todoTotal": 22,
-      "report": null
-    },
-    {
-      "id": "P14",
       "title": "7日ソーク・本番移行",
       "status": "pending",
       "todoDone": 0,
@@ -185,5 +153,20 @@
     "backupPath": "lll-legacy:~/atomcam-backup/20260731-p0/",
     "identitySecret": "gcloud secrets versions access latest --secret=atomcam-nor-identity --project=lll-fish"
   },
-  "updatedAt": "2026-07-31T14:20:00Z"
+  "updatedAt": "2026-07-31T14:45:00Z",
+  "planDeviations": [
+    "映像(ISP/エンコーダ)を非ゴールに変更。7.1 到達自体を成果とする(ユーザー 2026-07-31)。旧 KS-2(open-tx-isp 3.10 検証)と旧 KS-4 はキルスイッチから外し、任意フェーズ P10/P11 へ降格",
+    "UART シリアルコンソールのフェーズを削除。ハンダ付けを行わないため。診断は ramoops(PSTORE_RAM)と母艦経由に置き換える",
+    "USB gadget 経由の到達性を計画から除外。電源は Type-B でデータ線を前提にしない(P0 レポートの記述を訂正)",
+    "到達目標は 7.1-rc1(thingino ingenic-7.1-rc1)。Linux 7.0 は kernel.org 上に存在せず EOL のため選べない(参照日 2026-07-31)",
+    "P7 のメモリゲート指標は MemFree+Buffers+Cached(基準 45,656 kB)。3.10 に MemAvailable が無いため"
+  ],
+  "kernelTarget": {
+    "version": "7.1-rc1",
+    "branch": "ingenic-7.1-rc1",
+    "repo": "https://github.com/gtxaspec/thingino-linux",
+    "hash": "92b684b3674ed0ea2bd0c96b6b151402b19fd666",
+    "kernelOrgStable": "7.1.5",
+    "referencedAt": "2026-07-31"
+  }
 }
