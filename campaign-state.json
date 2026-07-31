@@ -1,0 +1,49 @@
+{
+  "campaign": "t31-mainline-7.1",
+  "repo": "/home/lll/atomcam_tools",
+  "plan_source": "~/.claude/plans/velvet-sniffing-orbit.md",
+  "tier": "C-L",
+  "status": "running",
+  "phaseIndex": 1,
+  "phaseTotal": 15,
+  "todoDone": 18,
+  "todoTotal": 337,
+  "killSwitch": [
+    { "id": "KS-1", "phase": 2, "title": "静的 API 依存監査（mainline に等価物なしが中核に0件か）", "result": null, "at": null, "note": null },
+    { "id": "KS-2", "phase": 5, "title": "open-tx-isp を 3.10.14 で検証（決定的）", "result": null, "at": null, "note": null },
+    { "id": "KS-3", "phase": 7, "title": "7.1 シェル到達 + メモリ予算", "result": null, "at": null, "note": null },
+    { "id": "KS-4", "phase": 9, "title": "open-tx-isp を 7.1 へ（ioctl 適合）", "result": null, "at": null, "note": null },
+    { "id": "KS-5", "phase": 12, "title": "ATBM6031 WiFi を 7.1 へ", "result": null, "at": null, "note": null }
+  ],
+  "phases": [
+    { "id": "P0", "title": "全計測 + MTD 全バックアップ", "status": "done", "todoDone": 18, "todoTotal": 18, "report": "docs/campaign/P0-report.md" },
+    { "id": "P1", "title": "復旧の実証（SD 抜き→純正→復帰）", "status": "pending", "todoDone": 0, "todoTotal": 10, "report": null },
+    { "id": "P2", "title": "KS-1 静的 API 依存監査（実機不要）", "status": "pending", "todoDone": 0, "todoTotal": 22, "report": null },
+    { "id": "P3", "title": "thingino buildroot ビルド環境", "status": "pending", "todoDone": 0, "todoTotal": 16, "report": null },
+    { "id": "P4", "title": "thingino 3.10.14 + 純正 blob（対照群）", "status": "pending", "todoDone": 0, "todoTotal": 30, "report": null },
+    { "id": "P5", "title": "KS-2 open-tx-isp を 3.10.14 で検証", "status": "pending", "todoDone": 0, "todoTotal": 30, "report": null },
+    { "id": "P6", "title": "UART シリアルコンソール", "status": "pending", "todoDone": 0, "todoTotal": 12, "report": null },
+    { "id": "P7", "title": "KS-3 7.1 シェル到達 + メモリ予算", "status": "pending", "todoDone": 0, "todoTotal": 34, "report": null },
+    { "id": "P8", "title": "MMC/SD を 7.1 で有効化", "status": "pending", "todoDone": 0, "todoTotal": 14, "report": null },
+    { "id": "P9", "title": "KS-4 open-tx-isp を 7.1 へ", "status": "pending", "todoDone": 0, "todoTotal": 40, "report": null },
+    { "id": "P10", "title": "AVPU エンコーダ移植", "status": "pending", "todoDone": 0, "todoTotal": 20, "report": null },
+    { "id": "P11", "title": "7.1 で映像 E2E", "status": "pending", "todoDone": 0, "todoTotal": 24, "report": null },
+    { "id": "P12", "title": "KS-5 ATBM6031 WiFi を 7.1 へ", "status": "pending", "todoDone": 0, "todoTotal": 30, "report": null },
+    { "id": "P13", "title": "常用化・機能再構築・tailscale 最新", "status": "pending", "todoDone": 0, "todoTotal": 22, "report": null },
+    { "id": "P14", "title": "7日ソーク・本番移行", "status": "pending", "todoDone": 0, "todoTotal": 15, "report": null }
+  ],
+  "baseline": {
+    "kernel": "3.10.14__isvp_swan_1.0__",
+    "cmdline": "console=ttyS1,115200n8 mem=92M@0x0 rmem=36M@0x5c00000 rdinit=/init mtdparts=jz_sfc:256K(boot),1984K(kernel),3904K(rootfs),3904K(app),1984K(kback),3904K(aback),384K(cfg),64K(para)",
+    "memTotalKb": 87708,
+    "memFreeKb": 3100,
+    "buffersKb": 5332,
+    "cachedKb": 37224,
+    "memAvailableSupported": false,
+    "loadAvg1": 2.43,
+    "norMd5": "7c49c83d96d7889961452a4b21e525ad",
+    "backupPath": "lll-legacy:~/atomcam-backup/20260731-p0/",
+    "identitySecret": "gcloud secrets versions access latest --secret=atomcam-nor-identity --project=lll-fish"
+  },
+  "updatedAt": "2026-07-31T11:55:00Z"
+}
