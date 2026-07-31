@@ -1,0 +1,7 @@
+# kernel 7.1: Kconfig シンボルを make 変数(KERNEL_VERSION=7.1-rc1)と同期させる
+# KERNEL_VERSION_7 は BR2_THINGINO_DEV_PACKAGES > BR2_THINGINO_DEV_EXPERIMENTAL 配下の choice
+BR2_THINGINO_DEV_PACKAGES=y
+BR2_THINGINO_DEV_EXPERIMENTAL=y
+# KERNEL_VERSION_3 is not set
+KERNEL_VERSION_7=y
+BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="/home/lll/thingino-firmware/user/atom_cam2_t31x_gc2053_atbm6031/kernel-initramfs.fragment"

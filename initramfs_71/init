@@ -1,0 +1,47 @@
+#!/bin/sh
+# ATOMCam kernel-7.1 initramfs: SD の rootfs_71.squashfs へ switch_root する。
+# UART が無い機体のため、全ステップを SD の boot71.log に残す(電源断で回収)。
+
+mount -t devtmpfs devtmpfs /dev
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+
+mkdir -p /rootfs /newroot
+
+i=0
+while [ $i -lt 15 ] && ! [ -b /dev/mmcblk0p1 ]; do sleep 1; i=$((i+1)); done
+
+fsck.fat -a /dev/mmcblk0p1
+mount -t vfat /dev/mmcblk0p1 /rootfs -o rw,umask=0000,dmask=0000
+
+LOG=/rootfs/boot71.log
+echo "==== 7.1 initramfs boot ====" >> $LOG
+uname -a >> $LOG 2>&1
+cat /proc/cmdline >> $LOG 2>&1
+grep MemTotal /proc/meminfo >> $LOG 2>&1
+echo "mmc wait loops: $i" >> $LOG
+sync
+
+[ -f /rootfs/initramfs-debug ] && /bin/sh
+
+if [ -f /rootfs/rootfs_71.squashfs ]; then
+  if mount -t squashfs -o loop /rootfs/rootfs_71.squashfs /newroot; then
+    echo "squashfs mounted ok" >> $LOG
+    sync
+    mount --move /dev /newroot/dev
+    mount --move /sys /newroot/sys
+    mount --move /proc /newroot/proc
+    mkdir -p /newroot/media/mmc 2>/dev/null
+    mount --move /rootfs /newroot/media/mmc
+    echo "switch_root -> /init" >> /newroot/media/mmc/boot71.log
+    sync
+    exec switch_root /newroot /init
+  fi
+  echo "squashfs mount FAILED" >> $LOG
+else
+  echo "rootfs_71.squashfs NOT FOUND" >> $LOG
+fi
+sync
+echo "fallback: shell (no console though)" >> $LOG
+sync
+exec /bin/sh
