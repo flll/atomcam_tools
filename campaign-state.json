@@ -4,9 +4,9 @@
   "plan_source": "~/.claude/plans/velvet-sniffing-orbit.md",
   "tier": "C-L",
   "status": "running",
-  "phaseIndex": 5,
+  "phaseIndex": 6,
   "phaseTotal": 13,
-  "todoDone": 56,
+  "todoDone": 76,
   "todoTotal": 283,
   "killSwitch": [
     {
@@ -78,10 +78,10 @@
     {
       "id": "P5",
       "title": "7.1-rc1 のビルド成立(uImage/rootfs 生成)",
-      "status": "in_progress",
-      "todoDone": 0,
+      "status": "done",
+      "todoDone": 20,
       "todoTotal": 20,
-      "report": null
+      "report": "docs/campaign/P5-report.md"
     },
     {
       "id": "P6",
@@ -153,7 +153,7 @@
     "backupPath": "lll-legacy:~/atomcam-backup/20260731-p0/",
     "identitySecret": "gcloud secrets versions access latest --secret=atomcam-nor-identity --project=lll-fish"
   },
-  "updatedAt": "2026-07-31T14:45:00Z",
+  "updatedAt": "2026-07-31T15:35:00Z",
   "planDeviations": [
     "映像(ISP/エンコーダ)を非ゴールに変更。7.1 到達自体を成果とする(ユーザー 2026-07-31)。旧 KS-2(open-tx-isp 3.10 検証)と旧 KS-4 はキルスイッチから外し、任意フェーズ P10/P11 へ降格",
     "UART シリアルコンソールのフェーズを削除。ハンダ付けを行わないため。診断は ramoops(PSTORE_RAM)と母艦経由に置き換える",
