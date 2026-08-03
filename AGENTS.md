@@ -1,83 +1,128 @@
-# AGENTS.md — ATOMCam2 カーネル 7.1 化キャンペーン (C-L)
+# Agents — atomcam_tools
 
-新しいエージェントはまずこれを読むこと。正本はこのリポジトリ (`lll-legacy:~/atomcam_tools`)。
-進行状態は `campaign-state.json`(phaseIndex 等)、フェーズ報告は `docs/campaign/P*-report.md`。
+> **進行中 (2026-08): カーネル 3.10→7.1 化キャンペーン (C-L)** — この作業に触るエージェントは
+> 先に [docs/campaign/AGENTS-71.md](docs/campaign/AGENTS-71.md) を必読(SD起動チェーン・ビルド罠・診断手順・禁止事項)。
+> SD カード作業は hx90 ではなく **lll-legacy 直挿し**に移行済み。
 
-## ゴールと絶対禁止
+このリポジトリは **AI エージェントが会話だけでビルド・デプロイできる**ように設計されている。
+特殊な専用コマンドや Node 間連携は不要。`make` と短い自然言語で完結する。
 
-- ゴール: ATOMCam2 (Ingenic T31X + GC2053 + atbm6031) のカーネルを 3.10.14 → **7.1-rc1** (thingino 移植) に上げ、tailscale を最新化する。KS-2 = SD の `boot71.log` に 7.1 の uname + switch_root 到達が記録されること
-- 映像(ISP/AVPU)は**非ゴール**(任意フェーズ P10-11)。7.1 到達自体が成果
-- **絶対禁止**: NOR フラッシュへの書き込み / UART ハンダ付け / USB データ線改造。IO は SD スロットと電源 microUSB のみ
-- git push しない(コミットは日本語・AI 著作権表記を入れない)
+## ⚠️ 必読ゲート — コードを書く前に(全エージェント必須)
 
-## マシン構成 (2026-08-03 更新)
+**Edit/Write・実機操作の前に必ず読む**(安価/軽量モデルも例外なし):
 
-- **lll-legacy**: ビルド・逆アセンブル・**SD カード読み書き**のすべてを行う正本マシン。
-  SD 作業は 2026-08-03 に hx90 から移行済み(hx90 の H: はもう使わない)
-- hx90 (Windows): ユーザーの操作端末。旧バックアップ `C:\Users\no5\atomcam-71\sd-backup-20260731\` は残置(正本は lll-legacy 側 `~/atomcam-backup/sd-backup-20260731/`)
-- 実機テストはユーザーの手作業: SD をカメラへ→電源 ON→LED 目視/数分通電→SD を lll-legacy へ戻す
+1. [docs/development/guardrails.md](docs/development/guardrails.md) — 実バグ由来の再発防止チェックリスト(10項目)
+2. [SECURITY.md](SECURITY.md) — 秘密の扱い(hack.ini の値を出さない 等)
 
-## ディレクトリ地図 (lll-legacy)
+読了後、変更がチェックリストに違反しないことを確認してからコードに触る。
+Cursor では `.cursor/rules/guardrails.mdc`(alwaysApply)が毎プロンプト同旨を注入する。
 
-| パス | 内容 |
-|---|---|
-| `~/atomcam_tools` | campaign 正本 (state, docs, initramfs_71/ に修正の写し) |
-| `~/thingino-firmware` | ビルドツリー (master)。BOARD=atom_cam2_t31x_gc2053_atbm6031 |
-| `~/atomcam71/` | initramfs_root(init 正本)・initramfs_devnodes.txt・blink/(ベアメタルプローブ)・ledprobe |
-| `~/atomcam-backup/20260731-p0/` | mtd0.bin 等 NOR 全パーティションのバックアップ (u-boot 逆アセンブルの素材) |
-| `~/atomcam-backup/sd-backup-20260731/` | SD フルバックアップ正本 |
-| `~/venv-cap` | capstone 入り venv (MIPS 逆アセンブル用。objdump は無い) |
-| `~/bin-gnu` | GNU coreutils (ビルド時 PATH 先頭に必要) |
+## いちばん大事な3点
 
-カーネルビルドディレクトリ `$K` = `~/thingino-firmware/output/master/atom_cam2_t31x_gc2053_atbm6031-7.1-rc1-uclibc/build/linux-92b684b3674ed0ea2bd0c96b6b151402b19fd666`
+1. **zip は1本**。`atomcam-{commit}[-{profile}].zip`(例 `atomcam-3ad28e8-harness.zip`、simple は `atomcam-3ad28e8.zip`)
+2. SD もデプロイも **同じ1本**を使う。OTA の時だけ `deploy_remote.sh` が中で余分な2ファイル(`hack.ini`/`tools_configs`)を自動で除く
+3. 版の真実は **`target/BUILD_MANIFEST.json`**(commit/tag/profile/時刻)。エージェントはここを読む
 
-## SD 起動チェーン (u-boot 解析で確定済み)
+## ビルド(1コマンド)
 
-- NOR の u-boot 環境変数: `bootdelay=0`、
-  `bootcmd=mw 0xb0011134 0x300 1;sdstart;sdupdate;sf probe;sf read 0x80600000 0x40000 0x1F0000; bootm 0x80600000`
-  → **sdstart は毎回自動実行**され、失敗すると黙って NOR の純正 3.10 にフォールバック(見た目: 黄色 LED 常灯)
-- sdstart (do_sdstart @0x80108ee0、mtd0.bin の load addr = file offset + 0x800f9800):
-  SD の FAT から `factory_t31_ZMC6tiIDQN` を **0x84000000** に読み(上限 **0x500000=5MB**)、以下を全部検査して `bootm 0x84000000`:
-  1. magic 0x27051956 / 2. ih_arch=5(MIPS, off 0x1d) / 3. ih_type=2(kernel, off 0x1e) /
-  4. ヘッダ CRC / 5. **ファイルサイズ == ih_size+0x40 (完全一致)** / 6. データ CRC
-- 純正 3.10 の枠: 解凍先 0x80100000〜ロード元 0x80600000 (5MB)。7.1 の解凍後 12MB は溢れる →
-  **自己解凍 uzImage (C=none の uImage が stub+LZMA を包む)** で回避。stub のロード先はカーネル末尾より上に置く
-  (v2: Load/Entry 0x80ca0000。解凍後 vmlinux 末尾 ≈0x80C87C00 なので重ならない)
+```bash
+cd ~/atomcam_tools          # lll-legacy が正本(main のみ)
 
-## 実機診断 (UART なしでの切り分け)
+make help                   # 一覧(既定ターゲット)
+make configure              # プロファイル対話選択(エージェント無しでも可)
 
-- initramfs の init が SD へ `boot71.log` を全ステップ書いて sync (KS-2 の判定材料)
-- LED プローブ `ledprobe` (initramfs 組込): devtmpfs 直後に黄+青点灯 / SD 検出で黄消灯 / switch_root 直前に青消灯
-- ベアメタル blink (`~/atomcam71/blink/`): 224B の MIPS コード。uImage ヘッダを本番と同一(comp=0, load=entry=0x80ca0000)にして sdstart→bootm の受け渡しだけを検証
-- LED: 黄=GPIO38/PB6、青=GPIO39/PB7、**active-low**。GPIO レジスタ: bank B base 0x10010100、
-  INTC=+0x18 / MSKS=+0x24 / PAT1C=+0x38(出力) / PAT0S=+0x44(消灯) / PAT0C=+0x48(点灯)
-- その他 GPIO: mmc_cd=59 / mmc_power=48(active-low) / wlan=57 / reset ボタン=51
-- 症状の読み方: **黄常灯のみ=NOR 純正が起動(sdstart 失敗)** / 黄+青点きっぱなし=7.1 生存だが SD 検出失敗 / 点いてすぐ消灯=switch_root 到達見込み
+make build                  # 既定 profile=tailscale。終わると 1本の zip ができる
+make build-harness          # HIL 反復デバッグ向け
+make build-simple           # Tailscale 無効・最小(zip 名に profile 付かない)
+make build-agent            # harness + デバッグ SSH 鍵
+```
 
-## ビルドの罠 (全部実際に踏んだ)
+`make build` は docker ビルド → `sd-package` で **1本の正本 zip** を生成し、
+`atomcam_tools.zip`(deploy 別名) と `target/sd_initial.zip`(SD 別名) を同じ正本へ symlink する。
 
-1. thingino の make ラッパは uImage が存在するとスキップする。`.stamp_*` を消しても **uzImage.bin は再生成されない**
-2. buildroot の `linux-rebuild` も uzImage.bin を作らない (デフォルトターゲット外)
-3. **正解**: `cd $K && PATH=$HOME/bin-gnu:$O/host/bin:$PATH make ARCH=mips CROSS_COMPILE=mipsel-linux- uzImage.bin`
-4. DTS は 2 箇所に同じパッチが要る: `$K/arch/mips/boot/dts/ingenic/` と `~/thingino-firmware/dl/linux/git/arch/mips/boot/dts/ingenic/` (後者が再展開元)
-5. initramfs は CONFIG_INITRAMFS_SOURCE=`~/atomcam71/initramfs_root` + devnodes。init や bin/* を変えたら uzImage.bin を作り直す
-6. カーネル config の要点: CONFIG_MMC_JZ4740=y / BUILTIN_DTB(thingino-t31) / KERNEL_LZMA / DEVMEM=y / GPIO_SYSFS=y / CMDLINE "earlycon"
-7. DTB の mmc@13450000 には `broken-cd;` を入れてある (実機の cd-gpio は 59 だが polling で回避)
-8. 静的ツールのクロスビルド: `$O/host/bin/mipsel-linux-gcc -static -Os` (busybox に devmem は無い)
-9. capstone は venv (`source ~/venv-cap/bin/activate`)。pip 直はexternally-managed で失敗する
+## 成果物
 
-## SD 上のファイル (factory_* の運用)
+| パス | 意味 |
+|------|------|
+| `target/releases/atomcam-*.zip` | **正本(版付き短名・1本)** |
+| `atomcam_tools.zip` | deploy 用エイリアス(symlink) |
+| `target/sd_initial.zip` | SD 用エイリアス(symlink) |
+| `target/BUILD_MANIFEST.json` | 機械可読メタ(commit/tag/profile) |
+| `target/LATEST.txt` | 最新 zip 名の短い要約 |
 
-- `factory_t31_ZMC6tiIDQN` — u-boot が起動する現物 (差し替えて実験する)
-- `.310` = 純正 3.10 / `.71v1` = v1(load 0x80C90000) / `.71v2` = v2(broken-cd+ledprobe, load 0x80ca0000, md5 f55a3a40...)
-- `rootfs_71.squashfs` — 7.1 用 rootfs (switch_root 先)
-- `wpa_supplicant.conf` — P8 (WiFi) 用に配置済み
-- 既存ファイルは消さない。退避はリネームで行う
+```bash
+make release-info    # 次に作られる zip 名 + メタ(ビルド不要)
+make artifacts       # symlink と releases/ 一覧
+```
 
-## 現在地 (2026-08-03 時点)
+## デプロイ / HIL(現状は LAN)
 
-- v1・v2 とも実機で完全沈黙 (boot71.log 書かれず・LED 変化なし)
-- ベアメタル blink も点滅せず**黄常灯のみ** → sdstart が bootm まで到達していない疑い濃厚
-  (v2/blink はヘッダ検査を全部通るはずなのに蹴られている → sdstart 実行時の SD 読み取り・
-  FAT 解釈・sdupdate の干渉・`mw 0xb0011134` の意味などが次の調査点)
-- 詳細な次アクションは `campaign-state.json` と最新ピン (`hx90:~/.cursor/session-pin/PIN.md`) を参照
+```bash
+# OTA(自動で hack.ini/tools_configs を除いた4ファイルを送る)
+ATOMCAM_HOST=10.0.0.228 make deploy
+ATOMCAM_HOST=10.0.0.228 ./scripts/deploy_remote.sh 10.0.0.228 --status
+ATOMCAM_HOST=10.0.0.228 make hil-debug-loop
+```
+
+tailnet(`atomcam33`)はカメラ側 Tailscale 復旧後に `debug-hil-loop.sh resolve` が自動選択。
+現状は LAN `10.0.0.228` が有効経路。
+
+## 会話シミュレーション例(10件)
+
+エージェントは下記のように自然言語を `make`/スクリプトへ写像する。
+
+1. 「harness でビルドして」→ `make build-harness` → `atomcam-3ad28e8-harness.zip`(1本)
+2. 「Tailscale なしの最小ビルド」→ `make build-simple` → `atomcam-3ad28e8.zip`(profile 無し)
+3. 「今のコミットだと zip 名どうなる？」→ `make release-info`(ビルド前プレビュー)
+4. 「SD に焼いて」→ `make build-harness` 後、Windows で `hil-windows.ps1 install -RefreshZip`(同じ1本)
+5. 「10.0.0.228 に入れて」→ `ATOMCAM_HOST=10.0.0.228 make deploy`(OTA は自動で4ファイルに絞る)
+6. 「カメラの状態見て」→ `./scripts/deploy_remote.sh 10.0.0.228 --status`
+7. 「デバッグループ回して」→ `ATOMCAM_HOST=10.0.0.228 make hil-debug-loop`
+8. 「この zip どのコミット？」→ 名前の `3ad28e8` と `target/BUILD_MANIFEST.json` を照合
+9. 「前の版に戻して」→ `./scripts/deploy_remote.sh 10.0.0.228 --rollback`(端末の .bak を書き戻し)
+10. 「zip って2個あったよね？」→「1本に統一済み。SD はそのまま、deploy 時だけ自動で2ファイル除く」+ `make artifacts`
+
+## エージェントが居ない場合
+
+`make agent-hint` で検出。未検出時は `make configure`(番号選択)→ `make build` で完結。
+clone も不要(lll-legacy の `~/atomcam_tools` が正本)。
+
+## 前提 / 境界
+
+- ビルド: Docker + `make docker-build`(初回)
+- push/commit は **ユーザー明示時のみ**
+- 起動不能リスク領域(`initramfs_skeleton/` `patches/kernel/` u-boot)には触れない
+
+## 詳細
+
+- [docs/development/build-profiles.md](docs/development/build-profiles.md)
+- [docs/development/debug-hil-loop.md](docs/development/debug-hil-loop.md)
+- [docs/development/hil-bootstrap.md](docs/development/hil-bootstrap.md)
+- [docs/development/repo-map.md](docs/development/repo-map.md)
+- 作業経緯/未解決: [docs/development/refactor-notes.md](docs/development/refactor-notes.md)
+
+## Cursor Cloud specific instructions
+
+クラウド VM(ハードウェア無し)で実際に開発・実行できるのは **`web-new/`(React 19 + Vite + TypeScript の WebUI)** のみ。
+ファーム本体ビルド(`make build` = Docker + Buildroot で MIPS クロスコンパイル)と
+デプロイ/HIL(`make deploy` / `scripts/hil/*` / `deploy_remote.sh`)は **重いビルドや実機カメラが前提**で
+クラウド VM では完結しない(コマンドの正本は本ファイル上部と `docs/development/`)。
+
+### web-new(主開発対象)
+
+- パッケージマネージャは **npm**(`web-new/package-lock.json`)。CI は **Node 22**(`.github/workflows/webui.yml`)。
+- コマンドは `web-new/package.json` の scripts が正本。要点:
+  - `npm run dev` — Vite dev server(**port 5173**)。`npm run test` — vitest。
+  - `npm run lint` / `npm run typecheck` / `npm run build`(+ `npm run budget` = gzip バンドル上限チェック)。
+  - `npm run e2e` は Playwright ブラウザが別途必要(`npx playwright install chromium`。update script には含めない)。
+- **バックエンドは MSW が自動モック**する(`import.meta.env.DEV` または demo ビルド時)。
+  実機の CGI(`overlay_rootfs/var/www/cgi-bin`)は起動せず、`.env` やバックエンド常駐も不要で dev/test/build が完結する。
+
+### 非自明な落とし穴(要記憶)
+
+- **MSW の Service Worker は初回ロードで登録された後にページを制御し始める**。
+  データ取得を伴うルートへ**直接 URL でハードリロード**すると、SW が制御を握る前の fetch が失敗し
+  白画面 + `Failed to fetch`(`mockServiceWorker`)になることがある。**サイドバー内の SPA 遷移**を使うか、一度リロードする。
+- **ナビ項目は端末モデルで出し分け**(`web-new/src/components/layout/AppLayout.tsx` の `filterNav`)。
+  既定モックは Swing モデルのため **`/settings/camera`(ATOM 専用)はサイドバーに出ず、直接開くと空表示**になる(仕様。バグではない)。
+  Swing では代わりに `/settings/cruise` が出る。動作確認は `/settings/system` 等の共通ページが確実。
