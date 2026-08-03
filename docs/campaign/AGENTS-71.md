@@ -42,17 +42,50 @@
   4. ヘッダ CRC / 5. **ファイルサイズ == ih_size+0x40 (完全一致)** / 6. データ CRC
 - 純正 3.10 の枠: 解凍先 0x80100000〜ロード元 0x80600000 (5MB)。7.1 の解凍後 12MB は溢れる →
   **自己解凍 uzImage (C=none の uImage が stub+LZMA を包む)** で回避。stub のロード先はカーネル末尾より上に置く
-  (v2: Load/Entry 0x80ca0000。解凍後 vmlinux 末尾 ≈0x80C87C00 なので重ならない)
+  - 解凍後 vmlinux.bin は **12,128,736 B = 0xB90BE0** → 0x80100000 + 0xB90BE0 = **0x80C90BE0** まで伸びる
+    (旧記載の ≈0x80C87C00 は誤り)
+  - **v1 の Load/Entry 0x80c90000 は 0x80C90BE0 の内側 = zboot stub が自分自身を上書きする致命的欠陥。**
+    v1 の沈黙はこれ単独で説明できる (v2 の沈黙とは別現象)
+  - v2 の Load/Entry 0x80ca0000 は正しい。`readelf -h $K/vmlinuz` → Entry 0x80ca0000 /
+    LOAD FileSiz 0x42eb00 MemSiz 0x930b10。余裕は 0xF420 (62,496 B) しかない
+- **7.1 は u-boot の bootargs を一切見ない**: `CONFIG_MIPS_CMDLINE_FROM_DTB=y`。
+  do_sdstart が強制する `mem=64M@0x0 ... rdinit=/linuxrc` は 7.1 に無効 (`/linuxrc` 不在は無関係)
+- **DTB 仮説は棄却済み**: `__dtb_start == __dtb_thingino_t31_begin` (唯一の builtin DTB)、
+  `ingenic,t31` は `arch/mips/generic/board-ingenic.c` の `ingenic_of_match[]` に存在
+
+## 安全: sdupdate は NOR を焼くが、リセットボタンで gate されている
+
+- `do_sdupdate` @0x80109344 は先頭で `gpio_request(51,"sdupgrade") → gpio_direction_input(51) →
+  gpio_get_value(51)&1` を見て、押されていなければ `beqz s0,0x801098b0` で
+  **SD 読み込み + NOR 書き込みパスを丸ごと飛ばす**
+- したがって SD に何 MB のファイルを置いても、**リセットボタンを押さずに通電する限り NOR は書かれない**
+- ペイロードに `FWGRADEUP` 文字列を含めないこと (更新フラグとして解釈されうる)
 
 ## 実機診断 (UART なしでの切り分け)
 
 - initramfs の init が SD へ `boot71.log` を全ステップ書いて sync (KS-2 の判定材料)
 - LED プローブ `ledprobe` (initramfs 組込): devtmpfs 直後に黄+青点灯 / SD 検出で黄消灯 / switch_root 直前に青消灯
-- ベアメタル blink (`~/atomcam71/blink/`): 224B の MIPS コード。uImage ヘッダを本番と同一(comp=0, load=entry=0x80ca0000)にして sdstart→bootm の受け渡しだけを検証
-- LED: 黄=GPIO38/PB6、青=GPIO39/PB7、**active-low**。GPIO レジスタ: bank B base 0x10010100、
-  INTC=+0x18 / MSKS=+0x24 / PAT1C=+0x38(出力) / PAT0S=+0x44(消灯) / PAT0C=+0x48(点灯)
+- ベアメタル blink: **`~/atomcam71/blink3/` を使う**。`~/atomcam71/blink/`(v1) は GPIO アドレスが誤りで廃止
+- LED: 黄=GPIO38/PB6、青=GPIO39/PB7、**active-low**。
+  **GPIO レジスタ: bank B base = phys 0x10011000 / KSEG1 0xB0011000。バンクストライドは 0x1000 (0x100 ではない)**
+  INTC=0xB0011018 / MSKS=0xB0011024 / PAT1C=0xB0011038(出力) / PAT0S=0xB0011044(HIGH=消灯) / PAT0C=0xB0011048(LOW=点灯)
+  - 一次証拠(実機 NOR の u-boot, mtd0.bin): `misc_init_r` @0x8012b330 が
+    `gpio_request(38,"yellow_gpio"); gpio_direction_output(38,0)` → 黄点灯、
+    `gpio_request(39,"blue_gpio"); gpio_direction_output(39,1)` → 青消灯 (= active-low が確定)。
+    アドレス計算は @0x80112de8 の `srl v1,a0,0x5 / lui v0,0xb / addiu v0,v0,16 / addu v0,v1,v0 / sll v0,v0,0xc`
+    = `(0xb0010 + (gpio>>5)) << 12`
+  - ⚠️ 2026-08-03 まで本ファイルに `bank B base 0x10010100` と誤記されており、
+    その誤りが `blink/blink.c` と `initramfs_root/bin/ledprobe`(mmap 0x10010000 len 4096 で PORT B に到達不能)に伝播。
+    **8/1・8/3 のベアメタル/LED プローブ実機テストはすべて PORT A に書いていた = 情報量ゼロの空実験だった**
+  - 純正 bootcmd 冒頭の `mw 0xb0011134 0x300 1` も PORT B の PXPAT1S (bit8,9 = GPIO40,41) であり、
+    ストライド 0x1000 を裏づける独立証拠
 - その他 GPIO: mmc_cd=59 / mmc_power=48(active-low) / wlan=57 / reset ボタン=51
-- 症状の読み方: **黄常灯のみ=NOR 純正が起動(sdstart 失敗)** / 黄+青点きっぱなし=7.1 生存だが SD 検出失敗 / 点いてすぐ消灯=switch_root 到達見込み
+- ~~症状の読み方: 黄常灯のみ=NOR 純正が起動(sdstart 失敗)~~ ← **この判定則は無効。使用禁止**
+- 症状の読み方(改訂): 黄常灯は (1) NOR フォールバック / (2) ペイロードがハング /
+  (3) ペイロードが LED を触れていない の3状態を区別できない。**判別子は「時間軸」**:
+  - 電源投入から数秒以内に LED が変化 → ペイロードが走っている
+  - 20〜40 秒後に LED が変化しカメラがネットワークに出る → NOR 純正 3.10 にフォールバック
+  - 90 秒何も起きない → ハンドオフ前で停止
 
 ## ビルドの罠 (全部実際に踏んだ)
 
@@ -70,14 +103,32 @@
 
 - `factory_t31_ZMC6tiIDQN` — u-boot が起動する現物 (差し替えて実験する)
 - `.310` = 純正 3.10 / `.71v1` = v1(load 0x80C90000) / `.71v2` = v2(broken-cd+ledprobe, load 0x80ca0000, md5 f55a3a40...)
+- `.probeL` = blink3 の 4,385,600B 版(.71v2 と幾何学的に完全一致) / `.probeS` = 352B 版 / `.blinkv1` = 廃止した v1 プローブ
 - `rootfs_71.squashfs` — 7.1 用 rootfs (switch_root 先)
 - `wpa_supplicant.conf` — P8 (WiFi) 用に配置済み
 - 既存ファイルは消さない。退避はリネームで行う
+- **既知の正常状態に戻す**: `cp /mnt/sd/factory_t31_ZMC6tiIDQN.310 /mnt/sd/factory_t31_ZMC6tiIDQN && sync`
+  (md5 `5ca130feb23e2331b31a9ccb379d1c70`。`~/atomcam_tools/target/` と sd-backup の同名ファイルと3者一致)
+
+## SD の書き込み規律 (必須)
+
+- SD は lll-legacy 直挿し。udev ルール(ラベル `ATOMCAM` 基準)で `/mnt/sd` に自動マウントされる
+  (`/etc/udev/rules.d/99-atomcam-sd.rules`、設定スクリプトは `~/setup-sd-automount.sh`)
+- lll-legacy には root が無く `umount /mnt/sd` は失敗する。**抜く直前に必ず `sync`**
+  (fsck.fat が dirty bit を検出済み。rw マウントのまま抜かれている)
+- 「マウント経由の md5 が一致」は媒体到達の証明にならない。生読み検証は
+  `docker run --rm --user 0 --privileged --device=/dev/sdg:/dev/sdg ... blockdev --flushbufs /dev/sdg; dd ...`
+- ルートディレクトリは cluster 2 → 35 の2クラスタに断片化。新規ファイルの dirent 位置は生読みで確認する
+- カードリーダーは相性がある。Anker PowerExpand / GL3224 系は `Media removed, stopped polling` で
+  カードを検出できなかった。**Realtek USB3.0 Card Reader (056e:800e) で動作**
 
 ## 現在地 (2026-08-03 時点)
 
-- v1・v2 とも実機で完全沈黙 (boot71.log 書かれず・LED 変化なし)
-- ベアメタル blink も点滅せず**黄常灯のみ** → sdstart が bootm まで到達していない疑い濃厚
-  (v2/blink はヘッダ検査を全部通るはずなのに蹴られている → sdstart 実行時の SD 読み取り・
-  FAT 解釈・sdupdate の干渉・`mw 0xb0011134` の意味などが次の調査点)
+- **v1 の沈黙は原因確定**: load/entry 0x80c90000 が解凍後 vmlinux(〜0x80C90BE0)の内側 → stub 自壊
+- **v2 の沈黙は原因未確定**。ただし sdstart の6検査は全通過することを自前パーサで確認済み。
+  DTB / bootargs / bootm overwrite は棄却済み。残る候補(すべて未証明): zboot 解凍後の I-cache フラッシュ、
+  zboot の BSS 領域(〜0x815D0B10)、earlycon 到達前の panic
+- **過去のベアメタル/LED テストは全て無効**(GPIO アドレス誤り)。ハンドオフの成否は一度も検証されていない
+- 次: blink3 の probeL(4,385,600B、.71v2 と同一ジオメトリ)で
+  「ハンドオフ / 4.38MB の FAT 読み / 5MB 上限 / bootm memmove」を1回の通電で同時判定する
 - 詳細な次アクションは `campaign-state.json` と最新ピン (`hx90:~/.cursor/session-pin/PIN.md`) を参照
