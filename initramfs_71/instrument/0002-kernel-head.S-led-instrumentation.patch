@@ -1,0 +1,41 @@
+--- a/arch/mips/kernel/head.S
++++ b/arch/mips/kernel/head.S
+@@ -25,6 +25,7 @@
+ #include <asm/stackframe.h>
+ 
+ #include <kernel-entry-init.h>
++#include <asm/ledprobe.h>
+ 
+ 	/*
+ 	 * For the moment disable interrupts, mark the kernel mode and
+@@ -85,6 +86,14 @@
+ 
+ NESTED(kernel_entry, 16, sp)			# kernel entry point
+ 
++#if LEDPROBE_ON
++	/* S4: 解凍後カーネルの最初の命令 (kernel_entry)。ここが光れば
++	 *     『解凍 -> ジャンプ』が成立し、I-cache も健全だったことになる。
++	 *     a0-a3 は firmware args。ledp_* は t0-t3 しか触らない。
++	 *     黄4回 -> ラッチ=両方。 */
++	ledp_stage 4, LEDP_BOTH
++#endif
++
+ 	kernel_entry_setup			# cpu specific setup
+ 
+ 	setup_c0_status_pri
+@@ -120,6 +129,15 @@
+ 	set_saved_sp	sp, t0, t1
+ 	PTR_SUBU	sp, 4 * SZREG		# init stack pointer
+ 
++#if LEDPROBE_ON
++	/* S5: head.S の仕上げ完了 -- .bss クリア済み / fw_arg0-3 保存済み /
++	 *     $28(gp)=init_thread_union / sp 確立済み。この直後に
++	 *     start_kernel へ抜ける。t0/t1 は直前の set_saved_sp の
++	 *     スクラッチで既に死んでいるので使ってよい。
++	 *     黄5回 -> ラッチ=青のみ。 */
++	ledp_stage 5, LEDP_BLU
++#endif
++
+ #ifdef CONFIG_RELOCATABLE
+ 	/* Copy kernel and apply the relocations */
+ 	jal		relocate_kernel

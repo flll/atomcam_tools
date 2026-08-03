@@ -122,13 +122,45 @@
 - カードリーダーは相性がある。Anker PowerExpand / GL3224 系は `Media removed, stopped polling` で
   カードを検出できなかった。**Realtek USB3.0 Card Reader (056e:800e) で動作**
 
-## 現在地 (2026-08-03 時点)
+## ★起動チェーンの健全性は実機で確定した (2026-08-03)
+
+blink3 の probeL(4,385,600B、`.71v2` と同一ジオメトリ)を実機で通電し、
+**「黄+青の同時点灯 → 黄と青の交互点滅」を観測**した。これにより以下が実証された:
+
+1. **ハンドオフ成功** — 両点灯は純正 u-boot が作れない状態(`misc_init_r` は黄=点灯/青=消灯にする)
+2. **4.38MB が1バイトも欠けず届く** — 交互点滅 = payload 内2箇所のマジック
+   (offset 0x200000 の `0xA5A5C0DE` と 末尾-16 の `0x5A5A1234`)が両方無傷
+3. したがって **sdstart の FAT 読み / uImage 6検査 / bootm の 4.38MB memmove / 制御移譲は全て健全**。
+   1984K 制限も 5MB 制限も無関係だった
+
+→ **残る容疑者は 7.1 の vmlinuz(zboot stub + LZMA カーネル)本体のみ。**
 
 - **v1 の沈黙は原因確定**: load/entry 0x80c90000 が解凍後 vmlinux(〜0x80C90BE0)の内側 → stub 自壊
-- **v2 の沈黙は原因未確定**。ただし sdstart の6検査は全通過することを自前パーサで確認済み。
-  DTB / bootargs / bootm overwrite は棄却済み。残る候補(すべて未証明): zboot 解凍後の I-cache フラッシュ、
-  zboot の BSS 領域(〜0x815D0B10)、earlycon 到達前の panic
-- **過去のベアメタル/LED テストは全て無効**(GPIO アドレス誤り)。ハンドオフの成否は一度も検証されていない
-- 次: blink3 の probeL(4,385,600B、.71v2 と同一ジオメトリ)で
-  「ハンドオフ / 4.38MB の FAT 読み / 5MB 上限 / bootm memmove」を1回の通電で同時判定する
+- 棄却済みの仮説: メモリ配置の衝突 / LZMA ヒープのペイロード踏み潰し / SD 上のイメージ破損 /
+  DTB 不在・誤選択 / bootargs 上書き / bootm overwrite
+
+## LED 計装イメージ (instr-v2)
+
+**`CONFIG_DEBUG_ZBOOT` が未設定**のため `puts/puthex/putc` は `do {} while(0)` に潰れ、
+`error()` は**無出力の while(1)** だった。さらに `decompress.c` は `__decompress()` の戻り値を
+捨てていた。つまり「破損検出」「無音の失敗」「本当のハング」が全部同じ症状に潰れていた。
+これを LED で分解するのが計装イメージ。
+
+- 資材: `~/atomcam71/instrument/`(ledprobe.h + 0001〜0004 パッチ + apply.sh/revert.sh + **pristine/**)
+- 成果物 md5 `c35a6adbaa8927b33292c7bad86767af` (4,389,616 B、`.71v3` として SD に併置)
+- **文法**: 進捗 S(n) = 青が枠(点きっぱなし)で黄が n 回点滅・一度きり /
+  異常 E(n) = 黄が枠で青が n 回点滅・**永久に繰り返す**
+  - ラッチに「青のみ」(奇数段)と「両方」(偶数段)だけを使う。どちらも u-boot には作れない状態。
+    「黄のみ」= u-boot 平常状態、「消灯」= 電源断と区別できないので使わない
+- 段階: S1=zboot エントリ(0x80CA0000) / S2=zboot BSS クリア後 / S3=decompress_kernel 復帰 /
+  S4=kernel_entry(0x8095F0C0) / S5=kernel head.S 完走 / S6=start_kernel(0x80BD1778)
+- 異常: E1=イメージ末尾4B不一致(DRAM に届いていない) / E2=LZMA が error() を呼んだ /
+  E3=`__decompress()` が黙って非ゼロ復帰 / E4=解凍成功を主張したが入口ワードが違う
+- ⚠️ **I-cache の罠**: u-boot は 0x800F9800〜0x80139800 に居り、解凍後カーネルが
+  0x80100000〜0x80139800 を上書きする。`decompress.c:127` に上流のまま
+  `/* FIXME: should we flush cache here? */` が残っている。重なり領域への最初の実行は
+  **S6 内の `jal ledp_c_dly`(0x80100400)**。よって S5 の後に点滅が見えないまま
+  両点灯/消灯になった場合も **S6 には入っている**と読む
+- 元に戻す: `.orig` からのコピーバック(`~/atomcam71/instrument/pristine/` にも保存)。
+  `revert.sh` の `patch -R` は git 管理外ツリーで半端に失敗しうるので `.orig` の方が安全
 - 詳細な次アクションは `campaign-state.json` と最新ピン (`hx90:~/.cursor/session-pin/PIN.md`) を参照

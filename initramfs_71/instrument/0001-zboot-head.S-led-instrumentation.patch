@@ -1,0 +1,54 @@
+--- a/arch/mips/boot/compressed/head.S
++++ b/arch/mips/boot/compressed/head.S
+@@ -14,8 +14,22 @@
+ 
+ #include <asm/asm.h>
+ #include <asm/regdef.h>
++/* LEDP_TAILWORD を持つ生成ヘッダ。必ず ledprobe.h より先に include する */
++#include <asm/ledprobe_tail.h>
++#include <asm/ledprobe.h>
+ 
+ 	LEAF(start)
++
++#if LEDPROBE_ON
++	/* S1: bootm から制御が渡った最初の 1 命令目。黄1回 -> ラッチ=青のみ。
++	 *     a0-a3 (firmware args) は次行で s0-s3 に退避されるので壊せない。
++	 *     このマクロは t0-t3 しか使わない。sp はまだ未定義だが未使用。 */
++	ledp_stage 1, LEDP_BLU
++	/* 続けて 4.38MB のペイロードが末尾まで届いているかを検証する。
++	 *  欠けていれば E1 (黄の枠 + 青1回) で停止し、以降には進まない。 */
++	ledp_check_image
++#endif
++
+ 	/* Save boot rom start args */
+ 	move	s0, a0
+ 	move	s1, a1
+@@ -29,6 +43,12 @@
+ 	PTR_ADDIU a0, a0, PTRSIZE
+ 	bne	a2, a0, 1b
+ 
++#if LEDPROBE_ON
++	/* S2: BSS クリア完了直後 = 解凍を始める直前。黄2回 -> ラッチ=両方。
++	 *     このラッチのまま止まったら『解凍中に死んだ』を意味する。 */
++	ledp_stage 2, LEDP_BOTH
++#endif
++
+ 	PTR_LA	a0, (.heap)	     /* heap address */
+ 	PTR_LA	sp, (.stack + 8192)  /* stack address */
+ 
+@@ -36,6 +56,15 @@
+ 	jalr	t9
+ 
+ 2:
++
++#if LEDPROBE_ON
++	/* S3: decompress_kernel() から復帰 = 解凍が完了して戻ってきた。
++	 *     ここから jalr KERNEL_ENTRY までは move 4 命令しか離れておらず
++	 *     分岐も呼出も無いため、『ジャンプ直前』も同一の観測点として統合。
++	 *     黄3回 -> ラッチ=青のみ。t0-t3 のみ使用、s0-s3 は壊さない。 */
++	ledp_stage 3, LEDP_BLU
++#endif
++
+ 	move	a0, s0
+ 	move	a1, s1
+ 	move	a2, s2

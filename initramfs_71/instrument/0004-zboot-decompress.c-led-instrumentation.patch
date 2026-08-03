@@ -1,0 +1,59 @@
+--- a/arch/mips/boot/compressed/decompress.c
++++ b/arch/mips/boot/compressed/decompress.c
+@@ -20,6 +20,9 @@
+ #include <asm-generic/vmlinux.lds.h>
+ 
+ #include "decompress.h"
++/* LEDP_TAILWORD/ENTRYWORD を持つ生成ヘッダ。ledprobe.h より先に */
++#include <asm/ledprobe_tail.h>
++#include <asm/ledprobe.h>
+ 
+ /*
+  * These two variables specify the free mem region
+@@ -34,6 +37,12 @@
+ 	puts(x);
+ 	puts("\n\n -- System halted");
+ 
++#if LEDPROBE_ON
++	/* E2: LZMA が破損/EOF/bad header/stack-protector を報告した。
++	 *     CONFIG_DEBUG_ZBOOT が無効なので上の puts は全て no-op であり、
++	 *     従来ここは『完全に無音の while(1)』だった。 */
++	ledp_c_fail(2);
++#endif
+ 	while (1)
+ 		;	/* Halt */
+ }
+@@ -100,8 +109,31 @@
+ 	puts("\n");
+ 
+ 	/* Decompress the kernel with according algorithm */
+-	__decompress((char *)zimage_start, zimage_size, 0, 0,
+-		   (void *)VMLINUX_LOAD_ADDRESS_ULL, 0, 0, error);
++	{
++		int ledp_ret;
++
++		ledp_ret = __decompress((char *)zimage_start, zimage_size, 0, 0,
++			   (void *)VMLINUX_LOAD_ADDRESS_ULL, 0, 0, error);
++#if LEDPROBE_ON
++		/* E3: error() を呼ばずに黙って失敗した経路
++		 *     (goto exit_3 / large_malloc が NULL)。
++		 *     上流はこの戻り値を完全に捨てており、失敗しても
++		 *     無検査で KERNEL_ENTRY へ飛んでいた。 */
++		if (ledp_ret)
++			ledp_c_fail(3);
++#else
++		(void)ledp_ret;
++#endif
++	}
++
++#if LEDPROBE_ON && (LEDP_ENTRYWORD != 0)
++	/* E4: 解凍後イメージのカーネル入口ワードを照合する。
++	 *     __decompress が 0 を返しても中身が正しい保証は無いので、
++	 *     実際に飛ぶ番地の 1 命令目を直接読んで確かめる。 */
++	if (*(volatile unsigned int *)(unsigned long)(LEDP_ENTRYADDR) !=
++	    (unsigned int)(LEDP_ENTRYWORD))
++		ledp_c_fail(4);
++#endif
+ 
+ 	if (IS_ENABLED(CONFIG_MIPS_RAW_APPENDED_DTB) &&
+ 	    fdt_magic((void *)&__appended_dtb) == FDT_MAGIC) {
