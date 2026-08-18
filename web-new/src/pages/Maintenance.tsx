@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { CalendarClock, DownloadCloud, FileArchive, HeartPulse, Link2, Power, Wifi } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { CalendarClock, DownloadCloud, FileArchive, HeartPulse, Link2, Power, RefreshCw, Wifi } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { RebootScheduleEditor, Section, SettingAction, SettingInput, SettingSwitch, UnsavedBar } from '@/components/settings';
 import { useHackIniForm } from '@/hooks/useHackIniForm';
@@ -9,6 +9,72 @@ import { runCmd } from '@/lib/runCmd';
 import { parseRebootSchedule, serializeRebootSchedule } from '@/lib/schedule';
 import type { RebootSchedule } from '@/api';
 import { WebUiAuthSection } from '@/components/auth/WebUiAuthSection';
+import { LOG_IDS, type LogId } from '@/lib/logs';
+
+function LogViewer() {
+  const { t } = useTranslation();
+  const [file, setFile] = useState<LogId>('atomhack');
+  const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  const load = useCallback(async () => {
+    setBusy(true);
+    setErr('');
+    try {
+      const body = await api.getLog(file, 200);
+      const first = body.trim().split('\n', 1)[0] ?? '';
+      if (first.startsWith('ERROR=')) {
+        const code = first.slice('ERROR='.length);
+        setText('');
+        setErr(code === 'missing' ? t('logs.missing') : t('logs.unknown'));
+        return;
+      }
+      setText(body);
+    } catch {
+      setErr(t('common.execFailed'));
+      setText('');
+    } finally {
+      setBusy(false);
+    }
+  }, [file, t]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  return (
+    <Section
+      title={t('logs.title')}
+      description={t('logs.hint')}
+      action={
+        <Button variant="ghost" size="sm" className="gap-2" disabled={busy} onClick={() => void load()}>
+          <RefreshCw className="size-4" />
+          {t('logs.refresh')}
+        </Button>
+      }
+    >
+      <label className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <span className="text-title-s">{t('logs.file')}</span>
+        <select
+          className="shrink-0 rounded-control border border-input bg-background px-3 py-1.5 text-sm"
+          value={file}
+          disabled={busy}
+          onChange={(e) => setFile(e.target.value as LogId)}
+        >
+          {LOG_IDS.map((id) => (
+            <option key={id} value={id}>
+              {t(`logs.${id}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <pre className="max-h-[60vh] overflow-auto whitespace-pre-wrap break-all px-4 py-3 font-mono text-xs leading-5 text-muted-foreground">
+        {err || text || t('logs.empty')}
+      </pre>
+    </Section>
+  );
+}
 
 export default function MaintenancePage() {
   const { t } = useTranslation('translation');
@@ -27,6 +93,7 @@ export default function MaintenancePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-title-xl">{t('maintenance.tab')}</h1>
+      <LogViewer />
       <WebUiAuthSection />
       <Section title={t('monitoring.title')}>
         <SettingSwitch icon={Wifi} i18nKey="monitoring.network" value={draft.MONITORING_NETWORK ?? 'on'} onChange={(v) => patch({ MONITORING_NETWORK: v })} />

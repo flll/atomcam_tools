@@ -287,5 +287,19 @@
     "deviceModel": "Model",
     "deviceMac": "MAC address",
     "deviceSd": "SD card capacity"
+  },
+  "logs": {
+    "title": "Logs",
+    "hint": "Config files are not shown. Last 200 lines.",
+    "file": "File",
+    "refresh": "Refresh",
+    "empty": "(empty)",
+    "missing": "This log does not exist yet.",
+    "unknown": "That log cannot be read.",
+    "atomhack": "hack (atomhack.log)",
+    "healthcheck": "network (healthcheck.log)",
+    "tools": "boot (tools.log)",
+    "update": "update (update.log)",
+    "lighttpd": "web server (lighttpd)"
   }
 }

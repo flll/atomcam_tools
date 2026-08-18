@@ -287,5 +287,19 @@
     "deviceModel": "モデル",
     "deviceMac": "MACアドレス",
     "deviceSd": "SDカード容量"
+  },
+  "logs": {
+    "title": "ログ",
+    "hint": "設定ファイルは出ません。直近 200 行です。",
+    "file": "ファイル",
+    "refresh": "更新",
+    "empty": "（空です）",
+    "missing": "このログはまだありません。",
+    "unknown": "そのログは読めません。",
+    "atomhack": "hack（atomhack.log）",
+    "healthcheck": "ネットワーク（healthcheck.log）",
+    "tools": "起動（tools.log）",
+    "update": "更新（update.log）",
+    "lighttpd": "Webサーバ（lighttpd）"
   }
 }

@@ -59,6 +59,12 @@ export const api = {
     return parseStatus(await getText(`${CGI_BASE}/cmd.cgi${q}`));
   },
 
+  // allowlist のログ末尾。file は LOG_IDS のみ(サーバ側でも拒否する)
+  async getLog(file: string, lines = 200): Promise<string> {
+    const q = new URLSearchParams({ name: 'log', file, lines: String(lines) });
+    return getText(`${CGI_BASE}/cmd.cgi?${q.toString()}`);
+  },
+
   async getJpegObjectUrl(): Promise<string> {
     const res = await fetch(`${CGI_BASE}/get_jpeg.cgi?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`GET get_jpeg.cgi -> ${res.status}`);

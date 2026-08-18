@@ -92,6 +92,13 @@ export const handlers = [
         JSON.stringify({ state: 'Running', ip: '100.101.102.103', dnsName: `${host}.tailnet-demo.ts.net` }),
       );
     }
+    if (name === 'log') {
+      const file = url.searchParams.get('file');
+      if (file === 'atomhack') {
+        return HttpResponse.text('2026/08/19 03:11:22 : Reboot and Start watchdog');
+      }
+      return HttpResponse.text('ERROR=unknown-log');
+    }
     return HttpResponse.text(statusText());
   }),
 

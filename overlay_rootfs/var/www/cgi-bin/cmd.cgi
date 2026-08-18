@@ -136,6 +136,32 @@ if [ "$REQUEST_METHOD" = "GET" ]; then
       # 適用トライアル(デッドマンスイッチ)の状態
       /scripts/tailscale.sh trial-status 2>/dev/null || echo '{"active":false,"remaining":0,"reverted":false}'
       ;;
+    log)
+      # WebUI ログ閲覧。allowlist 以外は返さない(hack.ini 等を読ませない)。
+      # ファイル名は web-new/src/lib/logs.ts の LOG_IDS と揃えること。
+      FILE=`query_param file`
+      LINES=`query_param lines`
+      case "$LINES" in
+        ''|*[!0-9]*) LINES=200 ;;
+      esac
+      if [ "$LINES" -gt 2000 ]; then LINES=2000; fi
+      if [ "$LINES" -lt 1 ]; then LINES=1; fi
+      LOGFILE=""
+      case "$FILE" in
+        atomhack) LOGFILE=/media/mmc/atomhack.log ;;
+        healthcheck) LOGFILE=/media/mmc/healthcheck.log ;;
+        tools) LOGFILE=/media/mmc/tools.log ;;
+        update) LOGFILE=/media/mmc/update.log ;;
+        lighttpd) LOGFILE=/tmp/log/lighttpd/lighttpd-error.log ;;
+      esac
+      if [ -z "$LOGFILE" ]; then
+        echo "ERROR=unknown-log"
+      elif [ ! -f "$LOGFILE" ]; then
+        echo "ERROR=missing"
+      else
+        tail -n "$LINES" "$LOGFILE"
+      fi
+      ;;
   esac
 fi
 
