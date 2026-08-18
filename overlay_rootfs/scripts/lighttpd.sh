@@ -35,22 +35,29 @@ fi
 
 # 401(サインイン失敗/キャンセル)時の案内ページを生成する。
 # ブラウザの認証ダイアログをキャンセルするとこのページが表示される。
-# 初心者向けに「ユーザー名は admin」「リセット手順」と機体の識別情報を載せる
+# ログイン前なので SPA の i18n は使えない。hack.ini の LOCALE を初期値にし、
+# ページ内の 日本語/English で切り替えられるようにする。
 gen_error_page() {
   ERRDIR=/tmp/lighttpd-err
   mkdir -p $ERRDIR
   MODEL=$(awk -F "=" '/^PRODUCT_MODEL/ {print $2}' /atom/configs/.product_config 2>/dev/null)
   MAC=$(ifconfig 2>/dev/null | awk '/HWaddr/ { gsub(/^.*HWaddr */, ""); print; exit }')
   HOST=$(hostname)
+  LOCALE=$(awk -F "=" '/^LOCALE *=/ {print $2}' $HACK_INI | tr -d '\r')
+  DEFAULT_LANG=ja
+  [ "$LOCALE" = "en" ] && DEFAULT_LANG=en
   cat > $ERRDIR/errfile-401.html <<HTML
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8">
+<html lang="$DEFAULT_LANG" data-default-lang="$DEFAULT_LANG"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>サインインが必要です - $HOST</title>
+<title>Sign-in required - $HOST</title>
 <style>
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
     background:#111;color:#fff;display:flex;min-height:100dvh;align-items:center;justify-content:center;padding:24px}
-  .card{max-width:560px;background:#1f1f1f;border:1px solid #3f3f3f;border-radius:13px;padding:28px}
+  .card{max-width:560px;background:#1f1f1f;border:1px solid #3f3f3f;border-radius:13px;padding:28px;position:relative}
+  .lang{display:flex;gap:8px;justify-content:flex-end;margin:0 0 16px}
+  .lang button{background:#2a2a2a;color:#b7b7b7;border:1px solid #3f3f3f;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+  .lang button[aria-pressed="true"]{color:#fff;border-color:#40b6ff;background:#16324a}
   h1{font-size:20px;margin:0 0 12px}
   p,li{font-size:14px;line-height:1.7;color:#b7b7b7}
   strong,code{color:#fff}
@@ -60,8 +67,12 @@ gen_error_page() {
   td:last-child{text-align:right;color:#fff;font-family:ui-monospace,Consolas,monospace}
   a{color:#40b6ff}
   ol{padding-left:20px}
-  .en{margin-top:20px;border-top:1px solid #3f3f3f;padding-top:14px;font-size:12px;color:#949494}
 </style></head><body><div class="card">
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" data-lang-btn="ja">日本語</button>
+  <button type="button" data-lang-btn="en">English</button>
+</div>
+<div data-lang="ja">
 <h1>サインインが必要です</h1>
 <p>ユーザー名は <strong>admin</strong> です。パスワードは WebUI ログイン設定で決めたものを入力してください。
 <a href="/">再試行する</a></p>
@@ -76,29 +87,52 @@ gen_error_page() {
 <tr><td>ホスト名</td><td>$HOST</td></tr>
 <tr><td>MACアドレス</td><td>$MAC</td></tr>
 </table>
-<p class="en">Sign-in required. The username is <strong>admin</strong>.
-Forgot the password? Power off, remove the DIGEST= line from hack.ini on the SD card, and boot again.</p>
+</div>
+<div data-lang="en">
+<h1>Sign-in required</h1>
+<p>The username is <strong>admin</strong>. Use the password set in WebUI login settings.
+<a href="/">Try again</a></p>
+<p><strong>Forgot the password (reset):</strong></p>
+<ol>
+<li>Power off the camera, remove the SD card, and insert it into a PC</li>
+<li>Open <code>hack.ini</code> on the SD card and delete the line that starts with <code>DIGEST=</code></li>
+<li>Put the SD card back and power on (the UI opens without login; set a password again)</li>
+</ol>
+<table>
+<tr><td>Model</td><td>$MODEL</td></tr>
+<tr><td>Hostname</td><td>$HOST</td></tr>
+<tr><td>MAC address</td><td>$MAC</td></tr>
+</table>
+</div>
 <script>
-/* WebUI 本体(SPA)に入る前なので i18n は使えない。ブラウザの言語が日本語でなければ
-   英語を主、日本語を副として並べ替える(静的ページで賄える最小限の多言語対応) */
 (function () {
-  if ((navigator.language || '').toLowerCase().indexOf('ja') === 0) return;
-  var card = document.querySelector('.card');
-  var en = document.querySelector('.en');
-  if (!card || !en) return;
-  en.classList.remove('en');
-  en.style.fontSize = '15px';
-  en.style.color = '#fff';
-  card.insertBefore(en, card.firstChild);
-  var ja = document.createElement('div');
-  ja.style.cssText = 'margin-top:20px;border-top:1px solid #3f3f3f;padding-top:14px;font-size:12px;color:#949494';
-  while (card.children.length > 2) { ja.appendChild(card.children[2]); }
-  card.appendChild(ja);
+  var KEY = 'atomcam-auth-help-lang';
+  var def = document.documentElement.getAttribute('data-default-lang') || 'ja';
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-lang]').forEach(function (el) {
+      el.hidden = el.getAttribute('data-lang') !== lang;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang-btn') === lang ? 'true' : 'false');
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  apply(saved === 'en' || saved === 'ja' ? saved : def);
+  document.querySelectorAll('[data-lang-btn]').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-lang-btn')); });
+  });
 })();
 </script>
 </div></body></html>
 HTML
 }
+if [ "$1" = "gen-error" ]; then
+  gen_error_page
+  exit 0
+fi
 gen_error_page
 
 if [ "$1" = "restart" ]; then
