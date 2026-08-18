@@ -6,10 +6,15 @@
 
 | 場所 | 含まれるもの |
 |------|--------------|
-| `/media/mmc/hack.ini`(実機) | WiFi PSK・`RTSP_USER`/`RTSP_PASSWD`・HomeKit PIN・CIFS 認証 |
+| `/media/mmc/hack.ini`(実機) | WebUI DIGEST・`RTSP_*`・HomeKit PIN・CIFS・`TAILSCALE_AUTH_KEY` 等 |
+| `/media/mmc/wpa_supplicant.conf`(実機) | hack が優先する Wi‑Fi コピー（無くても起動可） |
+| `/media/mmc/configs`(ext2・実機) | `/atom/configs/.user_config` の `[NET]`。mtd6 からのコピー |
+| **mtd6 `cfg`(jffs2・フラッシュ)** | **公式 Wi‑Fi の正本**。SD 無しの公式起動でも使う |
 | `/media/mmc/tailscaled.state`(実機) | Tailscale ノード秘密鍵 |
 | `authorized_keys` / agent プロファイルのデバッグ SSH 鍵 | SSH 認証情報 |
 | `sim-results/`(smoke 失敗時の自動収集) | **hack.ini のスナップショットが含まれることがある** |
+
+詳細: [docs/development/sd-boot-and-wifi.md](docs/development/sd-boot-and-wifi.md)
 
 ## ルール
 

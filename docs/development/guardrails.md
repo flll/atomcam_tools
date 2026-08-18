@@ -72,6 +72,7 @@
 
 ## 10. 秘密の扱い
 
+- Wi‑Fi 正本はフラッシュ mtd6。SD の wpa_supplicant.conf / configs はコピー。詳細は [sd-boot-and-wifi.md](sd-boot-and-wifi.md)。
 - [SECURITY.md](../../SECURITY.md) を読む。hack.ini の**値**(PSK/パスワード/PIN)を
   チャット・ログ・コミットに出さない(キー名のみ可)。
 

@@ -13,6 +13,7 @@
 
 1. [docs/development/guardrails.md](docs/development/guardrails.md) — 実バグ由来の再発防止チェックリスト(10項目)
 2. [SECURITY.md](SECURITY.md) — 秘密の扱い(hack.ini の値を出さない 等)
+3. [docs/development/sd-boot-and-wifi.md](docs/development/sd-boot-and-wifi.md) — SD なし公式起動・Wi‑Fi 正本は mtd6、SD はコピー
 
 読了後、変更がチェックリストに違反しないことを確認してからコードに触る。
 Cursor では `.cursor/rules/guardrails.mdc`(alwaysApply)が毎プロンプト同旨を注入する。
