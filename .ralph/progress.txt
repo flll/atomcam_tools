@@ -3,3 +3,4 @@
 S1 jest-dom 7. 検証 lint/typecheck/test/build OK.
 S2 @types/node. 検証 OK.
 S3 js-yaml 5. 検証 OK.
+S4 jsdom@^30. 検証 OK.
