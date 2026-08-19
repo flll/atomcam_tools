@@ -2,19 +2,19 @@
 #
 # tailscale-prebuilt
 # Prebuilt mipsle binaries from Tailscale releases.
-# https://dl.tailscale.com/stable/tailscale_1.92.3_mipsle.tgz
+# https://dl.tailscale.com/stable/tailscale_1.102.2_mipsle.tgz
 #
 # Stock Buildroot 2026.02 ships a source-build tailscale package; AtomCam uses
 # the official prebuilt tarball for MIPS32r1/Ingenic T31 instead.
 #
-# NOTE: pinned to 1.92.3 (Go 1.25.5). tailscale >= 1.96 is built with Go 1.26,
-# which has a runtime regression (futex_time64 / uname parse) that crashes on
-# old 32-bit mipsle kernels like 3.10.14__isvp_swan_1.0__ before heap init.
-# Refs: golang/go#77730, golang/go#77930, tailscale#19039. Do NOT bump past
-# 1.94 until a Go >=1.26.2 (fix backport) tailscale mipsle build is available.
+# 1.92.3 に止めていた理由: tailscale >= 1.96 は Go 1.26 で、mipsle 旧カーネル
+# (3.10.14__isvp_swan_1.0__) で futex_time64 / ENOSYS=-89 の runtime が起動前に死ぬ。
+# Refs: golang/go#77730, golang/go#77930, tailscale#19039.
+# 1.102.2 は go.mod が Go 1.26.5（1.26.2 の ENOSYS 修正を含む）。prebuilt tgz は
+# dl.tailscale.com/stable に存在する。初回 boot の tailscaled は実機で要確認。
 ################################################################################
 
-TAILSCALE_PREBUILT_VERSION = 1.92.3
+TAILSCALE_PREBUILT_VERSION = 1.102.2
 TAILSCALE_PREBUILT_SOURCE = tailscale_$(TAILSCALE_PREBUILT_VERSION)_mipsle.tgz
 TAILSCALE_PREBUILT_SITE = https://dl.tailscale.com/stable
 TAILSCALE_PREBUILT_LICENSE = BSD-3-Clause
@@ -28,13 +28,11 @@ endef
 define TAILSCALE_PREBUILT_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/tailscale $(TARGET_DIR)/usr/bin/tailscale
 	$(INSTALL) -D -m 0755 $(@D)/tailscaled $(TARGET_DIR)/usr/sbin/tailscaled
-	$(INSTALL) -D -m 0644 $(@D)/systemd/tailscaled.service \
-		$(TARGET_DIR)/etc/systemd/system/tailscaled.service
+	$(INSTALL) -D -m 0644 $(@D)/systemd/tailscaled.service 		$(TARGET_DIR)/etc/systemd/system/tailscaled.service
 endef
 
 define TAILSCALE_PREBUILT_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 0755 $(TAILSCALE_PREBUILT_PKGDIR)/S60tailscale \
-		$(TARGET_DIR)/etc/init.d/S80tailscale
+	$(INSTALL) -D -m 0755 $(TAILSCALE_PREBUILT_PKGDIR)/S60tailscale 		$(TARGET_DIR)/etc/init.d/S80tailscale
 endef
 
 $(eval $(generic-package))
