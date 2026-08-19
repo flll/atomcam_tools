@@ -2,9 +2,8 @@
 
 /* フォントは design-system 規約により Web フォント読込禁止 —
    LDSG Language Pack のシステムスタック(tailwind.config.ts の sans)を使う */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
 @layer base {
   :root {

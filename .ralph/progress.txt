@@ -7,3 +7,4 @@ S4 jsdom@^30. 検証 OK.
 S5 konva@^10.3.1. 検証 OK.
 S6 motion@^13.1.0. 検証 OK.
 S7 qrcode-generator@^2.0.4. 検証 OK.
+S8 tailwind 4. 検証 OK.

@@ -96,7 +96,7 @@
         "web-new の lint/typecheck/test/build が exit 0"
       ],
       "dependencies": [],
-      "passes": false
+      "passes": true
     },
     {
       "id": "S9",
