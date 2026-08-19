@@ -23,7 +23,7 @@
 flll フォークでの主な追加・変更:
 
 - **Tailscale VPN** — WebUI から設定可能なリモートアクセス
-- **Buildroot 2026.02** — ビルド環境のモダン化（`buildroot-2026.02.1`）
+- **Buildroot 2026.05.1** — ビルド環境のモダン化（`buildroot-2026.05.1`）
 - **Ubuntu 26.04 + Docker** — 推奨ホスト環境
 - **AtomSwing シミュレーション** — `make sim-swing` による QEMU 検証
 

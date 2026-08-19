@@ -157,7 +157,7 @@
         "web-new 回帰テストが exit 0"
       ],
       "dependencies": [],
-      "passes": false
+      "passes": true
     }
   ]
 }

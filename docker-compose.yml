@@ -1,6 +1,6 @@
 services:
   builder:
-    image: flll/atomcam_tools-builder:br2026.02
+    image: flll/atomcam_tools-builder:br2026.05
     volumes:
       - ".:/src"
     cap_add:

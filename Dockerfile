@@ -2,7 +2,7 @@ FROM ubuntu:26.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Host tools required by Buildroot 2026.02 LTS and the custom packages in this
+# Host tools required by Buildroot 2026.05.1 and the custom packages in this
 # tree. Notes versus the previous ubuntu:16.04 environment:
 #   * python (Python 2) and python-lzma are gone; Buildroot dropped Python 2
 #     support years ago. python-is-python3 keeps `/usr/bin/python` available
@@ -109,10 +109,10 @@ RUN curl -fsSL https://ftp.gnu.org/gnu/make/make-4.3.tar.gz -o /tmp/make-4.3.tar
 RUN mkdir -p /atomtools/build
 WORKDIR "/atomtools/build"
 
-# Buildroot 2026.02 LTS (matches Ubuntu 26.04 LTS release timing). The old
+# Buildroot 2026.05.1 (latest stable; 2026.08-rc は使わない). The old
 # 2016.02 is Python-2 only and does not build on modern hosts; see
 # patches/ and custompackages/ for the corresponding migration notes.
-ARG BUILDROOT_VERSION=2026.02.1
+ARG BUILDROOT_VERSION=2026.05.1
 ENV BUILDROOT_VERSION=${BUILDROOT_VERSION}
 RUN wget -qO - https://buildroot.org/downloads/buildroot-${BUILDROOT_VERSION}.tar.gz | tar zxf -
 

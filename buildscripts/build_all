@@ -4,7 +4,7 @@
 # iterative dev builds inside the running container after setup_buildroot.sh
 # has done the initial provisioning.
 
-BUILDROOT_VERSION=${BUILDROOT_VERSION:-2026.02.1}
+BUILDROOT_VERSION=${BUILDROOT_VERSION:-2026.05.1}
 BUILDROOT_DIR=/atomtools/build/buildroot-${BUILDROOT_VERSION}
 
 if [ ! -d "${BUILDROOT_DIR}" ]; then

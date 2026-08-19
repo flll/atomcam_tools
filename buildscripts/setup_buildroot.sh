@@ -15,7 +15,7 @@ set -e
 #     which is linked against uClibc-NG to interoperate with the proprietary
 #     Ingenic blobs.
 
-BUILDROOT_VERSION=${BUILDROOT_VERSION:-2026.02.1}
+BUILDROOT_VERSION=${BUILDROOT_VERSION:-2026.05.1}
 BUILDROOT_DIR=/atomtools/build/buildroot-${BUILDROOT_VERSION}
 
 cd "${BUILDROOT_DIR}"

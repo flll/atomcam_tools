@@ -7,7 +7,7 @@
 | パス | 役割 | 実行環境 |
 |---|---|---|
 | `Makefile` | 開発のエントリポイント (`make docker-build` / `make build` / `make login` / `make sim-swing` など) | ホスト |
-| `Dockerfile` | ビルドイメージ定義 (Ubuntu 26.04 + Buildroot 2026.02.1) | ホスト (docker build) |
+| `Dockerfile` | ビルドイメージ定義 (Ubuntu 26.04 + Buildroot 2026.05.1) | ホスト (docker build) |
 | `docker-compose.yml` | builder コンテナの定義 | ホスト |
 | `lima-docker.yml` | macOS で Docker を動かすための Lima VM 定義 | ホスト (macOS) |
 | `build.md` | ビルド手順の詳細ドキュメント | なし |

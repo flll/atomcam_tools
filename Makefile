@@ -4,7 +4,7 @@
 
 DOCKER_IMAGE=$(shell sed -ne 's>^.*image:[ \t]*>>p' docker-compose.yml)
 DOCKER_ARCH=-$(shell uname -m | sed 's>x86_64>amd64>g; s>aarch64>arm64>g')
-BUILDROOT_DIR=/atomtools/build/buildroot-2026.02.1
+BUILDROOT_DIR=/atomtools/build/buildroot-2026.05.1
 BR2_EXTERNAL=/src/custompackages
 PROFILE ?=
 BUILD_PROFILE_SCRIPT=./scripts/make/build-profile.sh
