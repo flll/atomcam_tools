@@ -66,7 +66,20 @@ mkdir -p /atomtools/build/cross/src/work
 chown -R cross:cross /atomtools/build/cross
 
 cd /atomtools/build/cross/src
-curl http://crosstool-ng.org/download/crosstool-ng/${CROSS_TOOLS}.tar.xz | tar Jxf -
+CT_TAR=${CROSS_TOOLS}.tar.xz
+for url in     "https://github.com/crosstool-ng/crosstool-ng/releases/download/${CROSS_TOOLS}/${CT_TAR}"     "http://crosstool-ng.org/download/crosstool-ng/${CT_TAR}"     ; do
+    if curl -fL --retry 5 --retry-delay 5 --retry-connrefused         --connect-timeout 30 --max-time 600         -o "${CT_TAR}" "${url}"; then
+        echo "crosstool-ng tarball cached from ${url}"
+        break
+    fi
+    echo "WARN: failed to fetch ${url}, trying next mirror..." >&2
+    rm -f "${CT_TAR}"
+done
+[ -s "${CT_TAR}" ] || {
+    echo "FATAL: could not fetch ${CT_TAR} from any mirror" >&2
+    exit 1
+}
+tar -Jxf "${CT_TAR}"
 cd ${CROSS_TOOLS}
 ./configure --prefix=/atomtools/build/cross/tools
 make
