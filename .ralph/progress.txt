@@ -10,3 +10,4 @@ S7 qrcode-generator@^2.0.4. 検証 OK.
 S8 tailwind 4. 検証 OK.
 S9 typescript 7 BLOCKED. typecheck は通るが eslint が TS 7.0 非対応。戻した。
 S12 go2rtc v1.9.14 BLOCKED. 0001-0004 が b5948cf に当たらない。mk は据え置き。
+S10 CI node-version 24. 検証 OK. S9 依存は外した（TS7 と無関係）。

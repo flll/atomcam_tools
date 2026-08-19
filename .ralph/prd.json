@@ -119,10 +119,8 @@
         ".github/workflows/webui.yml の node-version が 24",
         "web-new の lint/typecheck/test/build が exit 0"
       ],
-      "dependencies": [
-        "S9"
-      ],
-      "passes": false
+      "dependencies": [],
+      "passes": true
     },
     {
       "id": "S11",
