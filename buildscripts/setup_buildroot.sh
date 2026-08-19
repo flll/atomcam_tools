@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# Buildroot 2026.05.1 は uutils install 0.8.0 を拒否する (uutils/coreutils#12166).
+# Ubuntu 26.04 の /usr/bin/install は rust-coreutils。GNU は gnuinstall。
+if [ -x /usr/bin/gnuinstall ] && /usr/bin/install --version 2>/dev/null | grep -q uutils; then
+  update-alternatives --install /usr/bin/install install /usr/bin/gnuinstall 100
+fi
+
+
 # Build environment migration notes:
 #   * Buildroot bumped from 2016.02 to 2026.02 LTS. The old version is
 #     Python-2 only and does not build on modern hosts.
