@@ -40,7 +40,8 @@ function LogViewer() {
   }, [file, t]);
 
   useEffect(() => {
-    void load();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- ファイル切替でログを取り直す
+    void load().catch(() => undefined);
   }, [load]);
 
   return (

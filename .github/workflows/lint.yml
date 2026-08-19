@@ -9,7 +9,7 @@ jobs:
   shellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       # 各スクリプトは shebang を持つため shell 種別は自動判定に任せる。
@@ -35,7 +35,7 @@ jobs:
   busybox-compat:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install busybox
         run: sudo apt-get update && sudo apt-get install -y busybox-static
       - name: busybox compatibility gate
@@ -46,7 +46,7 @@ jobs:
   markdown-links:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # --offline: 相対リンクのみ検査し、外部 URL 起因の flaky な失敗を避ける
       - name: Check Markdown links (relative only)
         uses: lycheeverse/lychee-action@v2
