@@ -2,3 +2,4 @@
 2026-08-19 17:09:24 | 1周 | 完了 0件 | 残り 13件 | 反復上限に到達 | branch main
 S1 jest-dom 7. 検証 lint/typecheck/test/build OK.
 S2 @types/node. 検証 OK.
+S3 js-yaml 5. 検証 OK.
