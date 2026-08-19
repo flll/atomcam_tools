@@ -1,0 +1,163 @@
+{
+  "project": "atomcam_tools-latest",
+  "goal": "上げられる依存を latest にする。semver 内は完了済み。残る major と Tailscale / go2rtc / Buildroot を1周1件で消化する。",
+  "userStories": [
+    {
+      "id": "S1",
+      "priority": 1,
+      "title": "@testing-library/jest-dom を 7.0.1 へ",
+      "detail": "Wanted は 6.9.1。Latest は 7。devDependency のみ。",
+      "acceptance": [
+        "web-new/package.json の @testing-library/jest-dom が ^7",
+        "cd web-new && npm run lint && npm run typecheck && npm run test && npm run build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S2",
+      "priority": 2,
+      "title": "@types/node を 26 へ",
+      "detail": "CI の node-version はまだ 22。型だけ 26 に上げる。",
+      "acceptance": [
+        "web-new/package.json の @types/node が ^26",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S3",
+      "priority": 3,
+      "title": "js-yaml を 5.3.0 へ",
+      "detail": "devDependency。API 破壊があれば呼び出し側だけ直す。",
+      "acceptance": [
+        "web-new/package.json の js-yaml が ^5",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S4",
+      "priority": 4,
+      "title": "jsdom を 30 へ",
+      "detail": "vitest 環境。peer が足りなければ最小追加。",
+      "acceptance": [
+        "web-new/package.json の jsdom が ^30",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S5",
+      "priority": 5,
+      "title": "konva を 10.3.1 へ（react-konva が要れば同時）",
+      "detail": "Motion overlay が動くこと。peer 不整合なら react-konva も上げる。",
+      "acceptance": [
+        "web-new/package.json の konva が ^10",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S6",
+      "priority": 6,
+      "title": "motion を 13.1.0 へ",
+      "detail": "WebUI の motion 依存。破壊的変更は呼び出し側の最小修正。",
+      "acceptance": [
+        "web-new/package.json の motion が ^13",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S7",
+      "priority": 7,
+      "title": "qrcode-generator を 2.0.4 へ",
+      "detail": "HomeKit QR など。import が変われば呼び出し側だけ直す。",
+      "acceptance": [
+        "web-new/package.json の qrcode-generator が ^2",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S8",
+      "priority": 8,
+      "title": "tailwindcss を 4.3.3 へ",
+      "detail": "PostCSS 設定の移行が必要なら公式アップグレードガイドに従う。見た目の作り直しはしない。",
+      "acceptance": [
+        "web-new/package.json の tailwindcss が ^4",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S9",
+      "priority": 9,
+      "title": "typescript を 7.0.2 へ",
+      "detail": "tsconfig の最小修正のみ。eslint が追従できなければ RALPH_BLOCKED。",
+      "acceptance": [
+        "web-new/package.json の typescript が ^7",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S10",
+      "priority": 10,
+      "title": "CI の node-version を 24 へ",
+      "detail": "GitHub-hosted の setup-node。engines があれば合わせる。",
+      "acceptance": [
+        ".github/workflows/webui.yml の node-version が 24",
+        "web-new の lint/typecheck/test/build が exit 0"
+      ],
+      "dependencies": ["S9"],
+      "passes": false
+    },
+    {
+      "id": "S11",
+      "priority": 20,
+      "title": "Tailscale prebuilt を 1.102.2 へ",
+      "detail": "custompackages/package/tailscale-prebuilt/tailscale-prebuilt.mk。mipsle tgz が dl.tailscale.com/stable にあること。make build はしない。",
+      "acceptance": [
+        "TAILSCALE_PREBUILT_VERSION が 1.102.2",
+        "web-new の lint/typecheck/test/build が exit 0（回帰）"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S12",
+      "priority": 21,
+      "title": "go2rtc を v1.9.14 へ",
+      "detail": "go2rtc.mk の VERSION を v1.9.14 のコミットにする。0001-0004 が当たらなければ RALPH_BLOCKED。",
+      "acceptance": [
+        "GO2RTC_VERSION が v1.9.14 相当",
+        "既存パッチが適用できる、または当たない理由を progress に書いて BLOCKED",
+        "web-new 回帰テストが exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S13",
+      "priority": 22,
+      "title": "Buildroot を 2026.05.1 へ",
+      "detail": "Dockerfile ARG と Makefile BUILDROOT_DIR と docker-compose タグ。2026.08-rc は使わない。イメージ rebuild は人間。",
+      "acceptance": [
+        "BUILDROOT_VERSION が 2026.05.1",
+        "web-new 回帰テストが exit 0"
+      ],
+      "dependencies": [],
+      "passes": false
+    }
+  ]
+}

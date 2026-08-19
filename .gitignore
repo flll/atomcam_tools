@@ -32,3 +32,6 @@ target/.deploy_ota.zip
 libcallback/*.so
 libcallback/*.bak
 libcallback/*.orig
+
+.ralph/logs/
+.ralph/STOP
