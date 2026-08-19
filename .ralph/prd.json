@@ -1,6 +1,6 @@
 {
   "project": "atomcam_tools-latest",
-  "goal": "上げられる依存を latest にする。semver 内は完了済み。残る major と Tailscale / go2rtc / Buildroot を1周1件で消化する。",
+  "goal": "br2026.05 builder イメージを通す。コンパイル失敗は1周1件。S9/S12 は触らない。",
   "userStories": [
     {
       "id": "S1",
@@ -158,6 +158,83 @@
       ],
       "dependencies": [],
       "passes": true
+    },
+    {
+      "id": "S14",
+      "priority": 0,
+      "title": "builder の次のコンパイル失敗を1件直す（1/5）",
+      "detail": "docker build が走っていれば完了（成功または失敗）まで待つ。成功なら即 pass。失敗なら fatal 1件だけ直して同じタグで再ビルドする。既存の build を殺すな。",
+      "acceptance": [
+        "flll/atomcam_tools-builder:br2026.05 がある、または今回の修正コミットのあと docker build が走っている",
+        "bash .ralph/verify-builder.sh が exit 0",
+        "7.1 ファイルを触っていない"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S15",
+      "priority": 1,
+      "title": "builder の次のコンパイル失敗を1件直す（2/5）",
+      "detail": "docker build が走っていれば完了（成功または失敗）まで待つ。成功なら即 pass。失敗なら fatal 1件だけ直して同じタグで再ビルドする。既存の build を殺すな。",
+      "acceptance": [
+        "flll/atomcam_tools-builder:br2026.05 がある、または今回の修正コミットのあと docker build が走っている",
+        "bash .ralph/verify-builder.sh が exit 0",
+        "7.1 ファイルを触っていない"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S16",
+      "priority": 2,
+      "title": "builder の次のコンパイル失敗を1件直す（3/5）",
+      "detail": "docker build が走っていれば完了（成功または失敗）まで待つ。成功なら即 pass。失敗なら fatal 1件だけ直して同じタグで再ビルドする。既存の build を殺すな。",
+      "acceptance": [
+        "flll/atomcam_tools-builder:br2026.05 がある、または今回の修正コミットのあと docker build が走っている",
+        "bash .ralph/verify-builder.sh が exit 0",
+        "7.1 ファイルを触っていない"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S17",
+      "priority": 3,
+      "title": "builder の次のコンパイル失敗を1件直す（4/5）",
+      "detail": "docker build が走っていれば完了（成功または失敗）まで待つ。成功なら即 pass。失敗なら fatal 1件だけ直して同じタグで再ビルドする。既存の build を殺すな。",
+      "acceptance": [
+        "flll/atomcam_tools-builder:br2026.05 がある、または今回の修正コミットのあと docker build が走っている",
+        "bash .ralph/verify-builder.sh が exit 0",
+        "7.1 ファイルを触っていない"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S18",
+      "priority": 4,
+      "title": "builder の次のコンパイル失敗を1件直す（5/5）",
+      "detail": "docker build が走っていれば完了（成功または失敗）まで待つ。成功なら即 pass。失敗なら fatal 1件だけ直して同じタグで再ビルドする。既存の build を殺すな。",
+      "acceptance": [
+        "flll/atomcam_tools-builder:br2026.05 がある、または今回の修正コミットのあと docker build が走っている",
+        "bash .ralph/verify-builder.sh が exit 0",
+        "7.1 ファイルを触っていない"
+      ],
+      "dependencies": [],
+      "passes": false
+    },
+    {
+      "id": "S19",
+      "priority": 5,
+      "title": "br2026.05 イメージを compose に載せる",
+      "detail": "イメージが無い間は docker build の完了を待つ。失敗したら fatal 1件直して再ビルド。成功したら compose up -d --force-recreate し buildroot-2026.05.1 を確認する。実機には送らない。",
+      "acceptance": [
+        "docker image inspect flll/atomcam_tools-builder:br2026.05 が成功する",
+        "docker compose exec builder ls /atomtools/build/buildroot-2026.05.1 が成功する"
+      ],
+      "dependencies": [],
+      "passes": false
     }
   ]
 }

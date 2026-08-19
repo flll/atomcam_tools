@@ -1,4 +1,4 @@
-# Ralph iteration — atomcam_tools latest 上げ
+# Ralph iteration — atomcam_tools builder 2026.05 通し
 
 あなたは自律ループの1イテレーションです。**このイテレーションで扱うストーリーは1つだけ**。
 終わったらプロセスは終了し、次のイテレーションはまっさらな文脈で起動します。
@@ -21,12 +21,16 @@
 
 ## 検証コマンド（必ず実行し、実際の出力を確認する）
 
+S14–S19（builder）:
+
 ```bash
-cd web-new && npm run lint && npm run typecheck && npm run test && npm run build
+bash .ralph/verify-builder.sh <選んだID>
 ```
+例: `bash .ralph/verify-builder.sh S14`
+
+S9 / S12: 検証も install もせず即 `RALPH_BLOCKED`。
 
 どれか1つでも exit 0 でなければ「失敗」です。**通っていないのにコミットしない・次へ進まない。**
-デバイス系ストーリーでもこのコマンドは回帰として必ず通す。フル `make build` はしない（時間切れになる）。
 
 ## 途中で止める条件
 
@@ -42,21 +46,25 @@ cd web-new && npm run lint && npm run typecheck && npm run test && npm run build
 ## このリポジトリの約束
 
 - コミットメッセージは**日本語**。AI の著作権トレーラー（`Co-Authored-By` 等）を**入れない**。
-- **`git push` しない。** ローカルコミットまで。
 - **デプロイしない。** squashfs を実機へ送らない。SPI / NOR に触れない。
 - 秘密（トークン・パスワード等）をコミットしない・出力しない。
-- `campaign-state.json` / `docs/campaign/` / `initramfs_71/` は触らない（7.1 キャンペーンの dirty）。
-- 公式 ATOM ファームの再インストールはしない（hack が消える。人間が demo.bin で戻す判断）。
-- S9（typescript 7）と S12（go2rtc v1.9.14）はブロック済み。選んだら変更せず `RALPH_BLOCKED` を出して終了。
+- `campaign-state.json` / `docs/campaign/` / `initramfs_71/` は触らない（7.1 stash の dirty）。
+- 公式 ATOM ファームの再インストールはしない。
+- S9（typescript 7）と S12（go2rtc v1.9.14）はブロック済み。選んだら変更せず `RALPH_BLOCKED`。
+- builder ストーリー: `/tmp/atomcam-docker-build-br2026.05.log` を見る。走っている `docker build` は殺さない・二重起動しない。
+- 失敗したら fatal / undefined reference / missing header を**1件だけ**直す（`global_patches/`・`configs/`・`custompackages/`・`buildscripts/`・`external.mk`）。
+- 直したら `docker build -t flll/atomcam_tools-builder:br2026.05 -t flll/atomcam_tools-builder:br2026.05-amd64 .` を `/tmp/atomcam-docker-build-br2026.05.log` へ tee して再起動する。
+- イメージができたら `docker compose up -d --force-recreate` し `/atomtools/build/buildroot-2026.05.1` を確認する（S19）。実機には送らない。
+- origin（`flll/atomcam_tools`）へは builder 修正を push してよい。**upstream には絶対 push しない。**
 
 
 ## ファイルの地図
 
-- `web-new/package.json` / `web-new/package-lock.json` — WebUI 依存
-- `custompackages/package/tailscale-prebuilt/tailscale-prebuilt.mk` — Tailscale prebuilt（mk の VERSION）
-- `custompackages/package/go2rtc/go2rtc.mk` — go2rtc コミットピン（パッチ 0001–0004 あり）
-- `Dockerfile` / `Makefile` / `docker-compose.yml` — Buildroot（Dockerfile ARG / Makefile / compose タグ）
-- `.github/workflows/` — CI（このキャンペーン開始時点で actions は最新 major 済み）
+- `/tmp/atomcam-docker-build-br2026.05.log` — 現在の docker build ログ（tee 成功を成功と誤認するな。末尾の ERROR: failed を見る）
+- `global_patches/<pkg>/` — Buildroot グローバルパッチ（busybox.config の Kconfig は `configs/`）
+- `custompackages/external.mk` — パッケージ横断の CONF_ENV
+- `Dockerfile` 最後の `RUN setup_buildroot.sh` — 失敗のたびに ct-ng からやり直し
+- `docker-compose.yml` — 成功後に `br2026.05` で recreate
 
 ## 出力
 

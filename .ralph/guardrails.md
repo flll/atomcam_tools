@@ -1,10 +1,10 @@
 # guardrails — 毎イテレーションの最初に全文読む
 
-- 7.1 キャンペーンファイル（initramfs_71 / campaign-state / AGENTS-71）は触らない
-- SPI / NOR / 実機 deploy はしない。公式 demo.bin 再install もしない
-- WebUI の major は1パッケージ（関連 peer だけ例外）。lockfile 以外を巻き込むな
-- go2rtc は custom patch 4枚。upstream に当たらなければ RALPH_BLOCKED
-- `npm ci` を不用意に走らせて別差分を作るな。対象パッケージの bump だけ
-- 検証は `web-new` の lint/typecheck/test/build。フル firmware ビルドはしない
-- typescript 7.0 は typescript-eslint 非対応（TS>=7.1待ち）。S9 を選んだら install せず即 RALPH_BLOCKED
-- go2rtc v1.9.14 に 0001-0004 は当たらない。S12 は即 RALPH_BLOCKED。パッチ再作成は人間
+- 7.1（initramfs_71 / campaign-state / AGENTS-71）は触らない。stash を pop しない
+- SPI / NOR / 実機 deploy / 公式 demo.bin 再install はしない
+- docker build の tee 終了コードを成功と見るな。ログ末尾の ERROR: failed が正本
+- 走っている docker build を kill しない。二重起動しない
+- 1周で直す fatal は1件。次のヘッダ不足は次周
+- S9 typescript 7 / S12 go2rtc 1.9.14 は即 RALPH_BLOCKED
+- origin のみ push。upstream (mnakada) は禁止
+- compose recreate はイメージができてから。web-new npm は builder 周では走らせない
