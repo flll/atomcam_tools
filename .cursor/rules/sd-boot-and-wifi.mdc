@@ -1,0 +1,10 @@
+---
+description: SD なし公式起動と Wi-Fi 正本は mtd6。SD 上はコピー。
+alwaysApply: true
+---
+# SD 起動と Wi-Fi の正本
+
+- 公式 OS は NOR（SPI）だけで起動する。hack（WebUI / SSH / Tailscale）だけ SD が要る（`factory_t31_ZMC6tiIDQN` + `rootfs_hack.squashfs`）
+- Wi-Fi の正本はフラッシュ **mtd6 `cfg`（jffs2）**。SD の `wpa_supplicant.conf` と `configs`（`.user_config` の `[NET]`）はコピー
+- カード盗難で漏れるのはコピー側。本体の公式設定は mtd6 に残る。PSK 等の**値は出さない**（キー名のみ）
+- 詳細: `docs/development/sd-boot-and-wifi.md`

@@ -9,10 +9,12 @@ alwaysApply: true
 1. `AGENTS.md` — ビルド/デプロイ操作の正本
 2. `docs/development/guardrails.md` — 実バグ由来の再発防止チェックリスト(10項目)
 3. `SECURITY.md` — 秘密の扱い
+4. `docs/development/sd-boot-and-wifi.md` — SD なし公式起動・Wi-Fi 正本は mtd6
 
 ## 常時厳守(要約)
 
 - hack.ini を素手で全文書き換えない。値(PSK/パスワード)を出力しない(キー名のみ可)
+- Wi-Fi 正本は mtd6。SD の wpa_supplicant.conf / configs はコピー（詳細は `.cursor/rules/sd-boot-and-wifi.mdc`）
 - `initramfs_skeleton/` `patches/kernel/` u-boot / SPI に触れない。deploy は `/media/mmc/update/` 経由のみ
 - overlay のシェルは busybox sh(bashism 禁止・LF・コミット前 `sh -n`)
 - wdkeep(watchdog 給餌)を殺さない。debug 資産は使用後 `cleanup-debug-boot.sh` で撤去

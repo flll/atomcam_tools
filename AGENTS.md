@@ -16,13 +16,19 @@
 3. [docs/development/sd-boot-and-wifi.md](docs/development/sd-boot-and-wifi.md) — SD なし公式起動・Wi‑Fi 正本は mtd6、SD はコピー
 
 読了後、変更がチェックリストに違反しないことを確認してからコードに触る。
-Cursor では `.cursor/rules/guardrails.mdc`(alwaysApply)が毎プロンプト同旨を注入する。
+Cursor では `.cursor/rules/guardrails.mdc` と `.cursor/rules/sd-boot-and-wifi.mdc`(alwaysApply)が毎プロンプト同旨を注入する。
 
 ## いちばん大事な3点
 
 1. **zip は1本**。`atomcam-{commit}[-{profile}].zip`(例 `atomcam-3ad28e8-harness.zip`、simple は `atomcam-3ad28e8.zip`)
 2. SD もデプロイも **同じ1本**を使う。OTA の時だけ `deploy_remote.sh` が中で余分な2ファイル(`hack.ini`/`tools_configs`)を自動で除く
 3. 版の真実は **`target/BUILD_MANIFEST.json`**(commit/tag/profile/時刻)。エージェントはここを読む
+
+## SD と Wi-Fi（誤認しやすい）
+
+- 公式カメラは **SD 無しで起動する**（NOR）。hack だけ SD 必須
+- Wi-Fi 正本はフラッシュ **mtd6 `cfg`**。SD 上はコピー。値は出さない
+- 詳細: [docs/development/sd-boot-and-wifi.md](docs/development/sd-boot-and-wifi.md)
 
 ## ビルド(1コマンド)
 

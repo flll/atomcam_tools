@@ -5,6 +5,7 @@
 1. [AGENTS.md](AGENTS.md) — ビルド/デプロイ操作の正本(zip は1本・BUILD_MANIFEST が真実)
 2. [docs/development/guardrails.md](docs/development/guardrails.md) — 実バグ由来の再発防止チェックリスト
 3. [SECURITY.md](SECURITY.md) — 秘密の扱い(hack.ini の値を出力しない 等)
+4. [docs/development/sd-boot-and-wifi.md](docs/development/sd-boot-and-wifi.md) — SD なし公式起動・Wi-Fi 正本は mtd6
 
 読了前に Edit/Write を始めない。チェックリストに違反しそうな変更は手を止めてユーザーに確認する。
 
