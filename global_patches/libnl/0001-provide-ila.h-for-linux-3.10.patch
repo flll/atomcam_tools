@@ -1,0 +1,36 @@
+--- a/lib/route/nh_encap_ila.c
++++ b/lib/route/nh_encap_ila.c
+@@ -2,7 +2,7 @@
+ 
+ #include "nl-default.h"
+ 
+-#include <linux/ila.h>
++#include "uapi-linux-ila.h"
+ #include <linux/lwtunnel.h>
+ 
+ #include <netlink/route/nexthop.h>
+--- /dev/null
++++ b/lib/route/uapi-linux-ila.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* Minimal linux/ila.h for toolchains whose UAPI predates ILA (Linux 3.10). */
++#ifndef _UAPI_LINUX_ILA_H
++#define _UAPI_LINUX_ILA_H
++
++enum {
++	ILA_ATTR_UNSPEC,
++	ILA_ATTR_LOCATOR,
++	ILA_ATTR_IDENTIFIER,
++	ILA_ATTR_LOCATOR_MATCH,
++	ILA_ATTR_IFINDEX,
++	ILA_ATTR_DIR,
++	ILA_ATTR_PAD,
++	ILA_ATTR_CSUM_MODE,
++	ILA_ATTR_IDENT_TYPE,
++	ILA_ATTR_HOOK_TYPE,
++	__ILA_ATTR_MAX,
++};
++
++#define ILA_ATTR_MAX (__ILA_ATTR_MAX - 1)
++
++#endif
