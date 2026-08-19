@@ -8,3 +8,5 @@ S5 konva@^10.3.1. 検証 OK.
 S6 motion@^13.1.0. 検証 OK.
 S7 qrcode-generator@^2.0.4. 検証 OK.
 S8 tailwind 4. 検証 OK.
+S9 typescript 7 BLOCKED. typecheck は通るが eslint が TS 7.0 非対応。戻した。
+S12 go2rtc v1.9.14 BLOCKED. 0001-0004 が b5948cf に当たらない。mk は据え置き。

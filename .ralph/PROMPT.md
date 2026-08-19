@@ -47,13 +47,15 @@ cd web-new && npm run lint && npm run typecheck && npm run test && npm run build
 - 秘密（トークン・パスワード等）をコミットしない・出力しない。
 - `campaign-state.json` / `docs/campaign/` / `initramfs_71/` は触らない（7.1 キャンペーンの dirty）。
 - 公式 ATOM ファームの再インストールはしない（hack が消える。人間が demo.bin で戻す判断）。
+- S9（typescript 7）と S12（go2rtc v1.9.14）はブロック済み。選んだら変更せず `RALPH_BLOCKED` を出して終了。
+
 
 ## ファイルの地図
 
 - `web-new/package.json` / `web-new/package-lock.json` — WebUI 依存
-- `custompackages/package/tailscale-prebuilt/tailscale-prebuilt.mk` — Tailscale 1.92.3
+- `custompackages/package/tailscale-prebuilt/tailscale-prebuilt.mk` — Tailscale prebuilt（mk の VERSION）
 - `custompackages/package/go2rtc/go2rtc.mk` — go2rtc コミットピン（パッチ 0001–0004 あり）
-- `Dockerfile` / `Makefile` / `docker-compose.yml` — Buildroot 2026.02.1
+- `Dockerfile` / `Makefile` / `docker-compose.yml` — Buildroot（Dockerfile ARG / Makefile / compose タグ）
 - `.github/workflows/` — CI（このキャンペーン開始時点で actions は最新 major 済み）
 
 ## 出力
