@@ -7,4 +7,5 @@
 - 1周で直す fatal は1件。次のヘッダ不足は次周
 - S9 typescript 7 / S12 go2rtc 1.9.14 は即 RALPH_BLOCKED
 - origin のみ push。upstream (mnakada) は禁止
+- docker は ssh lll-legacy。Lenovo の cursor-agent で回す（lll-legacy 側は login 切れ）
 - compose recreate はイメージができてから。web-new npm は builder 周では走らせない

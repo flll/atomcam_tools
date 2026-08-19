@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # usage: bash .ralph/verify-builder.sh S14
+# docker は lll-legacy。git のコミット数はローカル clone。
 set -euo pipefail
 STORY="${1:-}"
 IMAGE=flll/atomcam_tools-builder:br2026.05
 BASE="$(tr -d "[:space:]" < .ralph/loop-base)"
+RSH=(ssh -o BatchMode=yes lll-legacy)
 
-if docker image inspect "$IMAGE" >/dev/null 2>&1; then
+if "${RSH[@]}" "docker image inspect $IMAGE >/dev/null 2>&1"; then
   echo "OK: $IMAGE exists"
-  docker image inspect "$IMAGE" --format "{{.Id}} {{.Size}}"
+  "${RSH[@]}" "docker image inspect $IMAGE --format '{{.Id}} {{.Size}}'"
   if [ "$STORY" = "S19" ]; then
-    docker compose exec -T builder ls /atomtools/build/buildroot-2026.05.1 >/dev/null
+    "${RSH[@]}" "cd /home/lll/atomcam_tools && docker compose exec -T builder ls /atomtools/build/buildroot-2026.05.1 >/dev/null"
     echo "OK: compose builder has buildroot-2026.05.1"
   fi
   exit 0
@@ -36,7 +38,7 @@ if [ "$n" -lt "$need" ]; then
   echo "FAIL: まだ ${need} 件目の builder 修正がない（イメージも未作成）"
   exit 1
 fi
-if pgrep -f "docker build -t flll/atomcam_tools-builder:br2026.05" >/dev/null; then
+if "${RSH[@]}" 'pgrep -f "docker build -t flll/atomcam_tools-builder:br2026.05" >/dev/null'; then
   echo "OK: ${need} 件目まで修正済みで docker build 走行中"
   exit 0
 fi

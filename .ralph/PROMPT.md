@@ -51,10 +51,11 @@ S9 / S12: 検証も install もせず即 `RALPH_BLOCKED`。
 - `campaign-state.json` / `docs/campaign/` / `initramfs_71/` は触らない（7.1 stash の dirty）。
 - 公式 ATOM ファームの再インストールはしない。
 - S9（typescript 7）と S12（go2rtc v1.9.14）はブロック済み。選んだら変更せず `RALPH_BLOCKED`。
-- builder ストーリー: `/tmp/atomcam-docker-build-br2026.05.log` を見る。走っている `docker build` は殺さない・二重起動しない。
+- このループは Lenovo の `cursor-agent`（ログイン済み）。docker は必ず `ssh -o BatchMode=yes lll-legacy`。lll-legacy の cursor-agent は login 切れなので使わない。
+- builder ストーリー: `ssh lll-legacy cat /tmp/atomcam-docker-build-br2026.05.log` を見る。走っている `docker build` は殺さない・二重起動しない。
 - 失敗したら fatal / undefined reference / missing header を**1件だけ**直す（`global_patches/`・`configs/`・`custompackages/`・`buildscripts/`・`external.mk`）。
-- 直したら `docker build -t flll/atomcam_tools-builder:br2026.05 -t flll/atomcam_tools-builder:br2026.05-amd64 .` を `/tmp/atomcam-docker-build-br2026.05.log` へ tee して再起動する。
-- イメージができたら `docker compose up -d --force-recreate` し `/atomtools/build/buildroot-2026.05.1` を確認する（S19）。実機には送らない。
+- 直したら origin へ push → `ssh lll-legacy 'cd ~/atomcam_tools && git pull --ff-only'` → 同じタグで docker build を tee して再起動する。
+- イメージができたら `ssh lll-legacy 'cd ~/atomcam_tools && docker compose up -d --force-recreate'` し buildroot-2026.05.1 を確認する（S19）。実機には送らない。
 - origin（`flll/atomcam_tools`）へは builder 修正を push してよい。**upstream には絶対 push しない。**
 
 
